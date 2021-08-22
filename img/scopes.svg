@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="89.968605mm"
+   height="50.401123mm"
+   viewBox="0 0 89.968605 50.401123"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="scopes.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="184.19618"
+     inkscape:cy="83.220965"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="998"
+     inkscape:window-x="0"
+     inkscape:window-y="28"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-32.339615,-24.251448)">
+    <rect
+       style="opacity:1;fill:#ff8080;fill-opacity:1;stroke:none;stroke-width:0.99999994;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:42.85448837;stroke-opacity:1"
+       id="rect4747"
+       width="89.968605"
+       height="50.401123"
+       x="32.339615"
+       y="24.251448" />
+    <rect
+       style="opacity:1;fill:#ddff55;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:42.85448837;stroke-opacity:1"
+       id="rect4747-3"
+       width="75.503639"
+       height="33.999252"
+       x="45.703087"
+       y="36.946751" />
+    <rect
+       style="opacity:1;fill:#afdde9;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:42.85448837;stroke-opacity:1"
+       id="rect4747-3-6"
+       width="62.287231"
+       height="15.57665"
+       x="57.730217"
+       y="51.512939" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="35.784557"
+       y="29.262991"
+       id="text4920"><tspan
+         sodipodi:role="line"
+         id="tspan4918"
+         x="35.784557"
+         y="29.262991">Outer namespace __main__</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none"
+       x="77.613777"
+       y="35.207169"
+       id="text4924"><tspan
+         sodipodi:role="line"
+         id="tspan4922"
+         x="77.613777"
+         y="35.207169">spam =</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none"
+       x="77.613777"
+       y="49.475578"
+       id="text4928"><tspan
+         sodipodi:role="line"
+         id="tspan4926"
+         x="77.613777"
+         y="49.475578">spam =</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none"
+       x="77.613777"
+       y="63.743988"
+       id="text4932"><tspan
+         sodipodi:role="line"
+         id="tspan4930"
+         x="77.613777"
+         y="63.743988">spam =</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="59.251144"
+       y="56.409813"
+       id="text4936"><tspan
+         sodipodi:role="line"
+         id="tspan4934"
+         x="59.251144"
+         y="56.409813">Inner namespace do_xxxxxxxx</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:3.52777767px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="49.730324"
+       y="42.657784"
+       id="text4940"><tspan
+         sodipodi:role="line"
+         id="tspan4938"
+         x="49.730324"
+         y="42.657784">Middle namespace middle_scope</tspan></text>
+  </g>
+</svg>
