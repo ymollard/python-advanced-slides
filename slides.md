@@ -4,7 +4,7 @@ marp: true
 <!-- 
 class: invert
 paginate: true
-footer: 'Python advanced training, Yoan Mollard, CC-BY-NC-SA'
+footer: 'Python advanced training – course – Yoan Mollard – CC-BY-NC-SA'
 -->
 
 
@@ -21,7 +21,7 @@ http://files.aubrune.eu/formations/humancoders
 ---
 # Pictograms
 
-🐍  Reference to the Python documentation
+🐍  Reference to the Python official documentation
 
 
 ---
@@ -38,10 +38,178 @@ http://files.aubrune.eu/formations/humancoders
 (Including reminders)
 
 ---
-# Python typing reminder
+# Python terminology reminder
+## Modules and packages
+
+* A **module** is a Python file e.g. `math.py`, the module's name is the filename without extension e.g. `math`
+* A module can either made to be:
+  * executable: this is a **Python script**
+  * imported from another module: this is a **Python package**
+
+---
+
+* Packages and sub-packages allow to bring a hierarchy to your code
+* The package's hierarchy is inherited from the files-and-folders hierarchy 
+* Modules hold resources that can be imported later on, e.g.:
+  * Constants
+  * Classes
+  * Functions...
+![bg right:40% 70%](img/package-init.png)
+
+---
+* All packages and sub-packages must contain an `__init__.py` file each
+* In general `__init__.py` is empty but may contain code to be executed at import time
+
+![bg right:30% 90%](img/package-with-init.png)
+
+Then the package or its sub-packages can be imported:
+```python
+import my_math.trigo
+my_math.trigo.sin.sinus(0)
+```
+Specific resources can also be imported:
+```python
+from my_math.matrix.complex.arithmetic import product
+```
+---
+Optionally, a (sub-)package can by "executed" from command-line with the `-m` option:
+```bash
+python -m my_math.float
+```
+only if a module `__main__.py` has been placed a the root of the sub-package.
+
+Then, executing the sub-package consists into running code in `__main__.py`
+
+![bg right:30% 90%](img/package-with-init-main.png)
+
+---
+
+### Relative imports (Imports internal to a package)
+Relative import from the same folder:
+```python
+from .my_math import my_sqrt
+value = my_sqrt(25)
+```
+
+Relative import from a parent folder:
+```python
+from ..my_math import my_sqrt
+value = sqrt(25)
+```
+
+* Do not put any slash such as ~~`import ../my_math`~~
+* Only current and parent folders can be retrieved with a relative import
+
+
+---
+## Package distribution
+`setuptools`, and particulary file `setup.py` at the parent root of your package, simplifies the package distribution. The setup file holds:
+* The list of modules and data files embedded in the package (*replaces the `MANIFEST` file*)
+* Package version number
+* The list of dependencies on other packages from PyPI, git repos, ...
+* The entry points (executables, commands, ...)
+* ... [🐍 Learn more about setuptools](https://setuptools.readthedocs.io/en/latest/setuptools.html)
+
+Note: `setuptools` replaces the legacy `distutils`
+
+![bg right:30% 90%](img/package-with-init-setup.png)
+
+---
+Most basic setup file to distribute a single module:
+
+```python
+# File setup.py within package "my_math"
+
+from setuptools import setup
+
+setup(name='foo',
+      version='1.0',
+      py_modules=['foo'],
+      )
+```
+
+This setup file distributes a single module `foo.py` under name `foo`.
+
+Now let's see a more complete setup file distributing a package:
+
+
+---
+```python
+from setuptools import setup, find_packages
+
+setup(name='my_math',
+      version='2.0',
+      description='Custom math tools and functions',
+      license='MIT',
+      author='Yoan Mollard',
+      author_email='yoan@aubrune.eu',
+      url='https://github.com/ymollard/my_math',
+      packages=find_packages(),                 # Embedded (sub-)packages
+      install_requires=['numpy', 'matplotlib']  # Dependencies to install
+     )
+```
+
+We rely on `find_packages()` to search for all valid (sub)-packages:
+`['my_math', 'my_math.trigo', 'my_math.float', 'my_math.matrix', 'my_math.matrix.complex', 'my_math.matrix.real']`
+
+There is 1 sub-package per `__init__.py` file.
+
+---
+The setup file then offers distribution tools:
+* Install the package in the current environement:
+```bash
+pip install .
+python setup.py install   # equivalent but deprecated because pip is cool 😎
+```
+
+* Build a source distribution (sdist):
+```bash
+python setup.py sdist
+```
+A **source distribution** is just a copy of all source files from your package.
+
+* Build a binary distribution (`bdist_*`: `bdist_wheel`, `bdist_egg`, `bdist_rpm`...):
+```bash
+pip install wheel
+python setup.py bdist_wheel
+```
+
+---
+
+### Remarks about binary distribution bdist_*
+* Binary format at platform-dependant (OS, arch, Python implementation and ABI)
+* `.egg` files are just zip files containing sdist or bdist, you can unzip them
+* Optional `setup.cfg` customizes the setup behaviour (e.g. ignore some flake8...)
+* Several binary formats exist: wheel, egg... As of 2021, `wheel` format is preferred
+* wheel files are named this way: `my_math-3.0.4-py3-none-any.whl` where:
+  * `my_math` is the package name
+  * `3.0.4` is the version
+  * `py3` is the Python implementation tag
+  * `none` is the ABI tag ([the C API for Python](https://docs.python.org/3/c-api/stable.html))
+  * `any` is the platform (x86_64, arm, macos...)
+
+
+ [🐍 Learn more about package distribution with setuptools](https://docs.python.org/fr/3/distributing/index.html)
+
+---
+## Uploading your package distribution on PyPI
+Once sdist and/or bdist are available, several pipelines exist to share your project.
+
+As of 2021, uploading to PyPI with `twine` is the preferred option:
+1. Create an account on [PyPI](https://pypi.org/account/register/) or in the sandbox [TestPyPI](https://test.pypi.org/account/register/) if you're just testing
+2. ` pip install twine`
+3. `twine upload dist/* --repository testpypi`
+   * Drop the `--repository` argument if you want to upload to the regular pypi
+   * `--repository` can also target your company's own pypi server [Learn more](https://packaging.python.org/guides/hosting-your-own-index/)
+
+---
+## Virtual environmeents
+
+---
+## Python typing
 Python typing is **dynamic** and infered from the value: **duck typing** 🦆
 
-## Primitive types
+### Primitive types
 ```python
 i = 9999999999999999999999999                   # Unbound integer
 f = 1.0                                         # float
@@ -50,8 +218,8 @@ c = 1 + 1j                                      # complex
 ```
 
 ---
-## Sequences
-### Immutable sequences
+### Sequences
+#### Immutable sequences
 ```python
 s = "A string is immutable"
 t = ("A", "tuple", "is", "immutable")
@@ -66,8 +234,8 @@ t = "this" + ("This", "works!")[1:]
 ```
 
 ---
-### Mutable sequences
-#### The list
+#### Mutable sequences
+##### The list
 
 ```python
 l = ["The", "list", "type", "is", "central", "in", "Python"]
@@ -77,7 +245,7 @@ l = "".join(["H", "e", "l", "l", "o"])
 ```
 
 ---
-#### The dictionary
+##### The dictionary
 ```python
 d = {}
 dict(zip(("article", "price", "stock"), ("Logitech M180", 99.90, 5)))
@@ -89,16 +257,29 @@ d.values()   # dict_values
 Regular dictionaries 
 
 ---
-#### The ordered dictionary
+##### The ordered dictionary
 
+```python
+d = {}
+
+
+for k, v in d.items():
+    print(k, v)   # Will print 
+
+from collections import OrderedDict
+
+```
 
 ---
 ## Module vs scripts
-A **module** is a Python file, e.g. `mymodule.py`. Th module name is `mymodule`
+A **module** is a Python file, e.g. `mymodule.py`. The module name is `mymodule`
 
 Either the module is made to be:
-* imported; it is a **package**: `import mymodule`
+* imported: it is a **package**: `import mymodule`
 * executed: it is a **script**: `python mymodule.py`
+
+A package is a folder containing modules.
+Modules can also be bindings, e.g. Python bindings to a C++ library.
 
 ---
 ## Namespaces
@@ -569,4 +750,122 @@ Moral entity or individual, which company, experience...
 # PERFORMANCE OPTIMIZATION
 <!--#####################################################################################################-->
 
+---
+# Multithreading and multiprocessing
+**Multithreading**: Split work into several threads within the same process and CPU.
+**Multiprocessing**: Split work into several processes dispatched to several CPUs.
+
+Multithreading is much less efficient in most cases, but Python makes it even worse because of 
+
+---
+## The reference counter
+The interpreter holds a counter counting how many references point to a literal.
+
+```ipython
+In [1]: s = "Hello world!" 
+
+In [2]: sys.getrefcount(s)
+Out[2]: 2
+
+In [3]: s2 = s             
+
+In [4]: sys.getrefcount(s)
+Out[4]: 3
+
+In [5]: del s2             
+
+In [6]: sys.getrefcount(s)
+Out[6]: 2
+```
+If the counter reaches 0, the literal is destroyed. This is how Python frees memory.
+
+---
+## The Python Global Interpreter Lock (GIL)
+The GIL is a mutex that protects access to the reference counters of Python objects.
+
+However it prevents multiple threads from executing Python bytecodes at once. It offers poor performance for multi-threaded programs, if they are CPU-bound.
+
+Several implementations of the Python interpreter exist, for instance:
+* CPython (By far the most popular)
+* Jython
+* IronPython
+* PyPy
+
+Only some of them "suffer" from the GIL. If it is an issue, use another implementation.
+[The GIL is a regular debate within the Python community](https://wiki.python.org/moin/GlobalInterpreterLock)
+
+---
+Because of the GIL, multiprocessing is way more efficient that multithreading.
+
+But also harder to deal with since processes are insulated in their own memory spaces. Solutions exist:
+* Use stdin and stdout from the [`subprocess`](https://docs.python.org/fr/3.8/library/subprocess.html) library (call a binary and read/write std in/out)
+* Use queues and pipes from the [`multiprocessing`](https://docs.python.org/3.7/library/multiprocessing.html) library (Python only)
+* Use network messaging libraries [`zmq`](https://zeromq.org/), [`rabbitmq`](https://www.rabbitmq.com/), [`redis`](https://redis.io/)... (language-agnostic)
+
+![bg right:35% 95%](img/multiprocess-communication.svg)
+
+---
+When to use these libs?
+* **`subprocess`**: call a system command (e.g. `traceroute`, `tar`, `useradd`...) or an existing executable whose code cannot be changed, from a Python module.
+* **`multiprocessing`**: split a Python-only program from which you write all the code into processes to improve performance.
+* **messaging libs**: build a decentralized application made of multiple technologies and languages (e.g. on top of a cloud infrastructure OVH, Gandi, AWS, ...)
+
+---
+## Alternative package managers
+Not happy with PyPI and pip? Here are other ones:
+* `conda`: Useful if you also deal with non-Python dependencies. Compatible with Ruby, Java, JS, C/ C++, FORTRAN, ...
+* `miniconda`: Minimal conda
+* `mamba`: Ultrafast conda reimplementation in C++
+* `micromamba`: ...
+
+The bad news is that package managers are not compatible with each other.
+
+---
+## Measure CPU time of instructions
+
+`timeit` will run your instruction many times and give you average execution duration and statistics.
+
+From an interactive interpreter with a *line-magic*:
+```ipython
+In [1]: import math, numpy                                                                                           
+
+In [2]: %timeit math.sqrt(25)                                                                                        
+# 63.7 ns ± 0.445 ns per loop (mean ± std. dev. of 7 runs, 10000000 loops each)
+
+In [3]: %timeit numpy.sqrt(25)                                                                                       
+# 788 ns ± 3.3 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+
+```
+For magics dealing with cells instead of a single line, use `%%timeit`
+
+---
+From a Python module:
+```python
+from timeit import repeat
+import math, numpy
+print(timeit("math.sqrt(25)", globals=globals()))
+print(timeit("numpy.sqrt(25)", globals=globals()))
+
+```
+🚨 timeit is a benchmarking tool, its results depend of your current CPU load
+
+[🐍 Learn more](https://docs.python.org/3/library/timeit.html)
+
+---
+## Reminders about collections (ADT - abstract data types)
+```python
+l = [42, 12, -1, 0, 15] # List: ordered; insertion and deletion anywhere, associative access to indexes
+d = {KKKKKKK} # Dictionary: 
+```
+
+---
+## Reminders about time complexity
+
+> Time complexity is the computational complexity that describes the amount of computer time it takes to run an algorithm. 
+
+From [Wikipedia](https://en.wikipedia.org/wiki/Time_complexity)
+
+
+### Time complexity of Python collections
+[🐍 Learn more about time complexity of Python collections](https://wiki.python.org/moin/TimeComplexity)
 
