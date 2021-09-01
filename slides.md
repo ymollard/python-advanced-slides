@@ -203,9 +203,6 @@ As of 2021, uploading to PyPI with `twine` is the preferred option:
    * `--repository` can also target your company's own pypi server [Learn more](https://packaging.python.org/guides/hosting-your-own-index/)
 
 ---
-## Virtual environmeents
-
----
 ## Python typing
 Python typing is **dynamic** and infered from the value: **duck typing** 🦆
 
@@ -613,6 +610,47 @@ TODO: Exercice idea: read-only property with a getter but no setter full_name
 *In C++ class methods and attributes are similar to static methods and attributes (but different)
 TODO
 
+---
+
+#### Magic methods
+These method exist in any class with a default behaviour...unless you override them:
+
+```python
+appart1 + appart2: Appartement.__add__(self, other)    # Addition
+appart1 * appart2: Appartement.__mul__(self, other)    # Multiplication
+appart1 == appart2: Appartement.__eq__(self, other)    # Equality test
+str(appart): Appartement.__str__(self)                 # Readable string
+repr(appart): Appartement.__repr__(self)               # Unique string
+```
+
+But also... (thank you duck-typing):
+```python
+getattr(appart, "price"): Appartement.__getattr__(self, name)  # Get an attribute 
+setattr(app, "price", 1): Appartement.__setattr__(self, n, v)  # Set an attribute
+detattr(app, "price"): Appartement.__detattr__(self, name)     # Drop an attribute
+```
+
+---
+These magic methods may alter the class type of an instance itself during runtime:
+```python
+In [1]: class Example: 
+   ...:     def __init__(self): 
+   ...:         self.some_attribute = 1 
+
+In [2]: example=Example()
+
+In [3]: example.some_attribute 
+Out[3]: 1
+
+In [4]: delattr(example, "some_attribute")
+
+In [5]: example.some_attribute           
+-------------------------------------------------------------------------
+AttributeError: 'Example' object has no attribute 'some_attribute'
+
+In [6]: type(example)  # The attribute no longer exists for this object...
+Out[6]: Example        # ... but the type is still the same
+```
 
 ---
 ### Reminder about class inheritance
@@ -743,6 +781,119 @@ Moral entity or individual, which company, experience...
 # of opensource users, # of clients, company financial health if not opensource, ...
 ```
 
+<!--#####################################################################################################-->
+---
+# DAY 2
+# CODE WITH QUALITY
+
+---
+## Virtual environments (venv)
+
+**Context:** All installed packages go into the `site-packages` directory of the interpreter.
+
+> The venv module provides support for creating lightweight “virtual environments” with their own site directories, optionally isolated from system site directories.
+
+> Each virtual environment has its own Python binary (which matches the version of the binary that was used to create this environment) and can have its own independent set of installed Python packages in its site directories.
+
+[🐍 Learn more](https://docs.python.org/3/library/venv.html)
+
+### Example
+---
+![bg 70%](img/venv-0.svg)
+
+---
+![bg 70%](img/venv-1.svg)
+
+---
+![bg 70%](img/venv-2.svg)
+
+---
+![bg 70%](img/venv-3.svg)
+
+---
+![bg 90%](img/venv-4.svg)
+
+---
+For each new project you create/clone, create it its own dedicated virtual environment:
+```bash
+/usr/bin/python3.7 -m venv dev/Training2021/venv
+```
+
+Then, every time you work on this project, activate its environment first:
+```bash
+source Training2021/venv/bin/activate
+```
+
+Your terminal must prefix the prompt with the name of the env:
+```bash
+(venv) yoan@humancoders ~/dev/Training2021 $
+```
+And quit the venv every time you stop working on the project:
+```bash
+(venv) yoan@humancoders ~/dev/Training2021 $ deactivate
+yoan@humancoders ~/dev/Training2021 $ 
+```
+---
+## Quality control tools
+### [PEP 8](https://www.python.org/dev/peps/pep-0008/), the style guide for Python code
+
+> This document gives coding conventions for the Python code
+
+PEP8 codes start with E (Errors) or W (Warnings)
+
+|   Types   |     Category     ||   Types   |     Category     |
+|:---------:|:----------------:|-|:---------:|:----------------:|
+| 100       | Indentation              || 500       | Line lengths             |   
+| 200       | Whitespaces              || 600       | Deprecation              |   
+| 300       | Blank lines              || 700       | Statements               |   
+| 400       | imports                  || 900       | Syntax                   |
+
+---
+Linters can be customized in configuration files in:
+* `~/.config/pep8` if it's user-wide
+* `<PROJECT_ROOT>/setup.cfg` or `<PROJECT_ROOT>/tox.ini` if it's project-wide
+
+Example:
+```conf
+[flake8]
+ignore = E501,E731,E741
+max-line-length = 160
+exclude = build,dist,*.egg-info,doc/*,tests/*
+```
+
+---
+### [Pyflakes](pyflakes), the semantic analyser
+Pyflakes only focuses on the semantics (what your code stands for) but is not concerned about style.
+
+```python
+import logging
+variable = ScrapyCommand
+```
+
+
+```
+./main.py:2: 'logging' imported but unused
+./main.py:3: undefined name 'ScrapyCommand'
+```
+
+---
+### Flake8 (also Pylint, Pychecker)
+Flake8 = PEP 8 + Pyflakes (syntax + semantic analysis)
+
+```python
+import numpy
+
+def f():
+    print("Hello world!")
+```
+
+```
+main.py:1:1: F401 'numpy' imported but unused              # Semantic
+main.py:3:1: E302 expected 2 blank lines, found 1          # Style
+```
+
+
+<!--#####################################################################################################-->
 
 <!--#####################################################################################################-->
 ---
@@ -755,7 +906,7 @@ Moral entity or individual, which company, experience...
 **Multithreading**: Split work into several threads within the same process and CPU.
 **Multiprocessing**: Split work into several processes dispatched to several CPUs.
 
-Multithreading is much less efficient in most cases, but Python makes it even worse because of 
+Multithreading is much less efficient in most cases, but Python makes it even worse because of the GIL.
 
 ---
 ## The reference counter
