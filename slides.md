@@ -203,6 +203,39 @@ As of 2021, uploading to PyPI with `twine` is the preferred option:
    * `--repository` can also target your company's own pypi server [Learn more](https://packaging.python.org/guides/hosting-your-own-index/)
 
 ---
+### Python package deployment with Continuous Integration (Github actions)
+```yaml
+name: my-package-name
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          pip install build websocket
+      - name: Test package with unittest (flake8 linter also goes here)
+        working-directory: tests
+        run: python -m unittest discover
+      - name: Build package with Python 3.8
+        if: ${{ github.event_name == 'push' }}
+      - name: Publish package relying on pypa/gh-action-pypi-publish with Python 3.8
+        uses: pypa/gh-action-pypi-publish
+        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags') }}
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
+```
+
+---
 ## Python typing
 Python typing is **dynamic** and infered from the value: **duck typing** 🦆
 
@@ -739,6 +772,150 @@ class Car:
 ---
 ## Functional programming
 
+In functional programming your program is the result of the mathematical composition of several function calls that all take an input and return an output:
+
+`f ∘ g ∘ h` or in Python `h(g(f(x)))`
+
+In strict functional programming, no side effect is allowed, which means that even variable assignment is forbidden!
+
+[🐍 Learn more](https://docs.python.org/3/howto/functional.html)
+
+---
+### Inline unpacking
+```python
+# Unpack from iterables
+a, b, c = 1, 2, 3
+a, b, c = [1, 2, 3]
+a, b, c = "abc"
+
+# It can also be used to swap elements
+a, b = b, a
+
+# Unpacking requires a consistent number of data to process
+a, b = 1, 2, 3             
+-------------------------------------------------------------------------
+ValueError                              Traceback (most recent call last)
+----> 1 a, b = 1, 2, 3
+ValueError: too many values to unpack (expected 2)
+```
+
+---
+During a function call, if `l` is a list, the starred expression `*l` is the unpacking of all elemnts from `l` into parameters
+```python
+random.gauss(mu, sigma) # Returns a random float with gaussian
+                        # distribution of mean "mu" and deviation "sigma"
+
+my_distribution = [0, 10]
+
+random.gauss(my_distribution)     # gauss() does not accept list as input
+
+# Starred expression: Unpacking arbitrary number of elements
+random.gauss(*my_distribution)
+```
+
+---
+During a function call, if `d` is a dict, the double-starred expression `**d` is the unpacking of all elemnts from `d` into named parameters (aka keyword arguments)
+
+```python
+my_distribution = {"sigma": 15, "mu": 1}
+
+random.gauss(**my_distribution)
+
+random.gauss(sigma=15, mu=1)           # This is equivalent
+```
+
+---
+During a function defintition, packing is widely used under function parameters named `*args` and `**kwargs` to accept unlimited number of respectively parameters and named parameters.
+
+```python
+def f(*args, **kwargs):
+    # Stared parameters are received as lists
+    for arg in args:
+        print("You passed {} as a parameter".format(arg))
+    
+    # Double-stars parameters are received as dicts
+    for arg_key, arg_val in kwargs.items():
+        print("You passed {} as a parameter named {}".format(arg_val, arg_key))
+
+f(1, 2, mu=3, sigma=4)
+
+# You passed 1 as a parameter
+# You passed 2 as a parameter
+# You passed 3 as a parameter named mu
+# You passed 4 as a parameter named sigma
+```
+---
+
+Popular use of `args` and `kwargs`: transmit all parameters to another function:
+
+```python
+class Example:
+    def __init__(self, *args, **kwargs):
+        super(Example, self).__init__(self, *args, **kwargs)
+```
+
+---
+### Lambda functions
+
+A lambda function (aka unnamed function) is an inline function definition with no name.
+
+```python
+lambda x: x*x
+```
+This lambda is the function that takes `x` in input and returns x*x in output.
+
+Like any other type, function can then be assigned to variables ... and called:
+```python
+squared = lambda x: x*x
+type(squared)           # Returns "function"
+squared(5)              # Returns 25
+```
+
+It is then equivalent to the regular function definition:
+```python
+def squared(x):
+    return x*x
+```
+---
+### Mapping
+
+The `map()` function applies a function to every element from an ierable.
+
+```python
+map(f, l)
+
+map(squared, [-5, 15, 10, -20])  # Returns [25, 225, 100, 400]
+```
+
+### Mapping example: Get all hexadecimal notations of a list of integers
+ 
+```python
+hex(1024)          # Returns the hexadecimal notation of an integer (here "0x400")
+
+map(hex, [2**x for x in range(5)])  # Returns ['0x1', '0x2', '0x4', '0x8', '0x10']
+```
+
+---
+### Functional programming example: capitalize each word
+```python
+sentence = "hello my friend"
+````
+How can we generate this string with each word capitalized? i.e. `"Hello My Friend"`?
+
+```python
+sentence.capitalize()   # returns "Hello my friend"
+
+" ".join(map(lambda x: x.capitalize(), sentence.split(" "))
+```
+If we do not want to with `str.capitalize()`:
+```python
+" ".join(map(lambda x: x[0].upper() + x[1:], sentence.split(" ")))
+```
+If we do not want to cheat with `str.upper()` (only with ASCII lowercase strings):
+```python
+" ".join(map(lambda x: chr(ord(x[0]) - 32) + x[1:], sentence.split(" ")))
+```
+
 ---
 # Distribution of Python packages and programs
 
@@ -833,6 +1010,30 @@ And quit the venv every time you stop working on the project:
 (venv) yoan@humancoders ~/dev/Training2021 $ deactivate
 yoan@humancoders ~/dev/Training2021 $ 
 ```
+
+---
+In an activated venv, every call to the interpreter and every package installation will target the isolated virtual environment:
+
+```bash
+(venv) yoan@humancoders ~/dev/Training2021 $ python
+```
+will run the Python version targeted by the venv
+
+```bash
+(venv) yoan@humancoders ~/dev/Training2021 $ pip install numpy
+```
+will install the latest numpy version into the venv
+
+```bash
+(venv) yoan@humancoders ~/dev/Training2021 $ pip install numpy==1.21.0
+```
+will install the specific numpy version into the venv
+
+---
+In practice, your IDE can handle venv creation, activation and deactivation automatically for you when you create or open/close a project.
+
+![bg right:50% 85%](img/venv-pycharm.png)
+
 ---
 ## Quality control tools
 ### [PEP 8](https://www.python.org/dev/peps/pep-0008/), the style guide for Python code
@@ -867,13 +1068,13 @@ Pyflakes only focuses on the semantics (what your code stands for) but is not co
 
 ```python
 import logging
-variable = ScrapyCommand
+variable = inexisting_variable
 ```
 
 
 ```
 ./main.py:2: 'logging' imported but unused
-./main.py:3: undefined name 'ScrapyCommand'
+./main.py:3: undefined name 'inexisting_variable'
 ```
 
 ---
@@ -1020,3 +1221,47 @@ From [Wikipedia](https://en.wikipedia.org/wiki/Time_complexity)
 ### Time complexity of Python collections
 [🐍 Learn more about time complexity of Python collections](https://wiki.python.org/moin/TimeComplexity)
 
+
+<!--#####################################################################################################-->
+---
+# ANNEXES
+# EXTRA-CURRICULAR TOPICS
+<!--#####################################################################################################-->
+
+---
+## Python for datascience
+### numpy
+`numpy` (numerical python) is the Python library dedicated to numerical calculs.
+
+`numpy` adds features to Python based on objects and classes that behaves the same way a mathematician would expect.
+
+Example 1: `numpuy.array` is the numpy's version of Python lists: 
+```python
+2 * [1, 2, 3, 4]
+# will repeat the list:  [1, 2, 3, 4, 1, 2, 3, 5]
+```
+
+```python
+import numpy
+2 * numpy.array([1, 2, 3, 4])
+# will run an element-wise multiplication:  numpy.array([2, 4, 6, 8])
+```
+
+---
+Example 2:
+Without numpy, try to compute several images by a function:
+```python
+import math
+x = [-3.14, -1.57, 0, 1.57, 3.14]
+math.sin(x)   # raises a TypeError because sin() expects float, not list 
+```
+
+With numpy:
+```python
+import numpy
+x = numpy.linspace(-3.14, 3.14, 100000) # 100000 values in range [-3.14, 3.14]
+numpy.sin(x) # 100000 images of x elemets by the sin function
+```
+
+
+-> Ideal for plots
