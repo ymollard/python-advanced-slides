@@ -11,7 +11,7 @@ footer: 'Python advanced training – course – Yoan Mollard – CC-BY-NC-SA'
 
 ![bg left:30% 90%](https://www.python.org/static/img/python-logo.png)
 
-# **Python advanced training**
+#  **Python advanced training**
 
 Yoan Mollard, for **Human Coders**
 
@@ -19,202 +19,23 @@ http://files.aubrune.eu/formations/humancoders
 
 
 ---
-# Pictograms
+#  Pictograms
 
 🐍  Reference to the Python official documentation
 
 
 ---
 
-# Programme
+#  Programme
 
 +-------------------+
 +-------------------+
 
 ---
 
-# DAY 1
+#  DAY 1
 # ADVANCED PROGRAMMING TECHNIQUES
 (Including reminders)
-
----
-# Python terminology reminder
-## Modules and packages
-
-* A **module** is a Python file e.g. `math.py`, the module's name is the filename without extension e.g. `math`
-* A module can either made to be:
-  * executable: this is a **Python script**
-  * imported from another module: this is a **Python package**
-
----
-
-* Packages and sub-packages allow to bring a hierarchy to your code
-* The package's hierarchy is inherited from the files-and-folders hierarchy 
-* Modules hold resources that can be imported later on, e.g.:
-  * Constants
-  * Classes
-  * Functions...
-![bg right:40% 70%](img/package-init.png)
-
----
-* All packages and sub-packages must contain an `__init__.py` file each
-* In general `__init__.py` is empty but may contain code to be executed at import time
-
-![bg right:30% 90%](img/package-with-init.png)
-
-Then the package or its sub-packages can be imported:
-```python
-import my_math.trigo
-my_math.trigo.sin.sinus(0)
-```
-Specific resources can also be imported:
-```python
-from my_math.matrix.complex.arithmetic import product
-```
----
-Optionally, a (sub-)package can by "executed" from command-line with the `-m` option:
-```bash
-python -m my_math.float
-```
-only if a module `__main__.py` has been placed a the root of the sub-package.
-
-Then, executing the sub-package consists into running code in `__main__.py`
-
-![bg right:30% 90%](img/package-with-init-main.png)
-
----
-
-### Relative imports (Imports internal to a package)
-Relative import from the same folder:
-```python
-from .my_math import my_sqrt
-value = my_sqrt(25)
-```
-
-Relative import from a parent folder:
-```python
-from ..my_math import my_sqrt
-value = sqrt(25)
-```
-
-* Do not put any slash such as ~~`import ../my_math`~~
-* Only current and parent folders can be retrieved with a relative import
-
----
-
-### The `sys.path` variable
-
-When importing a package with the `import` statement, the interpreter seeks for it in `sys.path`. 
-
-This is a regular Python list and it can be modified at runtime (with `append`) to add paths to your libraries.
-
-![bg right:60% 95%](img/sys.path.png)
-
----
-## Perfomance
-In computer science, optimization consists into improving:
-* **Time complexity**: the quantity of CPU/GPU cycles used by an operation
-* **Space complexity**: the quantity of memory used by an operation 
-
-Optimizing **time** often requires **more space**.
-Optimizing **space** often requires **more time**. 
-
-The less complex an operation is in terms of time / space, the better it is optimized. 
-
-According to the usecase, we may opt for a best optimization in space or in time.
-
-An optimized program is **faster**, **greener** and **more economic**, since both time (CPUs and GPUs) and space (Hard drives and networks) consume energy.
-
----
-### Introduction to the Big-O notation
-`Big-O` is a notation that helps measure complexity (in time or space) of programs.
-
-It describes how greedy an operation is according the size of its input, in terms of time (CPU cycles) or space (Memory space). It is thus a function of the input size (`n`).
-
-Examples:
-* `O(n)` in time = for an input of size `n`, the operation requires `n` CPU cycles 
-* `O(n*n)` in time = for an input of size `n`, the oepration requires `n*n` CPU cycles
-
-ℹ️ Here, *CPU cycle* and `n` do not refer to a precise quantity (e.g. bytes, assembly instructions, time in seconds...), only the order of magnitude is important.
-
-ℹ️ Big-O usually measures complexity in **the worst case scenario**.
-
-
----
-#### Table of common `big-O` complexities
-From best to worst performance:
-
-|         Big-O complexity                |  Complexity Name   |  Example of time complexity with a list |
-|:------------------------------------:|:------------------------:|:------------------------:|
-| O(1)                        |   Constant  | Read value at index `[i]`
-| O(n)               | Linear                         | A single `for i in range(n)` loop |
-| O(n.log(n)))        | Logarithmic | Sort list (with the quicksort method)
-| O(2*n), O(3*n) ... | Linear                         | Several consecutive `for` loops |
-| O(n²), O(n³) ...                    | Polynomial       | `for` loops nested inside `for` loops |
-| O(2ⁿ), O(10ⁿ) ...          | Exponential | Single `for i in range(k**n)` loop
-| O(2^(2ⁿ))          | Superexponential  | Nested `for i in range(k**n)` loops
-
----
-#### Documentation about complexities
-If you wish to optimize your program in time and/or space, check time or space the complexity of any:
-* **data structure** that you are using
-* **function** that you are using
-* **algorithm** that you are using
-
-The final complexity of your program depends of all of these.
-
----
-
-![bg 90%](img/sorting-complexity-wikipedia.png)
-
-
-![bg 100%](img/list-time-complexity.png)
-
----
-[🐍 Learn more about time complexity of Python structures](https://wiki.python.org/moin/TimeComplexity)
-
-
-[🐍 Learn more about complexity of sorting alogirthms](https://en.wikipedia.org/wiki/Sorting_algorithm#Comparison_of_algorithms)
-
-
-ℹ️ Complexity is not the only metric to look at when you optimize your program. You may also want to:
-* Increase code coverage: how much of your code that is actually run [🐍 Learn more](https://wiki.python.org/moin/CodeCoverage)
-* Identify slow/heavy operations with a profiler [🐍 Learn more](https://docs.python.org/3/library/profile.html)
-* Use state-of-the-art algorithms instead of custom ones e.g. scipy, numpy...
-* Refactor your code: prevent multiple computations of the same value, ... 
-* Optimize the infrastructure: use caching in the database, web server, change hard drive for a SSD...
-* Use another Python env in production: Pypy and Extensions compiled with Cython (.pyx) are powerful alternatives (most popular Python interpreter is CPython)
----
-
-#### Complexity in practice: Measure CPU time of instructions
-
-`timeit` will run your instruction many times and give you average execution duration and statistics.
-
-From an interactive interpreter with a *line-magic*:
-```ipython
-In [1]: import math, numpy                                                                                           
-
-In [2]: %timeit math.sqrt(25)                                                                                        
-# 63.7 ns ± 0.445 ns per loop (mean ± std. dev. of 7 runs, 10000000 loops each)
-
-In [3]: %timeit numpy.sqrt(25)                                                                                       
-# 788 ns ± 3.3 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
-
-```
-For magics dealing with cells instead of a single line, use `%%timeit`
-
----
-From a Python module:
-```python
-from timeit import repeat
-import math, numpy
-print(timeit("math.sqrt(25)", globals=globals()))
-print(timeit("numpy.sqrt(25)", globals=globals()))
-
-```
-🚨 timeit is a benchmarking tool, its results depend of your current CPU load
-
-[🐍 Learn more](https://docs.python.org/3/library/timeit.html)
 
 ---
 ## Python typing
@@ -348,233 +169,103 @@ class UpperCaseString(UserString):
         super(UpperCaseString, self).__init__. TODOOOOOOO
 ```
 
----
-## Module vs scripts
-A **module** is a Python file, e.g. `mymodule.py`. The module name is `mymodule`
-
-Either the module is made to be:
-* imported: it is a **package**: `import mymodule`
-* executed: it is a **script**: `python mymodule.py`
-
-A package is a folder containing modules.
-Modules can also be bindings, e.g. Python bindings to a C++ library.
 
 ---
-## Shebangs
+## Complexity and the `Big-O` notation
+In computer science, optimization consists into improving:
+* **Time complexity**: the quantity of CPU/GPU cycles used by an operation
+* **Space complexity**: the quantity of memory used by an operation 
 
-On UNIX OSes (Linuc, MacOS), a `shebang` is a header of a Python file that tells the system shell which interpreter is to be called to execute this Python module.
+Optimizing **time** often requires **more space**.
+Optimizing **space** often requires **more time**. 
 
-Usually, we invoke the `env` command to tell which is the interpreter for `python3` with such header:
+The less complex an operation is in terms of time / space, the better it is optimized. 
 
+According to the usecase, we may opt for a best optimization in space or in time.
+
+An optimized program is **faster**, **greener** and **more economic**, since both time (CPUs and GPUs) and space (Hard drives and networks) consume energy.
+
+---
+`Big-O` is a notation that helps measure complexity (in time or space) of programs.
+
+It describes how greedy an operation is according the size of its input, in terms of time (CPU cycles) or space (Memory space). It is thus a function of the input size (`n`).
+
+Examples:
+* `O(n)` in time = for an input of size `n`, the operation requires `n` CPU cycles 
+* `O(n*n)` in time = for an input of size `n`, the oepration requires `n*n` CPU cycles
+
+ℹ️ Here, *CPU cycle* and `n` do not refer to a precise quantity (e.g. bytes, assembly instructions, time in seconds...), only the order of magnitude is important.
+
+ℹ️ Big-O usually measures complexity in **the worst case scenario**.
+
+
+---
+### Table of common `big-O` complexities
+From best to worst performance:
+
+|         Big-O complexity                |  Complexity Name   |  Example of time complexity with a list |
+|:------------------------------------:|:------------------------:|:------------------------:|
+| O(1)                        |   Constant  | Read value at index `[i]`
+| O(n)               | Linear                         | A single `for i in range(n)` loop |
+| O(n.log(n)))        | Logarithmic | Sort list (with the quicksort method)
+| O(2*n), O(3*n) ... | Linear                         | Several consecutive `for` loops |
+| O(n²), O(n³) ...                    | Polynomial       | `for` loops nested inside `for` loops |
+| O(2ⁿ), O(10ⁿ) ...          | Exponential | Single `for i in range(k**n)` loop
+| O(2^(2ⁿ))          | Superexponential  | Nested `for i in range(k**n)` loops
+
+---
+### Deal with complexity in practice
+If you wish to optimize your program in time and/or space, check time or space the complexity of any:
+* **data structure** that you are using
+* **function** that you are using
+* **algorithm** that you are using
+
+The final complexity of your program depends of all of these.
+
+**Conclusion**: If performance matters for your application, read the documentation about any data structure/function/algorithm that you are willing to use, and be careful about their behaviour and performance.
+
+---
+
+![bg 90%](img/sorting-complexity-wikipedia.png)
+
+
+![bg 100%](img/list-time-complexity.png)
+
+---
+
+### Measure CPU time of instructions
+
+`timeit` will run your instruction many times and give you average execution duration and statistics.
+
+From an interactive interpreter with a *line-magic*:
 ```python
-#!/usr/bin/env python3
-```
+import math, numpy
 
-Direct call to the interpreter is possible but NOT recommanded, since it will force the interpreter bby ignoring any virtual environment you could be in:
+%timeit math.sqrt(25)
+# 63.7 ns ± 0.445 ns per loop (mean ± std. dev. of 7 runs, 10000000 loops each)
+
+%timeit numpy.sqrt(25)   
+# 788 ns ± 3.3 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+
+```
+For magics dealing with cells instead of a single line, use `%%timeit`
+
+---
+From a Python module:
 ```python
-#!/usr/local/bin/python3
+from timeit import repeat
+import math, numpy
+print(timeit("math.sqrt(25)", globals=globals()))
+print(timeit("numpy.sqrt(25)", globals=globals()))
+
 ```
+🚨 timeit is a benchmarking tool, its results depend of your current CPU load
 
-The Windows shell ignore shebangs.
-
----
-## Decorators
-The role of a decorator is to **alter** the behaviour of the function that follows with no need to modify the implementation to the function itself.
-
-It can be seen as adding "options" to a function, in the form of a wrapper code.
-
-```python
-@decorator
-def function():
-    pass
-```
-In that case the call of `function()` will be equivalent to `decorator(function())`.
-
-Decorators can take parameters in input, independant from parameters of the function.
-
-[🐍 Learn more](https://docs.python.org/3/glossary.html#term-decorator)
-
----
-**Example 1:** `@classmethod` is a decorator that passes the class type `cls` passed as the first paramter to the following function.
-
-```python
-class Animal:
-    @classmethod
-    def define(cls):
-        return "An " + str(cls) + " is an organism in the biological kingdom Animalia."
-```
-
----
-**Example 2:** Web frameworks usually use decorators to associate a function e.g. `get_bookings_list()` to:
-* an endpoint e.g. `/bookings/list`
-* a HTTP method e.g. `GET`
-
-Here is how Flask works:
-```python
-app = Flask()   # We create a web app
-
-@app.route("/bookings/list", method="GET")
-def get_bookings_list():
-    return "<ul><li>Booking A</li><li>Booking B</li></ul>"
-```
-
----
-## Namespaces
-**Definition**: a namespace is a specific mapping of variable values to variable names
-
-e.g. `pi = 3.14`... from which namespace the variable `pi` is changed? Local to the module `numpy.pi`? Global to the script? Local to the function? ...
-
-Python creates, evaluates and destroys namespaces automatically during the lifetime of your program . All you need to know is which namespace you're using when performing a variable read or write.
-
-[🐍 Learn more](https://docs.python.org/3/tutorial/classes.html#python-scopes-and-namespaces)
-
----
-The interpreter resolves names according to this priority:
-1. The innermost scope: which is searched first, contains the local names
-2. Inner scopes: from enclosing function calls
-3. Module scope, if any, or `__main__`
-4. Last scope: Built-in
-
-the next-to-last scope contains the current module’s global names
-
-the outermost scope (searched last) is the namespace containing built-in names
-
----
-**Case 1**: Built-in namespace
-
-Namespace is:
-* created when the interpreter starts
-* destroyed when the interpreter closes
-
-```bash
-python -c "print('Hello')"
-```
-In this namespace, `print()` is mapped to `builtins.print()`
-
-```python
-def print(thing): 
-    raise NotImplementedError("I do not want to print")
-print("Hello")            # Will raise exception
-builtins.print("Hello")   # Will print because builtins still resolves to builtins
-```
+[🐍 Learn more](https://docs.python.org/3/library/timeit.html)
 
 
 ---
-**Case 2**: Local namespace to a function
-
-Namespace is:
-* created when entering the function call (⚠️ not definition)
-* destroyed when leaving the function call
-
-```python
-variable = 1                                                                                                
-
-def print_var():
-    print(variable)
-
-variable = 2
-
-print_var()       # Will print ??? because ??? 
-```
-
----
-Example from the Python doc:
-![bg right:40% w:510px](img/scopes.svg)
-
-
-
-```python
-def middle_scope():
-    def do_local():
-        spam = "local"
-
-    def do_nonlocal():
-        nonlocal spam
-        spam = "nonlocal"
-
-    def do_global():
-        global spam
-        spam = "global"
-
-    spam = "middle"
-    do_local()
-    print("After local assignment:", spam)     # middle
-    do_nonlocal()
-    print("After nonlocal assignment:", spam)  # nonlocal
-    do_global()
-    print("After global assignment:", spam)    # nonlocal
-
-scope_test()
-print("In global scope:", spam)                # global
-```
-
----
-## Mutable default parameters
-```python
-def add_fruit(fruit, recipient=[]):
-    recipient.append(fruit)
-    return recipient
-
-fridge = add_fruit("apple")
-print("Content of the fridge:", fridge)   # Will print ["apple"]
-
-trash = add_fruit("apple")
-print("Content of the trash:", trash)     # Guess what's in the trash??
-```
-
----
-
-```python
-def add_fruit(fruit, recipient=[]):
-    recipient.append(fruit)
-    return recipient
-
-fridge = add_fruit("apple")
-print("Content of the fridge:", fridge)   # Will print ["apple"]
-
-trash = add_fruit("apple")
-print("Content of the trash:", trash)     # Will print ["apple", "apple"]
-```
-
-Default parameters are evaluated **during function definition**!
-
-Thus, if the default parameter is mutable (*list, dict, object...*), later on it will refer to the same instance every time the default parameter is invoked.
-
-**Good practice**: use only immuable types for default parameters, e.g. `recipient=()`
-
----
-## Name a function so that its behavior is explicit
-
-* What is the difference between `sort()` and `sorted()`?
-* What is the difference between `revert()` and `reverted()`?
-
-
----
-**Good practice**: make it explicit if a function has a side effect or returns a copy
-```python
-"""
-Normalize a 3D vector [x, y, z]
-:param vector: the iterable to be normlized by side effect 
-"""
-def normalize(vector):
-    vector_sum = sum(vector)
-    for i in range(len(vector)):
-        vector[i] /= vector_sum
-"""
-Get a normalized copy of a 3D vector [x, y, z]
-:param vector: the iterable to be normlized
-:return: a normalized copy of param vector
-"""
-def normalized(vector):
-    vector_sum = sum(vector)
-    new_vector = []
-    for value in vector:
-        new_vector.append(value/vector_sum)
-    return new_vector 
-```
-
----
-# Programming paradigms in Python
+# CHARACTERISTICS AND PARADIGMS OF PYTHON
 Python is multi-paradigm:
 * **Imperative**: *instructions create state changes*
 * **Object-oriented**: *instructions are grouped with their data in objects/classes*
@@ -1081,7 +772,496 @@ If we do not want to cheat with `str.upper()` (only with ASCII lowercase strings
 ```
 
 ---
-# Distribution of Python packages and programs
+## Decorators
+The role of a decorator is to **alter** the behaviour of the function that follows with no need to modify the implementation to the function itself.
+
+It can be seen as adding "options" to a function, in the form of a wrapper code.
+
+```python
+@decorator
+def function():
+    pass
+```
+In that case the call of `function()` will be equivalent to `decorator(function())`.
+
+Decorators can take parameters in input, independant from parameters of the function.
+
+[🐍 Learn more](https://docs.python.org/3/glossary.html#term-decorator)
+
+---
+**Example 1:** `@classmethod` is a decorator that passes the class type `cls` passed as the first paramter to the following function.
+
+```python
+class Animal:
+    @classmethod
+    def define(cls):
+        return "An " + str(cls) + " is an organism in the biological kingdom Animalia."
+```
+
+---
+**Example 2:** Web frameworks usually use decorators to associate a function e.g. `get_bookings_list()` to:
+* an endpoint e.g. `/bookings/list`
+* a HTTP method e.g. `GET`
+
+Here is how Flask works:
+```python
+app = Flask()   # We create a web app
+
+@app.route("/bookings/list", method="GET")
+def get_bookings_list():
+    return "<ul><li>Booking A</li><li>Booking B</li></ul>"
+```
+
+---
+## Namespaces
+**Definition**: a namespace is a specific mapping of variable values to variable names
+
+e.g. `pi = 3.14`... from which namespace the variable `pi` is changed? Local to the module `numpy.pi`? Global to the script? Local to the function? ...
+
+Python creates, evaluates and destroys namespaces automatically during the lifetime of your program . All you need to know is which namespace you're using when performing a variable read or write.
+
+[🐍 Learn more](https://docs.python.org/3/tutorial/classes.html#python-scopes-and-namespaces)
+
+---
+The interpreter resolves names according to this priority:
+1. The innermost scope: which is searched first, contains the local names
+2. Inner scopes: from enclosing function calls
+3. Module scope, if any, or `__main__`
+4. Last scope: Built-in
+
+the next-to-last scope contains the current module’s global names
+
+the outermost scope (searched last) is the namespace containing built-in names
+
+---
+**Case 1**: Built-in namespace
+
+Namespace is:
+* created when the interpreter starts
+* destroyed when the interpreter closes
+
+```bash
+python -c "print('Hello')"
+```
+In this namespace, `print()` is mapped to `builtins.print()`
+
+```python
+def print(thing): 
+    raise NotImplementedError("I do not want to print")
+print("Hello")            # Will raise exception
+builtins.print("Hello")   # Will print because builtins still resolves to builtins
+```
+
+
+---
+**Case 2**: Local namespace to a function
+
+Namespace is:
+* created when entering the function call (⚠️ not definition)
+* destroyed when leaving the function call
+
+```python
+variable = 1                                                                                                
+
+def print_var():
+    print(variable)
+
+variable = 2
+
+print_var()       # Will print ??? because ??? 
+```
+
+---
+Example from the Python doc:
+![bg right:40% w:510px](img/scopes.svg)
+
+
+
+```python
+def middle_scope():
+    def do_local():
+        spam = "local"
+
+    def do_nonlocal():
+        nonlocal spam
+        spam = "nonlocal"
+
+    def do_global():
+        global spam
+        spam = "global"
+
+    spam = "middle"
+    do_local()
+    print("After local assignment:", spam)     # middle
+    do_nonlocal()
+    print("After nonlocal assignment:", spam)  # nonlocal
+    do_global()
+    print("After global assignment:", spam)    # nonlocal
+
+scope_test()
+print("In global scope:", spam)                # global
+```
+
+---
+## Mutable default parameters
+```python
+def add_fruit(fruit, recipient=[]):
+    recipient.append(fruit)
+    return recipient
+
+fridge = add_fruit("apple")
+print("Content of the fridge:", fridge)   # Will print ["apple"]
+
+trash = add_fruit("apple")
+print("Content of the trash:", trash)     # Guess what's in the trash??
+```
+
+---
+
+```python
+def add_fruit(fruit, recipient=[]):
+    recipient.append(fruit)
+    return recipient
+
+fridge = add_fruit("apple")
+print("Content of the fridge:", fridge)   # Will print ["apple"]
+
+trash = add_fruit("apple")
+print("Content of the trash:", trash)     # Will print ["apple", "apple"]
+```
+
+Default parameters are evaluated **during function definition**!
+
+Thus, if the default parameter is mutable (*list, dict, object...*), later on it will refer to the same instance every time the default parameter is invoked.
+
+**Good practice**: use only immuable types for default parameters, e.g. `recipient=()`
+
+<!--#####################################################################################################-->
+---
+#  DAY 2
+# CODE WITH QUALITY
+
+---
+## Type annotations
+
+```python
+def sum(a, b):
+    return a+b
+```
+The same function, with annotations:
+```python
+def sum(a: int, b: int) -> int:
+    return a+b
+
+my_value : int = sum(5, 5)
+
+s: bool = sum(5.0, 5)
+# Linter warning: Expected "int", got "float" instead
+# Linter warning: Expected "bool", got "int" instead
+sum(5, 5).capitalize()
+# Linter warning:  Unresolved attribute reference "capitalize" for "int"
+```
+Mistakes will NOT raise exception or prevent the interpreter from running the code in any way, only an (optional) linter would notice.
+
+---
+To specify more complex annotations, import them from `typing`:
+* `Any`: every type
+* `Union[X, Y, Z]`: one among several types (e.g. `int`, `float` or `str`)
+* `Tuple[X, Y, Z]`: tuple (sequence) of several types (e.g. `bool`, `str`)
+* `Callable[[X], Y]`: function that takes X in input and returns Y
+* `TypeVar`: a name of variable type
+
+```python
+from typing import Union
+def sum(a: Union[int, float], b: Union[int, float]) -> Union[int, float]:
+    return a+b
+
+sum(5.0, 5)
+# Now this call is valid for the linter
+```
+
+[🐍 Learn more](https://docs.python.org/3/library/typing.html)
+
+---
+## Virtual environments (venv)
+
+**Context:** All installed packages go into the `site-packages` directory of the interpreter.
+
+> The venv module provides support for creating lightweight “virtual environments” with their own site directories, optionally isolated from system site directories.
+
+> Each virtual environment has its own Python binary (which matches the version of the binary that was used to create this environment) and can have its own independent set of installed Python packages in its site directories.
+
+[🐍 Learn more](https://docs.python.org/3/library/venv.html)
+
+---
+![bg 70%](img/venv-0.svg)
+
+---
+![bg 70%](img/venv-1.svg)
+
+---
+![bg 70%](img/venv-2.svg)
+
+---
+![bg 70%](img/venv-3.svg)
+
+---
+![bg 90%](img/venv-4.svg)
+
+---
+For each new project you create/clone, create it its own dedicated virtual environment:
+```bash
+/usr/bin/python3.7 -m venv dev/Training2021/venv
+```
+
+Then, every time you work on this project, activate its environment first:
+```bash
+source Training2021/venv/bin/activate
+```
+
+Your terminal must prefix the prompt with the name of the env:
+```bash
+(venv) yoan@humancoders ~/dev/Training2021 $
+```
+And quit the venv every time you stop working on the project:
+```bash
+(venv) yoan@humancoders ~/dev/Training2021 $ deactivate
+yoan@humancoders ~/dev/Training2021 $ 
+```
+
+---
+In an activated venv, every call to the interpreter and every package installation will target the isolated virtual environment:
+
+```bash
+(venv) yoan@humancoders ~/dev/Training2021 $ python
+```
+will run the Python version targeted by the venv
+
+```bash
+(venv) yoan@humancoders ~/dev/Training2021 $ pip install numpy
+```
+will install the latest numpy version into the venv
+
+```bash
+(venv) yoan@humancoders ~/dev/Training2021 $ pip install numpy==1.21.0
+```
+will install the specific numpy version into the venv
+
+---
+In practice, your IDE can handle venv creation, activation and deactivation automatically for you when you create or open/close a project.
+
+![bg right:50% 85%](img/venv-pycharm.png)
+
+---
+## Quality control tools
+### [PEP 8](https://www.python.org/dev/peps/pep-0008/), the style guide for Python code
+
+> This document gives coding conventions for the Python code
+
+PEP8 codes start with E (Errors) or W (Warnings)
+
+|   Types   |     Category     ||   Types   |     Category     |
+|:---------:|:----------------:|-|:---------:|:----------------:|
+| 100       | Indentation              || 500       | Line lengths             |   
+| 200       | Whitespaces              || 600       | Deprecation              |   
+| 300       | Blank lines              || 700       | Statements               |   
+| 400       | imports                  || 900       | Syntax                   |
+
+---
+Linters can be customized in configuration files in:
+* `~/.config/pep8` if it's user-wide
+* `<PROJECT_ROOT>/setup.cfg` or `<PROJECT_ROOT>/tox.ini` if it's project-wide
+
+Example:
+```conf
+[flake8]
+ignore = E501,E731,E741
+max-line-length = 160
+exclude = build,dist,*.egg-info,doc/*,tests/*
+```
+
+---
+### [Pyflakes](pyflakes), the semantic analyser
+Pyflakes only focuses on the semantics (what your code stands for) but is not concerned about style.
+
+```python
+import logging
+variable = inexisting_variable
+```
+
+
+```
+./main.py:2: 'logging' imported but unused
+./main.py:3: undefined name 'inexisting_variable'
+```
+
+---
+### Flake8 (also Pylint, Pychecker)
+Flake8 = PEP 8 + Pyflakes (syntax + semantic analysis)
+
+```python
+import numpy
+
+def f():
+    print("Hello world!")
+```
+
+```
+main.py:1:1: F401 'numpy' imported but unused              # Semantic
+main.py:3:1: E302 expected 2 blank lines, found 1          # Style
+```
+
+
+---
+## Name a function so that its behavior is explicit
+
+Name variables and objects so that their behavior is explicit
+
+* What is the difference between `sort()` and `sorted()`?
+* What is the difference between `revert()` and `reverted()`?
+* What is the difference between `users` and `user`?
+
+---
+**Good practice**: make it explicit if a function has a side effect or returns a copy
+```python
+"""
+Normalize a 3D vector [x, y, z]
+:param vector: the iterable to be normlized by side effect 
+"""
+def normalize(vector):
+    vector_sum = sum(vector)
+    for i in range(len(vector)):
+        vector[i] /= vector_sum
+"""
+Get a normalized copy of a 3D vector [x, y, z]
+:param vector: the iterable to be normlized
+:return: a normalized copy of param vector
+"""
+def normalized(vector):
+    vector_sum = sum(vector)
+    new_vector = []
+    for value in vector:
+        new_vector.append(value/vector_sum)
+    return new_vector 
+```
+
+---
+# PACKAGE AND DISTRIBUTE
+## Reminders about Modules and packages
+
+A **module** is a Python file, e.g. `mymodule.py`. The module name is `mymodule`
+
+Either the module is made to be:
+* imported: it is a **package**: `import mymodule`
+* executed: it is a **script**: `python mymodule.py`
+
+A package is a folder containing modules.
+Modules can also be bindings, e.g. Python bindings to a C++ library.
+
+---
+### Shebangs of Python scripts
+
+On UNIX OSes (UNIX, Linux, MacOS), a `shebang` is a header of a Python script that tells the system shell which interpreter is to be called to execute this Python module.
+
+Usually, we invoke the `env` command to tell which is the interpreter for `python3` with such header:
+
+```python
+#!/usr/bin/env python3
+```
+
+Direct call to the interpreter is possible but NOT recommanded, since it will force the interpreter bby ignoring any virtual environment you could be in:
+```python
+#!/usr/local/bin/python3
+```
+
+The Windows shell ignore shebangs.
+
+---
+### Structure of Python packages
+* Packages and sub-packages allow to bring a hierarchy to your code
+* The package's hierarchy is inherited from the files-and-folders hierarchy 
+* Modules hold resources that can be imported later on, e.g.:
+  * Constants
+  * Classes
+  * Functions...
+![bg right:40% 70%](img/package-init.png)
+
+---
+* All packages and sub-packages must contain an `__init__.py` file each
+* In general `__init__.py` is empty but may contain code to be executed at import time
+
+![bg right:30% 90%](img/package-with-init.png)
+
+Then the package or its sub-packages can be imported:
+```python
+import my_math.trigo
+my_math.trigo.sin.sinus(0)
+```
+Specific resources can also be imported:
+```python
+from my_math.matrix.complex.arithmetic import product
+```
+---
+Optionally, a (sub-)package can by "executed" from command-line with the `-m` option:
+```bash
+python -m my_math.float
+```
+only if a module `__main__.py` has been placed a the root of the sub-package.
+
+Then, executing the sub-package consists into running code in `__main__.py`
+
+![bg right:30% 90%](img/package-with-init-main.png)
+
+---
+
+### Relative imports (Imports internal to a package)
+Relative import from the same folder:
+```python
+from .my_math import my_sqrt
+value = my_sqrt(25)
+```
+
+Relative import from a parent folder:
+```python
+from ..my_math import my_sqrt
+value = sqrt(25)
+```
+
+* Do not put any slash such as ~~`import ../my_math`~~
+* Only current and parent folders can be retrieved with a relative import
+
+---
+
+### The `sys.path` variable
+
+When importing a package with the `import` statement, the interpreter seeks for it in `sys.path`. 
+
+This is a regular Python list and it can be modified at runtime (with `append`) to add paths to your libraries.
+
+![bg right:60% 95%](img/sys.path.png)
+
+---
+## The Python Package Index (PyPI)
+**PyPI** is a global server that allows to find, install and share Python packages.
+
+It is operated by the **Python Packaging Authority (PyPA)**: a working group from the **Python Software Foundation (PSF)**.
+
+The command-line tool **Package Installer for Python (pip)** can be used to install packages by their name, e.g. `bottle`. It can install from various sources (Link to code repos, ZIP file, local server...) and automatically seeks on PyPI if no source is given:
+
+```bash
+pip install git+https://github.com/bottlepy/bottle
+pip install https://github.com/bottlepy/bottle/archive/refs/heads/master.zip
+pip install path/to/my/python/package/folder/
+pip install path/to/my/python/package/zip/file.zip
+pip install numpy    # Will seek on PyPI
+```
+
+---
+
+Pip installs packages in the current Python installation's `site-packages` directory which is, depending the situation:
+1. Inside your virtual environment if some venv is activated
+2. Inside your local hoem directory `/home/<user>/.local/lib` if you cannot write to system directories (i.e. you are not root)
+3. Inside system's directories such as `/usr/lib/python3.8/` if you are root (🚨 This is dangerous and not advisable in general)
 
 ---
 ## PyPI Security warning 🚨
@@ -1260,193 +1440,35 @@ jobs:
 
 <!--#####################################################################################################-->
 ---
-# DAY 2
-# CODE WITH QUALITY
-
----
-## Type annotations
-
-```python
-def sum(a, b):
-    return a+b
-```
-The same function, with annotations:
-```python
-def sum(a: int, b: int) -> int:
-    return a+b
-
-my_value : int = sum(5, 5)
-
-s: bool = sum(5.0, 5)
-# Linter warning: Expected "int", got "float" instead
-# Linter warning: Expected "bool", got "int" instead
-sum(5, 5).capitalize()
-# Linter warning:  Unresolved attribute reference "capitalize" for "int"
-```
-Mistakes will NOT raise exception or prevent the interpreter from running the code in any way, only an (optional) linter would notice.
-
----
-To specify more complex annotations, import them from `typing`:
-* `Any`: every type
-* `Union[X, Y, Z]`: one among several types (e.g. `int`, `float` or `str`)
-* `Tuple[X, Y, Z]`: tuple (sequence) of several types (e.g. `bool`, `str`)
-* `Callable[[X], Y]`: function that takes X in input and returns Y
-* `TypeVar`: a name of variable type
-
-```python
-from typing import Union
-def sum(a: Union[int, float], b: Union[int, float]) -> Union[int, float]:
-    return a+b
-
-sum(5.0, 5)
-# Now this call is valid for the linter
-```
-
-[🐍 Learn more](https://docs.python.org/3/library/typing.html)
-
----
-## Virtual environments (venv)
-
-**Context:** All installed packages go into the `site-packages` directory of the interpreter.
-
-> The venv module provides support for creating lightweight “virtual environments” with their own site directories, optionally isolated from system site directories.
-
-> Each virtual environment has its own Python binary (which matches the version of the binary that was used to create this environment) and can have its own independent set of installed Python packages in its site directories.
-
-[🐍 Learn more](https://docs.python.org/3/library/venv.html)
-
-### Example
----
-![bg 70%](img/venv-0.svg)
-
----
-![bg 70%](img/venv-1.svg)
-
----
-![bg 70%](img/venv-2.svg)
-
----
-![bg 70%](img/venv-3.svg)
-
----
-![bg 90%](img/venv-4.svg)
-
----
-For each new project you create/clone, create it its own dedicated virtual environment:
-```bash
-/usr/bin/python3.7 -m venv dev/Training2021/venv
-```
-
-Then, every time you work on this project, activate its environment first:
-```bash
-source Training2021/venv/bin/activate
-```
-
-Your terminal must prefix the prompt with the name of the env:
-```bash
-(venv) yoan@humancoders ~/dev/Training2021 $
-```
-And quit the venv every time you stop working on the project:
-```bash
-(venv) yoan@humancoders ~/dev/Training2021 $ deactivate
-yoan@humancoders ~/dev/Training2021 $ 
-```
-
----
-In an activated venv, every call to the interpreter and every package installation will target the isolated virtual environment:
-
-```bash
-(venv) yoan@humancoders ~/dev/Training2021 $ python
-```
-will run the Python version targeted by the venv
-
-```bash
-(venv) yoan@humancoders ~/dev/Training2021 $ pip install numpy
-```
-will install the latest numpy version into the venv
-
-```bash
-(venv) yoan@humancoders ~/dev/Training2021 $ pip install numpy==1.21.0
-```
-will install the specific numpy version into the venv
-
----
-In practice, your IDE can handle venv creation, activation and deactivation automatically for you when you create or open/close a project.
-
-![bg right:50% 85%](img/venv-pycharm.png)
-
----
-## Quality control tools
-### [PEP 8](https://www.python.org/dev/peps/pep-0008/), the style guide for Python code
-
-> This document gives coding conventions for the Python code
-
-PEP8 codes start with E (Errors) or W (Warnings)
-
-|   Types   |     Category     ||   Types   |     Category     |
-|:---------:|:----------------:|-|:---------:|:----------------:|
-| 100       | Indentation              || 500       | Line lengths             |   
-| 200       | Whitespaces              || 600       | Deprecation              |   
-| 300       | Blank lines              || 700       | Statements               |   
-| 400       | imports                  || 900       | Syntax                   |
-
----
-Linters can be customized in configuration files in:
-* `~/.config/pep8` if it's user-wide
-* `<PROJECT_ROOT>/setup.cfg` or `<PROJECT_ROOT>/tox.ini` if it's project-wide
-
-Example:
-```conf
-[flake8]
-ignore = E501,E731,E741
-max-line-length = 160
-exclude = build,dist,*.egg-info,doc/*,tests/*
-```
-
----
-### [Pyflakes](pyflakes), the semantic analyser
-Pyflakes only focuses on the semantics (what your code stands for) but is not concerned about style.
-
-```python
-import logging
-variable = inexisting_variable
-```
-
-
-```
-./main.py:2: 'logging' imported but unused
-./main.py:3: undefined name 'inexisting_variable'
-```
-
----
-### Flake8 (also Pylint, Pychecker)
-Flake8 = PEP 8 + Pyflakes (syntax + semantic analysis)
-
-```python
-import numpy
-
-def f():
-    print("Hello world!")
-```
-
-```
-main.py:1:1: F401 'numpy' imported but unused              # Semantic
-main.py:3:1: E302 expected 2 blank lines, found 1          # Style
-```
-
-
-<!--#####################################################################################################-->
-
-<!--#####################################################################################################-->
----
-# DAY 3
+#  DAY 3
 # PERFORMANCE OPTIMIZATION
 <!--#####################################################################################################-->
 
----
-# Asynchronous code (Python coroutines)
+## Refactor your code by keeping complexity in mind
 
-## Definition
+If you wish to optimize your program in time and/or space, check time or space the complexity of any:
+* **data structure** that you are using
+* **function** that you are using
+* **algorithm** that you are using
+
+The final complexity of your program depends of all of these.
+
+[🐍 Learn more about time complexity of Python structures](https://wiki.python.org/moin/TimeComplexity)
+[🐍 Learn more about complexity of sorting algorithms](https://en.wikipedia.org/wiki/Sorting_algorithm#Comparison_of_algorithms)
+
+---
+TODO EXTEND
+ℹ️ Complexity is not the only metric to look at when you optimize your program. You may also want to:
+* Increase code coverage: how much of your code that is actually run [🐍 Learn more](https://wiki.python.org/moin/CodeCoverage)
+* Identify slow/heavy operations with a profiler [🐍 Learn more](https://docs.python.org/3/library/profile.html)
+* Use state-of-the-art algorithms instead of custom ones e.g. scipy, numpy...
+* Refactor your code: prevent multiple computations of the same value, ... 
+* Optimize the infrastructure: use caching in the database, web server, change hard drive for a SSD...
+* Use another Python env in production: Pypy and Extensions compiled with Cython (.pyx) are powerful alternatives (most popular Python interpreter is CPython)
+---
+
+## Asynchronous code (Python coroutines)
+
 A **coroutine** is an asynchronous function. To be executed it must be awaited or run in an event loop.
 
 A **task** is an execution scheduling of coroutines. It allows coroutines to be excuted simultaneously.
@@ -1491,14 +1513,17 @@ The event loop is declared in the main thread (outermost scope).
 As a consequence, `await` and `create_task` are forbidden outside an async function
 
 ---
-# Multithreading and multiprocessing
+## Multithreading and multiprocessing
+### Execute parrallel code with Python
+**Definitions**:
+
 **Multithreading**: Split work into several threads within the same process and CPU.
 **Multiprocessing**: Split work into several processes dispatched to several CPUs.
 
 Multithreading is much less efficient in most cases, but Python makes it even worse because of the GIL.
 
 ---
-## The reference counter
+### The reference counter
 The interpreter holds a counter counting how many references point to a literal.
 
 ```ipython
@@ -1520,7 +1545,7 @@ Out[6]: 2
 If the counter reaches 0, the literal is destroyed. This is how Python frees memory.
 
 ---
-## The Python Global Interpreter Lock (GIL)
+### The Python Global Interpreter Lock (GIL)
 The GIL is a mutex that protects access to the reference counters of Python objects.
 
 However it prevents multiple threads from executing Python bytecodes at once. It offers poor performance for multi-threaded programs, if they are CPU-bound.
@@ -1563,8 +1588,7 @@ The bad news is that package managers are not compatible with each other.
 
 <!--#####################################################################################################-->
 ---
-# ANNEXES
-# EXTRA-CURRICULAR TOPICS
+# ANNEXES / EXTRA-CURRICULAR TOPICS
 <!--#####################################################################################################-->
 
 ---
