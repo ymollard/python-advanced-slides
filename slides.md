@@ -100,140 +100,121 @@ value = sqrt(25)
 * Do not put any slash such as ~~`import ../my_math`~~
 * Only current and parent folders can be retrieved with a relative import
 
+---
+
+### The `sys.path` variable
+
+When importing a package with the `import` statement, the interpreter seeks for it in `sys.path`. 
+
+This is a regular Python list and it can be modified at runtime (with `append`) to add paths to your libraries.
+
+![bg right:60% 95%](img/sys.path.png)
 
 ---
-## Package distribution
-`setuptools`, and particulary file `setup.py` at the parent root of your package, simplifies the package distribution. The setup file holds:
-* The list of modules and data files embedded in the package (*replaces the `MANIFEST` file*)
-* Package version number
-* The list of dependencies on other packages from PyPI, git repos, ...
-* The entry points (executables, commands, ...)
-* ... [🐍 Learn more about setuptools](https://setuptools.readthedocs.io/en/latest/setuptools.html)
+## Perfomance
+In computer science, optimization consists into improving:
+* **Time complexity**: the quantity of CPU/GPU cycles used by an operation
+* **Space complexity**: the quantity of memory used by an operation 
 
-Note: `setuptools` replaces the legacy `distutils`
+Optimizing **time** often requires **more space**.
+Optimizing **space** often requires **more time**. 
 
-![bg right:30% 90%](img/package-with-init-setup.png)
+The less complex an operation is in terms of time / space, the better it is optimized. 
+
+According to the usecase, we may opt for a best optimization in space or in time.
+
+An optimized program is **faster**, **greener** and **more economic**, since both time (CPUs and GPUs) and space (Hard drives and networks) consume energy.
 
 ---
-Most basic setup file to distribute a single module:
+### Introduction to the Big-O notation
+`Big-O` is a notation that helps measure complexity (in time or space) of programs.
 
+It describes how greedy an operation is according the size of its input, in terms of time (CPU cycles) or space (Memory space). It is thus a function of the input size (`n`).
+
+Examples:
+* `O(n)` in time = for an input of size `n`, the operation requires `n` CPU cycles 
+* `O(n*n)` in time = for an input of size `n`, the oepration requires `n*n` CPU cycles
+
+ℹ️ Here, *CPU cycle* and `n` do not refer to a precise quantity (e.g. bytes, assembly instructions, time in seconds...), only the order of magnitude is important.
+
+ℹ️ Big-O usually measures complexity in **the worst case scenario**.
+
+
+---
+#### Table of common `big-O` complexities
+From best to worst performance:
+
+|         Big-O complexity                |  Complexity Name   |  Example of time complexity with a list |
+|:------------------------------------:|:------------------------:|:------------------------:|
+| O(1)                        |   Constant  | Read value at index `[i]`
+| O(n)               | Linear                         | A single `for i in range(n)` loop |
+| O(n.log(n)))        | Logarithmic | Sort list (with the quicksort method)
+| O(2*n), O(3*n) ... | Linear                         | Several consecutive `for` loops |
+| O(n²), O(n³) ...                    | Polynomial       | `for` loops nested inside `for` loops |
+| O(2ⁿ), O(10ⁿ) ...          | Exponential | Single `for i in range(k**n)` loop
+| O(2^(2ⁿ))          | Superexponential  | Nested `for i in range(k**n)` loops
+
+---
+#### Documentation about complexities
+If you wish to optimize your program in time and/or space, check time or space the complexity of any:
+* **data structure** that you are using
+* **function** that you are using
+* **algorithm** that you are using
+
+The final complexity of your program depends of all of these.
+
+---
+
+![bg 90%](img/sorting-complexity-wikipedia.png)
+
+
+![bg 100%](img/list-time-complexity.png)
+
+---
+[🐍 Learn more about time complexity of Python structures](https://wiki.python.org/moin/TimeComplexity)
+
+
+[🐍 Learn more about complexity of sorting alogirthms](https://en.wikipedia.org/wiki/Sorting_algorithm#Comparison_of_algorithms)
+
+
+ℹ️ Complexity is not the only metric to look at when you optimize your program. You may also want to:
+* Increase code coverage: how much of your code that is actually run [🐍 Learn more](https://wiki.python.org/moin/CodeCoverage)
+* Identify slow/heavy operations with a profiler [🐍 Learn more](https://docs.python.org/3/library/profile.html)
+* Use state-of-the-art algorithms instead of custom ones e.g. scipy, numpy...
+* Refactor your code: prevent multiple computations of the same value, ... 
+* Optimize the infrastructure: use caching in the database, web server, change hard drive for a SSD...
+* Use another Python env in production: Pypy and Extensions compiled with Cython (.pyx) are powerful alternatives (most popular Python interpreter is CPython)
+---
+
+#### Complexity in practice: Measure CPU time of instructions
+
+`timeit` will run your instruction many times and give you average execution duration and statistics.
+
+From an interactive interpreter with a *line-magic*:
+```ipython
+In [1]: import math, numpy                                                                                           
+
+In [2]: %timeit math.sqrt(25)                                                                                        
+# 63.7 ns ± 0.445 ns per loop (mean ± std. dev. of 7 runs, 10000000 loops each)
+
+In [3]: %timeit numpy.sqrt(25)                                                                                       
+# 788 ns ± 3.3 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+
+```
+For magics dealing with cells instead of a single line, use `%%timeit`
+
+---
+From a Python module:
 ```python
-# File setup.py within package "my_math"
+from timeit import repeat
+import math, numpy
+print(timeit("math.sqrt(25)", globals=globals()))
+print(timeit("numpy.sqrt(25)", globals=globals()))
 
-from setuptools import setup
-
-setup(name='foo',
-      version='1.0',
-      py_modules=['foo'],
-      )
 ```
+🚨 timeit is a benchmarking tool, its results depend of your current CPU load
 
-This setup file distributes a single module `foo.py` under name `foo`.
-
-Now let's see a more complete setup file distributing a package:
-
-
----
-```python
-from setuptools import setup, find_packages
-
-setup(name='my_math',
-      version='2.0',
-      description='Custom math tools and functions',
-      license='MIT',
-      author='Yoan Mollard',
-      author_email='yoan@aubrune.eu',
-      url='https://github.com/ymollard/my_math',
-      packages=find_packages(),                 # Embedded (sub-)packages
-      install_requires=['numpy', 'matplotlib']  # Dependencies to install
-     )
-```
-
-We rely on `find_packages()` to search for all valid (sub)-packages:
-`['my_math', 'my_math.trigo', 'my_math.float', 'my_math.matrix', 'my_math.matrix.complex', 'my_math.matrix.real']`
-
-There is 1 sub-package per `__init__.py` file.
-
----
-The setup file then offers distribution tools:
-* Install the package in the current environement:
-```bash
-pip install .
-python setup.py install   # equivalent but deprecated because pip is cool 😎
-```
-
-* Build a source distribution (sdist):
-```bash
-python setup.py sdist
-```
-A **source distribution** is just a copy of all source files from your package.
-
-* Build a binary distribution (`bdist_*`: `bdist_wheel`, `bdist_egg`, `bdist_rpm`...):
-```bash
-pip install wheel
-python setup.py bdist_wheel
-```
-
----
-
-### Remarks about binary distribution bdist_*
-* Binary format at platform-dependant (OS, arch, Python implementation and ABI)
-* `.egg` files are just zip files containing sdist or bdist, you can unzip them
-* Optional `setup.cfg` customizes the setup behaviour (e.g. ignore some flake8...)
-* Several binary formats exist: wheel, egg... As of 2021, `wheel` format is preferred
-* wheel files are named this way: `my_math-3.0.4-py3-none-any.whl` where:
-  * `my_math` is the package name
-  * `3.0.4` is the version
-  * `py3` is the Python implementation tag
-  * `none` is the ABI tag ([the C API for Python](https://docs.python.org/3/c-api/stable.html))
-  * `any` is the platform (x86_64, arm, macos...)
-
-
- [🐍 Learn more about package distribution with setuptools](https://docs.python.org/fr/3/distributing/index.html)
-
----
-## Uploading your package distribution on PyPI
-Once sdist and/or bdist are available, several pipelines exist to share your project.
-
-As of 2021, uploading to PyPI with `twine` is the preferred option:
-1. Create an account on [PyPI](https://pypi.org/account/register/) or in the sandbox [TestPyPI](https://test.pypi.org/account/register/) if you're just testing
-2. ` pip install twine`
-3. `twine upload dist/* --repository testpypi`
-   * Drop the `--repository` argument if you want to upload to the regular pypi
-   * `--repository` can also target your company's own pypi server [Learn more](https://packaging.python.org/guides/hosting-your-own-index/)
-
----
-### Python package deployment with Continuous Integration (Github actions)
-```yaml
-name: my-package-name
-on: [push]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: |
-          pip install build websocket
-      - name: Test package with unittest (flake8 linter also goes here)
-        working-directory: tests
-        run: python -m unittest discover
-      - name: Build package with Python 3.8
-        if: ${{ github.event_name == 'push' }}
-      - name: Publish package relying on pypa/gh-action-pypi-publish with Python 3.8
-        uses: pypa/gh-action-pypi-publish
-        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags') }}
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
-```
+[🐍 Learn more](https://docs.python.org/3/library/timeit.html)
 
 ---
 ## Python typing
@@ -247,9 +228,68 @@ b = True                                        # bool
 c = 1 + 1j                                      # complex
 ```
 
+### Python collections (data containers)
+Collections allow to store data in structures.
+General purpose built-in containers are `dict`, `list`, `set`, and `tuple`.
+Other containers exist in module `collections`.
+
 ---
-### Sequences
+#### Mutable collections
+##### The list
+
+```python
+l = ["The", "list", "type", "is", "central", "in", "Python"]
+l = list(("Conversion", "tuple", "to", "list"))
+l = list("Hello")
+l = "".join(["H", "e", "l", "l", "o"])
+l.append("element") # Append at the end (right side)
+l.pop()             # Remove from the end. pop(0) removes from the start
+```
+
+##### The dictionary (no guarantee about order)
+```python
+d = {}
+dict(zip(("article", "price", "stock"), ("Logitech M180", 99.90, 5)))
+d.update({"foo": "bar"})
+d.keys()     # dict_keys
+d.values()   # dict_values
+```
+
+---
+##### The ordered dictionary
+
+```python
+from collections import OrderedDict
+scores = OrderedDict()
+
+scores["Anna"] = 900                                                      
+scores["Mathew"] = 500                                                    
+scores["Alfredo"] = 450                                                  
+
+print(scores)                                                            
+# OrderedDict([('Anna', 900), ('Mathew', 500), ('Alfredo', 450)])
+```
+Hence, an `OrderDict` has additional methods unavailable in regular dicts:
+```python
+# Say that Anna has now a score of 300, the OrderedDict must be reordered:
+scores.move_to_end("Anna", last=True)
+```
+
+---
+##### The deque (queue)
+A deque is great to append or remove elements at both extremities:  
+```python
+from collections import deque
+queue = deque(["Kylie", "Albert", "Josh"])
+queue.appendleft("Anna")   # list.insert(0, "Anna") would be slow here: O(n)
+queue.popleft()    # list.pop(0) would be slow here: O(n)
+```
+Deques have O(1) performance for appendleft() and popleft() while lists have O(n) performance for insert(0, value) and pop(0).
+
+---
 #### Immutable sequences
+**Definition:** An immutable data structure can be assigned to values only once at creation, then it cannot mutate (cannot change).
+##### The string
 ```python
 s = "A string is immutable"
 t = ("A", "tuple", "is", "immutable")
@@ -264,40 +304,48 @@ t = "this" + ("This", "works!")[1:]
 ```
 
 ---
-#### Mutable sequences
-##### The list
+##### The named tuple
+Compared to a tuple, the named tuple can be accessed by keys.
+Compared to a dict, the named tuple is immutable.
 
 ```python
-l = ["The", "list", "type", "is", "central", "in", "Python"]
-l = list(("Conversion", "tuple", "to", "list"))
-l = list("Hello")
-l = "".join(["H", "e", "l", "l", "o"])
+from collections import namedtuple
+
+# We declare a new type
+HighScores = namedtuple("HighScores", ("name", "gender", "score"))
+tiffany = HighScores(name="Tiffany", gender="f", score=900)               
+
+tiffany.score
+# Will return 900
+
+tiffany.name
+# Will return 'Tiffany'
 ```
+---
+
+**Exercise**: With `timeit`, compare performance of:
+1. Multiple declarations of:
+   * instances of type `HighScores` (namedtuple)
+   * instances of type `dict` (with equivalent data fields)
+   * instances of type `tuple` (with equivalent data sequence)
+2. Multiple access to the score of:
+   * the `HighScores` (namedtuple)
+   * the `dict` 
+   * the `tuple`
+
+**Conclusion:** The Python dict inherits from benefits from the tuple (for fast creation and access) and named tuples (for readibilitythanks to key-access), and it is mutable!
 
 ---
-##### The dictionary
-```python
-d = {}
-dict(zip(("article", "price", "stock"), ("Logitech M180", 99.90, 5)))
-d.update({"foo": "bar"})
-d.keys()     # dict_keys
-d.values()   # dict_values
-```
+### Subclassing existing types
 
-Regular dictionaries 
+If you require a data structure than behaves like an existing one (`dict`, `list`, `strings`...) you may implement you own type by inheriting from existing classes.
 
----
-##### The ordered dictionary
+In module `collections`, three types are made specifically for this purpose: `UserDict`, `UserString` and `UserList`.
 
 ```python
-d = {}
-
-
-for k, v in d.items():
-    print(k, v)   # Will print 
-
-from collections import OrderedDict
-
+class UpperCaseString(UserString):
+    def __init(args):
+        super(UpperCaseString, self).__init__. TODOOOOOOO
 ```
 
 ---
@@ -310,6 +358,65 @@ Either the module is made to be:
 
 A package is a folder containing modules.
 Modules can also be bindings, e.g. Python bindings to a C++ library.
+
+---
+## Shebangs
+
+On UNIX OSes (Linuc, MacOS), a `shebang` is a header of a Python file that tells the system shell which interpreter is to be called to execute this Python module.
+
+Usually, we invoke the `env` command to tell which is the interpreter for `python3` with such header:
+
+```python
+#!/usr/bin/env python3
+```
+
+Direct call to the interpreter is possible but NOT recommanded, since it will force the interpreter bby ignoring any virtual environment you could be in:
+```python
+#!/usr/local/bin/python3
+```
+
+The Windows shell ignore shebangs.
+
+---
+## Decorators
+The role of a decorator is to **alter** the behaviour of the function that follows with no need to modify the implementation to the function itself.
+
+It can be seen as adding "options" to a function, in the form of a wrapper code.
+
+```python
+@decorator
+def function():
+    pass
+```
+In that case the call of `function()` will be equivalent to `decorator(function())`.
+
+Decorators can take parameters in input, independant from parameters of the function.
+
+[🐍 Learn more](https://docs.python.org/3/glossary.html#term-decorator)
+
+---
+**Example 1:** `@classmethod` is a decorator that passes the class type `cls` passed as the first paramter to the following function.
+
+```python
+class Animal:
+    @classmethod
+    def define(cls):
+        return "An " + str(cls) + " is an organism in the biological kingdom Animalia."
+```
+
+---
+**Example 2:** Web frameworks usually use decorators to associate a function e.g. `get_bookings_list()` to:
+* an endpoint e.g. `/bookings/list`
+* a HTTP method e.g. `GET`
+
+Here is how Flask works:
+```python
+app = Flask()   # We create a web app
+
+@app.route("/bookings/list", method="GET")
+def get_bookings_list():
+    return "<ul><li>Booking A</li><li>Booking B</li></ul>"
+```
 
 ---
 ## Namespaces
@@ -555,6 +662,64 @@ class Foo:
 ```
 
 ---
+### Class methods
+
+While a regular method `f(self)` is an **instance method** because it applies to instance `self`, **class methods** apply to the class instead. 
+
+Their first parameter is no longer the instance `self` but the class type `cls`:
+
+```python
+class Animal:
+    @classmethod
+    def define(cls):
+        return "An " + str(cls) + " is an organism in the biological kingdom Animalia."
+```
+
+Thus it is possible to call the class method from the class or the instance:
+
+```python
+Animal.define()
+Animal().define()
+```
+
+
+---
+Class methods are sometimes used as factories:
+
+A factory is a function that builds an instance, e.g. `make_dog()`:
+
+```python
+class Animal:
+    def __init__(self, type:str):
+        self.type = type
+    
+    @classmethod
+    def make_dog(cls):
+        return cls("dog")
+```
+
+---
+### Static methods
+Unlike instance methods and class methods, static methods do not receive any implicit parameter such as `self` or `cls`:
+
+
+```python
+class Animal:
+    @staticmethod
+    def define():
+        return "Animals are organisms in the biological kingdom Animalia."
+```
+
+They can be called on a class or an instance:
+
+```python
+Animal.define()
+Animal().define()
+```
+
+💡 Class and static methods are close concepts, but use the first only if you need the class type in parameter.
+
+---
 ### Properties, getters and setters
 
 
@@ -607,7 +772,6 @@ d.month = 99      # Will raise "Month can only be set between 1 and 12"
 ```
 
 ---
-TODO: parler de décorateur d'abord
 
 Usually, properties are used as a decorator instead of a function:
 
@@ -887,7 +1051,7 @@ map(f, l)
 map(squared, [-5, 15, 10, -20])  # Returns [25, 225, 100, 400]
 ```
 
-### Mapping example: Get all hexadecimal notations of a list of integers
+### Mapping example: Get all hexadecimal notations of a list of integers
  
 ```python
 hex(1024)          # Returns the hexadecimal notation of an integer (here "0x400")
@@ -958,10 +1122,187 @@ Moral entity or individual, which company, experience...
 # of opensource users, # of clients, company financial health if not opensource, ...
 ```
 
+
+---
+## Package distribution
+`setuptools`, and particulary file `setup.py` at the parent root of your package, simplifies the package distribution. The setup file holds:
+* The list of modules and data files embedded in the package (*replaces the `MANIFEST` file*)
+* Package version number
+* The list of dependencies on other packages from PyPI, git repos, ...
+* The entry points (executables, commands, ...)
+* ... [🐍 Learn more about setuptools](https://setuptools.readthedocs.io/en/latest/setuptools.html)
+
+Note: `setuptools` replaces the legacy `distutils`
+
+![bg right:30% 90%](img/package-with-init-setup.png)
+
+---
+Most basic setup file to distribute a single module:
+
+```python
+# File setup.py within package "my_math"
+
+from setuptools import setup
+
+setup(name='foo',
+      version='1.0',
+      py_modules=['foo'],
+      )
+```
+
+This setup file distributes a single module `foo.py` under name `foo`.
+
+Now let's see a more complete setup file distributing a package:
+
+
+---
+```python
+from setuptools import setup, find_packages
+
+setup(name='my_math',
+      version='2.0',
+      description='Custom math tools and functions',
+      license='MIT',
+      author='Yoan Mollard',
+      author_email='yoan@aubrune.eu',
+      url='https://github.com/ymollard/my_math',
+      packages=find_packages(),                 # Embedded (sub-)packages
+      install_requires=['numpy', 'matplotlib']  # Dependencies to install
+     )
+```
+
+We rely on `find_packages()` to search for all valid (sub)-packages:
+`['my_math', 'my_math.trigo', 'my_math.float', 'my_math.matrix', 'my_math.matrix.complex', 'my_math.matrix.real']`
+
+There is 1 sub-package per `__init__.py` file.
+
+---
+The setup file then offers distribution tools:
+* Install the package in the current environement:
+```bash
+pip install .
+python setup.py install   # equivalent but deprecated because pip is cool 😎
+```
+
+* Build a source distribution (sdist):
+```bash
+python setup.py sdist
+```
+A **source distribution** is just a copy of all source files from your package.
+
+* Build a binary distribution (`bdist_*`: `bdist_wheel`, `bdist_egg`, `bdist_rpm`...):
+```bash
+pip install wheel
+python setup.py bdist_wheel
+```
+
+---
+
+### Remarks about binary distribution bdist_*
+* Binary format at platform-dependant (OS, arch, Python implementation and ABI)
+* `.egg` files are just zip files containing sdist or bdist, you can unzip them
+* Optional `setup.cfg` customizes the setup behaviour (e.g. ignore some flake8...)
+* Several binary formats exist: wheel, egg... As of 2021, `wheel` format is preferred
+* wheel files are named this way: `my_math-3.0.4-py3-none-any.whl` where:
+  * `my_math` is the package name
+  * `3.0.4` is the version
+  * `py3` is the Python implementation tag
+  * `none` is the ABI tag ([the C API for Python](https://docs.python.org/3/c-api/stable.html))
+  * `any` is the platform (x86_64, arm, macos...)
+
+
+ [🐍 Learn more about package distribution with setuptools](https://docs.python.org/fr/3/distributing/index.html)
+
+---
+## Uploading your package distribution on PyPI
+Once sdist and/or bdist are available, several pipelines exist to share your project.
+
+As of 2021, uploading to PyPI with `twine` is the preferred option:
+1. Create an account on [PyPI](https://pypi.org/account/register/) or in the sandbox [TestPyPI](https://test.pypi.org/account/register/) if you're just testing
+2. ` pip install twine`
+3. `twine upload dist/* --repository testpypi`
+   * Drop the `--repository` argument if you want to upload to the regular pypi
+   * `--repository` can also target your company's own pypi server [Learn more](https://packaging.python.org/guides/hosting-your-own-index/)
+
+---
+### Python package deployment with Continuous Integration (Github actions)
+```yaml
+name: my-package-name
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          pip install build websocket
+      - name: Test package with unittest (flake8 linter also goes here)
+        working-directory: tests
+        run: python -m unittest discover
+      - name: Build package with Python 3.8
+        if: ${{ github.event_name == 'push' }}
+      - name: Publish package relying on pypa/gh-action-pypi-publish with Python 3.8
+        uses: pypa/gh-action-pypi-publish
+        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags') }}
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
+```
+
+
 <!--#####################################################################################################-->
 ---
 # DAY 2
 # CODE WITH QUALITY
+
+---
+## Type annotations
+
+```python
+def sum(a, b):
+    return a+b
+```
+The same function, with annotations:
+```python
+def sum(a: int, b: int) -> int:
+    return a+b
+
+my_value : int = sum(5, 5)
+
+s: bool = sum(5.0, 5)
+# Linter warning: Expected "int", got "float" instead
+# Linter warning: Expected "bool", got "int" instead
+sum(5, 5).capitalize()
+# Linter warning:  Unresolved attribute reference "capitalize" for "int"
+```
+Mistakes will NOT raise exception or prevent the interpreter from running the code in any way, only an (optional) linter would notice.
+
+---
+To specify more complex annotations, import them from `typing`:
+* `Any`: every type
+* `Union[X, Y, Z]`: one among several types (e.g. `int`, `float` or `str`)
+* `Tuple[X, Y, Z]`: tuple (sequence) of several types (e.g. `bool`, `str`)
+* `Callable[[X], Y]`: function that takes X in input and returns Y
+* `TypeVar`: a name of variable type
+
+```python
+from typing import Union
+def sum(a: Union[int, float], b: Union[int, float]) -> Union[int, float]:
+    return a+b
+
+sum(5.0, 5)
+# Now this call is valid for the linter
+```
+
+[🐍 Learn more](https://docs.python.org/3/library/typing.html)
 
 ---
 ## Virtual environments (venv)
@@ -1103,6 +1444,53 @@ main.py:3:1: E302 expected 2 blank lines, found 1          # Style
 <!--#####################################################################################################-->
 
 ---
+# Asynchronous code (Python coroutines)
+
+## Definition
+A **coroutine** is an asynchronous function. To be executed it must be awaited or run in an event loop.
+
+A **task** is an execution scheduling of coroutines. It allows coroutines to be excuted simultaneously.
+
+A **future** is a placeholder in which a future result value will be stored later.
+
+An **awaitable** is anything that can be awaited with `await`, e.g. a coroutine, a task, or a future.
+
+---
+```python
+def say(sentence):
+    print(sentence)
+
+say("Hello world!")
+```
+
+
+Let's add the keyword `async`:
+```python
+async def say(sentence):
+    print(sentence)
+
+say("Hello world!")
+# Returns a <coroutine object say at 0x7fe4f837dbc0>
+```
+---
+
+If we want to execute a coroutine, we can:
+* call it in `asyncio.run()` i.e:
+```python 
+asyncio.run(say("Hello"))  # It also creates an event loop
+```
+* await it with keyword `await` i.e:
+```python 
+await say("Hello")     # It does NOT create an event loop
+```
+* create a task from it i.e:
+ ```python 
+asyncio.create_task(say("Hello"))     # It does NOT create an event loop
+```
+The event loop is declared in the main thread (outermost scope).
+As a consequence, `await` and `create_task` are forbidden outside an async function
+
+---
 # Multithreading and multiprocessing
 **Multithreading**: Split work into several threads within the same process and CPU.
 **Multiprocessing**: Split work into several processes dispatched to several CPUs.
@@ -1171,55 +1559,6 @@ Not happy with PyPI and pip? Here are other ones:
 * `micromamba`: ...
 
 The bad news is that package managers are not compatible with each other.
-
----
-## Measure CPU time of instructions
-
-`timeit` will run your instruction many times and give you average execution duration and statistics.
-
-From an interactive interpreter with a *line-magic*:
-```ipython
-In [1]: import math, numpy                                                                                           
-
-In [2]: %timeit math.sqrt(25)                                                                                        
-# 63.7 ns ± 0.445 ns per loop (mean ± std. dev. of 7 runs, 10000000 loops each)
-
-In [3]: %timeit numpy.sqrt(25)                                                                                       
-# 788 ns ± 3.3 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
-
-```
-For magics dealing with cells instead of a single line, use `%%timeit`
-
----
-From a Python module:
-```python
-from timeit import repeat
-import math, numpy
-print(timeit("math.sqrt(25)", globals=globals()))
-print(timeit("numpy.sqrt(25)", globals=globals()))
-
-```
-🚨 timeit is a benchmarking tool, its results depend of your current CPU load
-
-[🐍 Learn more](https://docs.python.org/3/library/timeit.html)
-
----
-## Reminders about collections (ADT - abstract data types)
-```python
-l = [42, 12, -1, 0, 15] # List: ordered; insertion and deletion anywhere, associative access to indexes
-d = {KKKKKKK} # Dictionary: 
-```
-
----
-## Reminders about time complexity
-
-> Time complexity is the computational complexity that describes the amount of computer time it takes to run an algorithm. 
-
-From [Wikipedia](https://en.wikipedia.org/wiki/Time_complexity)
-
-
-### Time complexity of Python collections
-[🐍 Learn more about time complexity of Python collections](https://wiki.python.org/moin/TimeComplexity)
 
 
 <!--#####################################################################################################-->
