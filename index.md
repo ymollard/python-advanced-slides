@@ -1,3 +1,11 @@
+---
+marp: true
+---
+<!-- 
+class: invert
+paginate: true
+footer: 'Python advanced training – Yoan Mollard – CC-BY-NC-SA'
+-->
 # Advanced Python training 🐍
 
 
