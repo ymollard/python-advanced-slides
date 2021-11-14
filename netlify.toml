@@ -1,0 +1,3 @@
+[build]
+  publish = "dist"
+  command = "npm i @marp-team/marp-cli -g && marp -I . -o dist --html && cp -R images/ dist/"
