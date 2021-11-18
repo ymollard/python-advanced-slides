@@ -48,11 +48,31 @@ f = 1.0                                         # float
 b = True                                        # bool
 c = 1 + 1j                                      # complex
 ```
+---
+🚨 **Beware with floats**
+
+Python's floats are IEE754 floats with mathematically incorrect rounding precision:
+```python
+0.1 + 0.1 + 0.1 - 0.3 == 0    # This is WRONG :(
+print(0.1 + 0.1 + 0.1 - 0.3)  # Returns 5.551115123125783e-17 but not 0
+```
+Also, they are not able to handle large differences of precisions:
+```python
+1e-10 + 1e10 == 1e10          # This is True :(
+```
+When you deal with float number and if precision counts, use the decimal module!
+```python
+from decimal import Decimal
+Decimal("1e-10") + Decimal("1e10") == Decimal("1e10")   # This is True
+```
+Beware not to initialize `Decimal` with float since the precision is already lost: `Decimal(0.1)` will show `Decimal('0.10000000000000000555111512312578270215')`
+
+---
 
 ### Python collections (data containers)
-Collections allow to store data in structures.
-General purpose built-in containers are `dict`, `list`, `set`, and `tuple`.
-Other containers exist in module `collections`.
+Collections allow to store data in structures. General purpose built-in containers are `dict`, `list`, `set`, and `tuple`. Other containers exist in module `collections`.
+
+**Definition**: Some Python collections are said **mutable** because they can be updated and modified at any moment during runtime.
 
 ---
 #### Mutable collections
@@ -109,7 +129,7 @@ Deques have O(1) performance for appendleft() and popleft() while lists have O(n
 
 ---
 #### Immutable sequences
-**Definition:** An immutable data structure can be assigned to values only once at creation, then it cannot mutate (cannot change).
+**Definition:** An **immutable** data structure can be assigned to values only once at creation, then it cannot mutate (cannot change).
 ##### The string
 ```python
 s = "A string is immutable"
@@ -123,6 +143,27 @@ s = "t" + "This works!"[1:]
 # t = ("This", "does", "not", "work")[0] = "this"
 t = "this" + ("This", "works!")[1:]
 ```
+
+---
+##### The tuple
+The tuple is the Python version of an **array**.
+```python
+tuple1 = (42, -15, None, 5.0)
+tuple2 = True, True, 42.5
+```
+It is also used during unpacking:
+```python
+a, b = b, a   # Value swapping
+```
+And this is the type used for returning several values in a function:
+```python
+def compute(a, b):
+    return a+b, a-b
+
+sum, difference = compute(5, 5)
+results = compute(5, 5)
+```
+
 
 ---
 ##### The named tuple
@@ -373,22 +414,6 @@ Animal.define()
 Animal().define()
 ```
 
-
----
-Class methods are sometimes used as factories:
-
-A factory is a function that builds an instance, e.g. `make_dog()`:
-
-```python
-class Animal:
-    def __init__(self, type:str):
-        self.type = type
-    
-    @classmethod
-    def make_dog(cls):
-        return cls("dog")
-```
-
 ---
 ### Static methods
 Unlike instance methods and class methods, static methods do not receive any implicit parameter such as `self` or `cls`:
@@ -515,7 +540,7 @@ But also... (thank you duck-typing):
 ```python
 getattr(appart, "price"): Appartement.__getattr__(self, name)  # Get an attribute 
 setattr(app, "price", 1): Appartement.__setattr__(self, n, v)  # Set an attribute
-detattr(app, "price"): Appartement.__detattr__(self, name)     # Drop an attribute
+delattr(app, "price"): Appartement.__detattr__(self, name)     # Drop an attribute
 ```
 
 ---
@@ -587,8 +612,10 @@ class Tiger(Felidae, Mammalia, Animal):
 ```
 
 ```python
-Tiger().avglifetime()   # Will return 35, left-to-right resolution happens
+Tiger().avglifetime() # Returns 35: left-to-right resolution
 ```
+
+![bg right:30% 70%](./img/multiple-heritage.png)
 
 ---
 
@@ -604,14 +631,98 @@ class Mammalia(Animal):
         return 35
 
 class Felidae(Animal):
-    pass
+    def avglifetime(self):
+        return 30
 
-class Tiger(Felidae, Mammalia, Animal):
+class Tiger(Animal, Mammalia):
     pass
 ```
-There are now multiple paths for resolving `Tiger.avglifetime()` 
+There are now multiple paths for resolving `Tiger.avglifetime()`?
 
-TODOOOO REPRENDRE ICI
+---
+Python 3 uses the C3 linearization algorithm. Resolution order is in a class attribute:
+
+```python
+Tiger.mro()
+# [__main__.Tiger, __main__.Felidae, __main__.Mammalia, __main__.Animal, object]
+```
+In some situations though, the MRO may be inconsistent:
+```python
+class Animal: pass
+
+class Mammalia(Animal): pass
+  
+class Tiger(Animal, Mammalia): pass  # The superclass Animal is before Mammalia
+
+# TypeError: Cannot create a consistent method resolution order (MRO)
+#   for bases Animal, Mammalia
+```
+A consistent MRO requires to validate the following:
+* The first superclasses list must be before in the MRO than the ones it lists later.
+* A class in the MRO must be before its superclasses: `Tiger(Mammalia, Animal)`
+
+---
+## Metaclasses
+While an **instance** of a class is an **object** ; an instance of a **metaclass** is a **class**.
+In other words, a metaclass is made to create new classes (yes, at runtime).
+
+```python
+type(int)    # Returns "type" 
+type(type)   # Returns "type" 🤯
+```
+Just like `int` is a child class of `type`, `type` is a child class `type` (a child of itself).
+
+![bg right:42% 90%](./img/metaclasses.png)
+
+---
+
+The role of a metaclass is to generate a class.
+The type of the metaclass can be a class or a function. `type` is both. First, a function:
+
+```python
+NewClass = type(name, bases, methods)
+# name = name of the new class
+# bases = tuple of base classes, if any
+# methods = dictionary of methods (keys = method names, values = functions)
+```
+
+Then we can define a new class at runtime:
+```python
+def init(self, petname):
+    self.petname = petname
+
+Dog = type("Dog", (), {"__init__": init})
+cooper = Dog("Cooper")
+```
+
+---
+Metaclasses can also be created by inheritance:
+
+```python
+animals = {
+    "Dog": {"bark": lambda self: "WAF!"},
+    "Cat": {"meow": lambda self: "MEOW"}
+}
+
+class ClassGenerator(type):
+    def __new__(cls, name, bases, methods):
+        methods.update(animals[name])
+        return super(ClassGenerator, cls).__new__(cls, name, bases, methods)
+
+
+Dog = ClassGenerator("Dog", (), animals["Dog")
+Cat = ClassGenerator("Cat", (), animals["Cat"])
+
+Dog().bark()    # WAF!
+Cat().meow()    # MEOW!
+```
+
+---
+
+Some usecases of metaclasses:
+* Class generation at runtime (e.g. from classes described in a configuration file)
+* Class checking (e.g. check the existance of compulsory/forbidden methods or attributes)
+* Class mutation (e.g. remove some existing mathods when inheriting from another class)
 
 ---
 ##### Classes hide dictionaries
@@ -1146,6 +1257,54 @@ def normalized(vector):
 ```
 
 ---
+### Python docstrings
+
+[PEP 257](https://www.python.org/dev/peps/pep-0257/) describes how RST documentation strings should be inserted in Python code:
+
+```python
+def is_same_sign_than_or_positive(a: Union[float, int], b: Optional[Union[float, int]] = None) -> bool:
+    """
+    Returns True if :
+       * either both parameters are of the same sign or equal
+       * or if the first parameter is positive, in case no second parameter is provided
+    Returns False otherwise
+
+    :Example:
+
+    is_same_sign_than_or_positive(5, None)
+    is_same_sign_than_or_positive(5.6, -5)
+    is_same_sign_than_or_positive(-1.5)
+
+    ..warning: if parameters are float, strict equality is not guaranteed
+
+    :param a: First element to be compared
+    :type a: float
+    :param b: Optional second element to be compared, or None
+    :type b: float
+    :type b: NoneType
+    :return: True if a and b have the same sign or equal, False otherwise
+    """
+    return a * b >= 0 if b is not None else a > 0
+```
+
+---
+#### What should have a docstring?
+Everything that is exported by a module:
+* modules
+* functions
+* classes
+* public methods (including the __init__ constructor)
+* packages (via their `__init__.py`) 
+
+Let your IDE (e.g. Pycharm) autocomplete the docstring syntax for you!
+
+
+The docstring can be accessed with the magic `__doc__` (used by `help()`):
+```python
+print(is_same_sign_than_or_positive.__doc__)
+```
+
+---
 # PACKAGE AND DISTRIBUTE
 ## Reminders about Modules and packages
 
@@ -1239,6 +1398,20 @@ When importing a package with the `import` statement, the interpreter seeks for 
 This is a regular Python list and it can be modified at runtime (with `append`) to add paths to your libraries.
 
 ![bg right:60% 95%](img/sys.path.png)
+
+---
+
+### Choose the exported resources
+
+By default, Python will export all resources (classes, constants, instances...) if they do not start with a `_`.
+
+An user of your package will only "see" exported names. i.e. both autocompletion and `from yourpackage import *` will only concern exported names.
+
+If it is required to limit the exported names to only some resources you can use the magic `__all__`:
+
+```python
+__all__ = ["Class1", "Class2", "Class3"]
+```
 
 ---
 ## The Python Package Index (PyPI)
@@ -1576,6 +1749,14 @@ When to use these libs?
 * **messaging libs**: build a decentralized application made of multiple technologies and languages (e.g. on top of a cloud infrastructure OVH, Gandi, AWS, ...)
 
 ---
+## Profiling
+
+* `tottime` is the total time spent in the internal body of the function only
+* `cumtime` is the total time spent in the function + all functions that this function called
+
+If a function does call any other, then `tottime = cumtime`. 
+
+---
 ## Alternative package managers
 Not happy with PyPI and pip? Here are other ones:
 * `conda`: Useful if you also deal with non-Python dependencies. Compatible with Ruby, Java, JS, C/ C++, FORTRAN, ...
@@ -1598,12 +1779,21 @@ The bad news is that package managers are not compatible with each other.
 
 `numpy` adds features to Python based on objects and classes that behaves the same way a mathematician would expect.
 
-Example 1: `numpuy.array` is the numpy's version of Python lists: 
+The core feature in `numpy` is the multi-dimensional array type `numpy.array` aka `numpy.ndarray`. Here is a 3-dimensional array:
+
+```python
+pixels = numpy.array([[[255, 255, 255], [255, 0, 0], [0, 0, 255],
+                     [255, 0, 255], [255, 255, 0], [0, 255, 255],
+                     [0, 255, 255], [255, 0, 255], [0, 255, 255]]])
+```
+---
+With a regular Python list, default operators apply:
 ```python
 2 * [1, 2, 3, 4]
 # will repeat the list:  [1, 2, 3, 4, 1, 2, 3, 5]
 ```
 
+With a numpy array, operators behave differently:
 ```python
 import numpy
 2 * numpy.array([1, 2, 3, 4])
@@ -1628,3 +1818,146 @@ numpy.sin(x) # 100000 images of x elemets by the sin function
 
 
 -> Ideal for plots
+
+---
+### Matplotlib
+
+TODO
+
+---
+# Common design patterns
+
+**Design patterns** are patterns of code solving common software problems be reused in any object-oriented programming language.
+
+They were introduced in 1994 for C++ language by [Gamma et al](https://www.eyrie.org/~eagle/reviews/books/0-201-63361-2.html).
+
+
+A few patterns are presented here.
+
+---
+## The factory 
+
+A **factory** is a function that builds an instance with the right type and parameters:
+
+```python
+class Animal:
+    def __init__(self, type:str, vocalization:str):
+        self._type = type
+        self._vocalization = vocalization
+    
+    @classmethod
+    def make_dog(cls):
+        return cls("dog", "bark")
+```
+
+```python
+class Fox: pass
+
+class Duck: pass
+
+def make_animal(animal: str):
+    return Fox() if animal == "fox" else Duck()
+```
+
+---
+## The singleton
+
+A **singleton** is a class that must have only one instance.
+
+```python
+class USBJoystickController:
+    __controller : "USBJoystickController" = None
+
+    @staticmethod
+    def get_controller():
+        if USBJoystickController.__controller is None:
+            USBJoystickController()
+        return USBJoystickController.__controller
+
+    def __init__(self):
+        if USBJoystickController.__controller is not None:
+            raise ValueError("Singleton already existing, use get_controller()")
+        USBJoystickController.__controller = self
+```
+
+---
+## Iterators
+
+An **iterator** is an object that iterates over a structure but agnostic about what it contains.
+
+```python
+class DivisorsOf:
+    def __init__(self, n: int):
+        self.__last_divisor_tested = n // 2 + 1
+
+    def __iter__(self): # The definition of __iter__ makes DivisorsOf iterable
+        return self
+    
+    def __next__(self):
+        if self.__last_divisor_tested == 1:
+            raise StopIteration("There is no more divisor")
+
+        divisor = self.__last_divisor_tested - 1
+        self.__last_divisor_tested = divisor
+        return divisor if divisor % 2 == 0 else next(self)
+```
+---
+The `__iter__` magic transforms this class into an iterable, that can be iterated just as any regular iterable:
+
+```python
+for i in DivisorsOf(500):
+    print(i, "is a divisor")
+```
+Or also:
+```python
+it = DivisorsOf(2)
+print(next(it), "is the first divisor")   # 2 is the first divisor
+print(next(it), "is the second divisor") # 1 is the second divisor
+print(next(it), "is the third divisor") # StopIteration: There is no more divisor
+```
+All basic iterables (tuples, lists, dicts) also work this way with `__iter__` & `__next__`:
+```python
+t = 1, 2, 3   # Tuple
+t.__next__()
+```
+
+---
+## The generator
+A **generator** is a specific type of iterator created via a function instead of a class:
+
+```python
+def divisors_of(n: int):
+    for i in range(n // 2 + 1):
+        if i % 2 == 0:
+            yield i
+```
+It can then be used this way:
+```python
+for divisor in divisors_of(50):
+    print(it, "is the next divisor")
+```
+`StopIteration`is raised automatically when there is no more `yield`.
+**Note:** Iterators and generators do not have to stop: useful to generate infinite patterns.
+
+---
+## The interface
+
+An **interface** is a class that cannot be instanciated but only used to define subclasses.
+It it used to define a model so that all subclasses implement compulsory methods.
+
+```python
+from abc import abstractmethod   # THis is the Abstract Base Classe module
+
+class Animal:
+    @abstractmethod
+    def vocalize(self):
+        raise NotImplementedError("vocalize() must be overriden")
+
+class Dog(Animal):
+    def vocalize(self):
+        print("WAF!")
+
+class Cat(Animal): pass
+```
+In this example the linter will report that `vocalize()` must be defined in `Cat`.
+
