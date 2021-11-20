@@ -15,7 +15,7 @@ footer: 'Python advanced training – course – Yoan Mollard – CC-BY-NC-SA'
 
 Yoan Mollard, for **Human Coders**
 
-http://files.aubrune.eu/formations/humancoders
+https://advanced.python.training.aubrune.eu/
 
 
 ---
@@ -1094,6 +1094,82 @@ sum(5.0, 5)
 [🐍 Learn more](https://docs.python.org/3/library/typing.html)
 
 ---
+## Python docstrings
+
+[PEP 257](https://www.python.org/dev/peps/pep-0257/) describes how RST documentation strings should be inserted in Python code:
+
+```python
+def is_same_sign_than_or_positive(a: Union[float, int], b: Optional[Union[float, int]] = None) -> bool:
+    """
+    Returns True if :
+       * either both parameters are of the same sign or equal
+       * or if the first parameter is positive, in case no second parameter is provided
+    Returns False otherwise
+
+    :Example:
+
+    is_same_sign_than_or_positive(5, None)
+    is_same_sign_than_or_positive(5.6, -5)
+    is_same_sign_than_or_positive(-1.5)
+
+    ..warning: if parameters are float, strict equality is not guaranteed
+
+    :param a: First element to be compared
+    :type a: float
+    :param b: Optional second element to be compared, or None
+    :type b: float
+    :type b: NoneType
+    :return: True if a and b have the same sign or equal, False otherwise
+    """
+    return a * b >= 0 if b is not None else a > 0
+```
+
+---
+### What should have a docstring?
+Everything that is exported by a module:
+* modules
+* functions
+* classes
+* public methods (including the __init__ constructor)
+* packages (via their `__init__.py`) 
+
+Let your IDE (e.g. Pycharm) autocomplete the docstring syntax for you!
+
+
+The docstring can be accessed with the magic `__doc__` (used by `help()`):
+```python
+print(is_same_sign_than_or_positive.__doc__)
+```
+---
+## Logging
+Python has a module dedicated to **logging**. It classes each log entry in levels of criticity: debug, info, warning, error and allows to filter them. [🐍 Learn more](https://docs.python.org/3/howto/logging.html)
+
+```python
+logging.basicConfig(filename='app.log', level=logging.INFO)
+logging.debug('Debug message')  # Won't print because DEBUG is < INFO
+logging.info('Info message')    # Will print
+```
+
+---
+
+The **logging** library uses  modular approach to organize logs in a big app. Usually every module has its own logger named as itself:
+
+```python
+logger = logging.getLogger(__name__)
+# foo/bar.py will be named "foo.bar"
+```
+
+Hierarchy of module allows to propagate messages
+
+When a message is posted to logger L:
+
+1. L decides whether to handle the event based on the level/filters
+2. Handlers of L get notified and react if their own level/filter match
+3. L's parent is notified, if appropriate
+
+![bg right:36% 80%](./img/logging.png)
+
+---
 ## Virtual environments (venv)
 
 **Context:** All installed packages go into the `site-packages` directory of the interpreter.
@@ -1222,7 +1298,6 @@ main.py:1:1: F401 'numpy' imported but unused              # Semantic
 main.py:3:1: E302 expected 2 blank lines, found 1          # Style
 ```
 
-
 ---
 ## Name a function so that its behavior is explicit
 
@@ -1254,54 +1329,6 @@ def normalized(vector):
     for value in vector:
         new_vector.append(value/vector_sum)
     return new_vector 
-```
-
----
-### Python docstrings
-
-[PEP 257](https://www.python.org/dev/peps/pep-0257/) describes how RST documentation strings should be inserted in Python code:
-
-```python
-def is_same_sign_than_or_positive(a: Union[float, int], b: Optional[Union[float, int]] = None) -> bool:
-    """
-    Returns True if :
-       * either both parameters are of the same sign or equal
-       * or if the first parameter is positive, in case no second parameter is provided
-    Returns False otherwise
-
-    :Example:
-
-    is_same_sign_than_or_positive(5, None)
-    is_same_sign_than_or_positive(5.6, -5)
-    is_same_sign_than_or_positive(-1.5)
-
-    ..warning: if parameters are float, strict equality is not guaranteed
-
-    :param a: First element to be compared
-    :type a: float
-    :param b: Optional second element to be compared, or None
-    :type b: float
-    :type b: NoneType
-    :return: True if a and b have the same sign or equal, False otherwise
-    """
-    return a * b >= 0 if b is not None else a > 0
-```
-
----
-#### What should have a docstring?
-Everything that is exported by a module:
-* modules
-* functions
-* classes
-* public methods (including the __init__ constructor)
-* packages (via their `__init__.py`) 
-
-Let your IDE (e.g. Pycharm) autocomplete the docstring syntax for you!
-
-
-The docstring can be accessed with the magic `__doc__` (used by `help()`):
-```python
-print(is_same_sign_than_or_positive.__doc__)
 ```
 
 ---
@@ -1638,62 +1665,19 @@ TODO EXTEND
 * Refactor your code: prevent multiple computations of the same value, ... 
 * Optimize the infrastructure: use caching in the database, web server, change hard drive for a SSD...
 * Use another Python env in production: Pypy and Extensions compiled with Cython (.pyx) are powerful alternatives (most popular Python interpreter is CPython)
----
 
-## Asynchronous code (Python coroutines)
-
-A **coroutine** is an asynchronous function. To be executed it must be awaited or run in an event loop.
-
-A **task** is an execution scheduling of coroutines. It allows coroutines to be excuted simultaneously.
-
-A **future** is a placeholder in which a future result value will be stored later.
-
-An **awaitable** is anything that can be awaited with `await`, e.g. a coroutine, a task, or a future.
 
 ---
-```python
-def say(sentence):
-    print(sentence)
-
-say("Hello world!")
-```
-
-
-Let's add the keyword `async`:
-```python
-async def say(sentence):
-    print(sentence)
-
-say("Hello world!")
-# Returns a <coroutine object say at 0x7fe4f837dbc0>
-```
----
-
-If we want to execute a coroutine, we can:
-* call it in `asyncio.run()` i.e:
-```python 
-asyncio.run(say("Hello"))  # It also creates an event loop
-```
-* await it with keyword `await` i.e:
-```python 
-await say("Hello")     # It does NOT create an event loop
-```
-* create a task from it i.e:
- ```python 
-asyncio.create_task(say("Hello"))     # It does NOT create an event loop
-```
-The event loop is declared in the main thread (outermost scope).
-As a consequence, `await` and `create_task` are forbidden outside an async function
-
----
-## Multithreading and multiprocessing
-### Execute parrallel code with Python
+## Multithreading, multiprocessing ans asynchronous IO
 **Definitions**:
 
-**Multithreading**: Split work into several threads within the same process and CPU.
-**Multiprocessing**: Split work into several processes dispatched to several CPUs.
+* **Multithreading**: Split work into several threads within the same process and CPU.
+* **Multiprocessing**: Split work into several processes dispatched to several CPUs.
+* **Asynchronous tasks**: Release the CPU and yield to another task when an IO is needed (e.g. network or hard disk response) 
 
-Multithreading is much less efficient in most cases, but Python makes it even worse because of the GIL.
+---
+
+![bg center 95%](./img/multiprocessing-multithreading-async.svg)
 
 ---
 ### The reference counter
@@ -1749,12 +1733,235 @@ When to use these libs?
 * **messaging libs**: build a decentralized application made of multiple technologies and languages (e.g. on top of a cloud infrastructure OVH, Gandi, AWS, ...)
 
 ---
+### Multithreading example
+```python
+import time, threading
+def second_thread():
+    for i in range(10):
+        print("Hello from the second thread!")
+        time.sleep(1)
+
+new_thread = threading.Thread(target=second_thread)
+new_thread.start()
+
+for i in range(10):
+    print("Hello from the main thread!")
+    time.sleep(1)
+
+new_thread.join()
+```
+```bash
+Hello from the second thread! # We can't tell in which order the prints will happen
+Hello from the main thread!   # The OS schedules threads as fairly as possible
+Hello from the main thread!   # ...according to the system load.
+Hello from the second thread! # The GIL limits Python to 1 CPU 
+```
+---
+### Multiprocessing example
+```python
+import time, multiprocessing
+def second_process():
+    for i in range(10):
+        print("Hello from the second process!")
+        sleep(1)
+
+new_process = multiprocessing.Process(target=second_process)
+new_process.start()
+
+for i in range(10):
+    print("Hello from the first process!")
+    sleep(1)
+
+new_process.join()
+```
+```bash
+Hello from the first process!  # Pretty much the same as threads
+Hello from the second process! # But mutliprocessing may use  all CPUs
+Hello from the second process! # The OS schedules the processes on the CPUs
+Hello from the first process!
+```
+---
+What if we want to communicate between between 2 threads?
+`threading` relies on thread-safe* synchronization primitives:
+ * `threading.Lock` (aka Mutex): authorizes a single thread at once
+ * `threading.Semaphore`: authorizes a maximum of `n` threads at once
+ * `threading.Event`: an event can be emitted `event.set()` by a thread and waited by other threads (`event.wait()`) 
+
+```python
+lock = threading.Lock()  # Lock share dby all threads
+my_list = [0]            # List shared by all threads
+
+with lock:               # All threads lock the lock before writing the list 
+    my_list[0] += 1  # += is not an atomic operation: not thread-safe
+```
+**thread-safe**: ability to be manipulate by several threads at once with no risk of unintended interaction with unpredictable issue
+
+---
+What if we want to communicate between between 2 processes?
+`multiprocessing` relies on thread-safe* synchronization primitives:
+ * `multiprocessing.Lock` (aka Mutex): authorizes a single process at once
+ * `multiprocessing.Semaphore`: authorizes a maximum of `n` processes at once
+ * `multiprocessing.Event`: an event can be emitted `event.set()` by a process and waited by other processes (`event.wait()`) 
+ * `multiprocessing.Queue`: shared queue between all processes. They can put data into it and retrieve data from it
+ * `multiprocessing.Pipe`: bidiretionnal pipe with only two ends to put an retrieve data between a maximum of 2 processes
+ * It is also possible to share lists, dicts, ...
+---
+
+## Asynchronous code (Python coroutines)
+
+A **coroutine** is an asynchronous function. To be executed it must be awaited or run in an event loop.
+
+A **task** is an execution scheduling of a coroutine. It knows when a coroutine is done (if it returned a value, a result, or an exception).
+
+A **future** is a placeholder in which a future result value will be stored later.
+
+An **awaitable** is anything that can be awaited with `await`: a coroutine, a task, or future
+
+An async program is built as a concurrent one but it is a **single-threaded process**.
+
+The OS is **NOT** involved with `asyncio`: the library handles parrallelization by itself. 
+
+---
+```python
+def say(sentence):
+    print(sentence)
+
+say("Hello world!")
+```
+
+
+Let's add the keyword `async`:
+```python
+async def say(sentence):
+    print(sentence)
+
+say("Hello world!")
+# Returns a <coroutine object say at 0x7fe4f837dbc0>
+```
+*Note: asyncio evolves fast, our slides are based on Python 3.7+*.
+
+
+---
+
+If we want to execute a coroutine, we can:
+* call it in `asyncio.run()` i.e:
+```python 
+asyncio.run(say("Hello"))  # It also creates an event loop
+```
+* await it with keyword `await` i.e:
+```python 
+await say("Hello")     # It does NOT create an event loop
+```
+* create a task from it i.e:
+ ```python 
+asyncio.create_task(say("Hello"))     # It does NOT create an event loop
+```
+The event loop is declared in the main thread (outermost scope).
+As a consequence, `await` and `create_task` are forbidden outside an async function
+
+---
+
+A the heart of the async app there is an **event loop**: This is a **scheduler**: you register tasks to be executed in the future ; and you retrieve them when they are done.
+
+![](https://digitalpress.fra1.cdn.digitaloceanspaces.com/9hob7gz/2021/05/Event-Loop-4.png)
+
+---
+
+```python
+async def wait(duration):
+    await asyncio.sleep(duration)
+    print("Finished to wait {}secs".format(duration))
+
+async def main():
+    l3 = asyncio.create_task(wait(3))   # Plan for execution asap
+    l5 = asyncio.create_task(wait(5))   # Plan for execution asap
+    await asyncio.wait([l3, l5]) # Your moment of glory: don't abandon tasks
+
+asyncio.run(main())        # Creates and destroys the event loop
+```
+
+Forgetting to await a task is like giving birth to a child and forgetting it: **DON'T**. Thus, keep track of the task and await it:
+* with `await task` ; or
+* with: `asyncio.wait(task)` (or equivalent) 
+
+Grouping task creations and waiting for them in the same function is handy because `asyncio.run()` creates and destroys the event loop ; everything inside requires a loop
+
+---
+**No synchronous code** (e.g. `time.sleep()` or `requests.get()`) or heavy code (e.g. a `while loop` that will take years) should be mixed with async code.
+
+AsynIO is single-threaded, the event loop uses it too. If you block it with synchronous code, the event loop will be delayed as well as all other planned tasks.
+
+If needed though, [executors](https://docs.python.org/3/library/asyncio-eventloop.html#executing-code-in-thread-or-process-pools) can run synchronous code in thread or process pools.
+
+---
+Not all coroutines have to run *asap*. Some will first:
+* wait for another coroutine to end: `await` is made for it
+* wait for a returned value: `asyncio.Future` is made for it
+* wait for aquiring the right to access a resource: `asyncio.Lock` is made for it
+* wait for an event to happen: `asyncio.Event` is made for it
+* wait for a specific time or delay: `asyncio.sleep` is made for it
+
+These [Synchronization primitives](https://docs.python.org/3/library/asyncio-sync.html) are the same as the `threading` module, but they are not thread-safe.
+
+---
+### Example of task synchronisation with Event
+```python
+async def coroutine(go):
+    await go.wait()  # The coroutine waits for the event to happen
+    print("I've received your go!")
+    go.clear()   # The vent is clear so that it can be set again
+
+async def trigger_event(go):
+    await asyncio.sleep(5)
+    go.set()
+
+async def main():
+    go = asyncio.Event()  # We trigger this event to launch the coroutine
+    event_receiver = asyncio.create_task(coroutine(go))
+    event_emitter = asyncio.create_task(trigger_event(go))
+    await asyncio.wait([event_receiver, event_emitter])
+
+asyncio.run(main())   
+```
+---
+### Example of fetching a web page (sync vs async)
+
+```python
+import requests
+response = requests.get("http://example.com")
+print("Status:", response.status_code)
+print("Content-type:", response.headers['content-type'])
+print(response.content[:15], "...")
+```
+
+```python
+import asyncio, aiohttp
+async def fetch(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+
+            print("Status:", response.status)
+            print("Content-type:", response.headers['content-type'])
+
+            html = await response.text()
+            print("Body:", html[:15], "...")
+
+asyncio.run(fetch("http://example.com"))
+```
+---
 ## Profiling
 
-* `tottime` is the total time spent in the internal body of the function only
-* `cumtime` is the total time spent in the function + all functions that this function called
+**Profiling** measures time complexity of programs, in terms of CPU time spent in each function and number of function calls.
 
-If a function does call any other, then `tottime = cumtime`. 
+A profiler usually returns a table of each function call during execution, with:
+
+* `ncalls`: the number of calls of this function
+* `tottime`: the total time spent in the internal body of the function only
+* `cumtime`: the total time spent in the function + all functions that this function called
+
+If a function does not call any other then `tottime=cumtime`. Some tools draw profiles:
+
+![](./img/profiler.png)
 
 ---
 ## Alternative package managers
