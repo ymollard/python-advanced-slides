@@ -4,7 +4,7 @@ marp: true
 <!-- 
 class: invert
 paginate: true
-footer: 'Python advanced training – exercices and mini-projects – Yoan Mollard – CC-BY-NC-SA'
+footer: 'Python advanced training – exercices and mini-projects – Yoan Mollard – CC-BY-NC-SA [🔗](https://advanced.python.training.aubrune.eu/)'
 -->
 
 ![bg left:30% 90%](https://www.python.org/static/img/python-logo.png)
@@ -13,7 +13,7 @@ footer: 'Python advanced training – exercices and mini-projects – Yoan Molla
 
 Yoan Mollard, for **Human Coders**
 
-http://files.aubrune.eu/formations/humancoders
+https://advanced.python.training.aubrune.eu/
 
 
 ---
@@ -192,6 +192,8 @@ Output: EXPLORED, the list of all nodes in BFS order
 
 ---
 **1.1**. Implement and test with `timeit` a first version `naive_bfs(G: dict, root: str)` of the preceeding BFS pseudocode:
+* For `Q`, use a `list`
+* For `EXPLORED`, use a `list`
 * For `G` use a `dict` associating a list of children for each node:
 ```python
 G = { # dict representing the children of all nodes
@@ -207,16 +209,17 @@ G = { # dict representing the children of all nodes
   '12': [],
   '13': []}
 ```
-* For `Q`, use a `list`
-* For `EXPLORED`, use a `list`
 
 ![bg right:20% 95%](./img/tree-bfs.png)
 
 ---
 **1.2.** : Use a graphical profiler to identify the culprints of your code:
 * Install `snakeviz` with `pip`. Read the [documentation](https://jiffyclub.github.io/snakeviz/).
-* Make sure you repeat calls to `naive_bfs` several thousands of time to get meaningful statistics about its performance
+* Make sure you repeat calls to `naive_bfs()` several thousands of time to get meaningful statistics about its performance
 * Generate a profile for your naive implementation of BFS
+* What could be improved?
+
+**1.3.**: Implement a new version `fixed_bfs()` that fixes the performance issue you spotted with the profiler. Measure the difference of execution time with `timeit`.
 
 
 
@@ -261,13 +264,10 @@ This hierarchy sets the file/directory hierarchy to use in your package:
 
 _Nota Bene:_ Since package `account` is in the same directory as the scneario script, there will not be any issue to import it. If it had to be in another path, we could fix it by adding the path to `account` to the `sys.path` value.
 
-But the preffered fix would be to create an installable package with pip, that would then be importable from any path just as other pacakges we installed and used (matplotlib, pytest, time, math ...).
-However this technique is extra-curricular.
-
 ---
 * 4.9. Add empty `__init__.py` files to all directories of the package. You must have:
 
-![Hierarchy with init files](./images/package_init.png)
+![bg right:40% 70%](./img/package-init.png)
 
 * 4.10. Execute the scenario and check that it leads to the same result as before this refactoring
 
@@ -302,3 +302,171 @@ Several Python package can help automate unit tests. Among them, `pytest` is the
 * 7.7. Update your package (e.g. add `numpy` dependency) and publish a new version 1.1. Make sure both versions are now on TestPyPI
 
 Note: If you create your own PyPI account, make sure you create it on the [TestPyPI index](https://test.pypi.org/account/register/) that is pruned periodically, instead of the regular PyPI.
+
+---
+# Mini-project 4: AsyncIO
+
+In this mini-project, we will simulate **moves of chess** during a tournament in which a unique chess master faces many opponents by turns
+
+We will simulate only the **timeslots for each move and each player**, but we will not simulate the pieces their play or their actual outcome.
+
+In a tournament in general, many games are being played in parallel on many boards. The I/O resource that slows down the games here is the time allotted to think-and-play.
+
+**Laws of the simulation:**
+* A player (master or opponent) cannot play moves against several players at a time
+* A player (master or opponent) cannot play the other has not finished their move
+
+---
+
+## Part 1. Synchronous simulation
+Create a synchronous version of the simulator in which only 1 single move can be played on a board at a time in the entire crowd of participants. Implement the following:
+* A `Chessmaster` class with method `think_and_play(self, round: "Round", opponent: "Player")` that waits 1 sec to simulate the player's move
+* A `Round` class with method `play(self, opponent_id: int)` that allows the player and then the master to think-and-play.
+* A `Player` class with method `think_and_play(self, round: "Round", opponent: "Player")` that waits 5 secs to simualte the player's move
+* A `Simulator` class with a single function `main()` being the entry point
+
+Run a simulation between 3 players against the master, playing 2 rounds each. Report the overall simulation time (*see figure next page*).
+
+---
+
+![bg 90%](./img/exercises/chessmaster-sequential.svg)
+
+---
+
+## Part 2. Asynchronous simulation
+In the synchronous version IOs were waited for return every time but they can be optimized: several players can play their move on their board at a time, as long as the laws of the simulator here above are met. 
+
+1. Trasform relevant functions in coroutines `async` and await them. Start the event loop with `asyncio.run(entry_point)`. This first step is still a **sequential run**
+2. Identify which coroutines will need to be concurrent in the final run.
+3. Create tasks for the latter so that their are scheduled by the event loop, and awit for their terminaison. This new step is a **full-concurrent run**
+4. Choose the number and the different types of [synchonization primives](https://docs.python.org/3/library/asyncio-sync.html) that will enforce the laws in any case, so that tasks wait the right time to run. 
+
+Run the simulation with the same parameters (*see figure next page*).
+
+---
+
+![bg 90%](./img/exercises/chessmaster-async.svg)
+
+---
+# Mini-project 5:  (Naive) Virus spread simulation
+
+This is a project to practice **numpy** and **matplotlib**. It consists into simulating a number of sick people based on a simplistic exponential contamination model.
+
+It relies on the `R0` variable: it describes the slope of the contamination:
+* `R0 < 1` = In average, a person contaminates less than 1 person: The number of contamination dicreases
+* `R0 > 1` = In average, a person contaminates more than 1 person: The number of contaminations increases
+
+
+The goal is to simulate contamination scenarii and plot them as presented on the next figure. 
+
+---
+
+![bg 60%](./img/exercises/naive-virus-simulation.png)
+
+---
+## Description of the model to implement
+In our simplistic model:
+* The R0 has discrete values for different periods:
+  * a **value during migitation measures** (e.g. lockdowns ; low R0)
+  * a **value during celebrations** (e.g. Christmas ; high R0)
+  * a regular value for all other periods
+* Time is measured in number of days from day 0, for a certain **simulation duration**
+* **Incubation time** is taken into account: it is materialized by a delay of a few days every time the R0 changes
+* Lockdown is triggered automatically when the number of contaminations goes beyond a **critical threshold**, causing the R0 to
+
+**bold values** are taken as parameters of the simulation.
+
+---
+
+## Part 1: Core of the simulator
+
+1. Implement a class with a constructor accepting the parameters of the simu, e.g:
+```python
+s = Scenario(
+    incubation_duration = 15,     # Number of days before the R0 actually changes 
+    duration = 300,               # Days of simulation
+    critical = 5000,              # Threshold for triggering lockdowns
+    lockdown_duration = 60,       # Lockdown duration in days
+    celebrations = [
+                    74, 75, 76,   # Individual dates of celebrations
+                    210, 211, 212 
+                   ], 
+    r0 = {
+        "high": 2,          # R0 applied for celebrations
+        "lockdown": 0.9,    # R0 applied for lockdowns
+        "regular": 1.2,     # R0 applied for all other cases
+    }
+)
+```
+Store the parameters as attributes.
+
+---
+
+2. Implement a method `plot(self)` that draws a plot with matplotlib, with:
+* a correct *xlabel*, *ylabel*, *legend* and *title*
+* a linear plot `f(x)=x` from 0 to `duration`. Execute and check that the plot is right
+
+3. Initialize a new attribute `self.num_cases` to 1 in the constructor (this is our first person contaminating the other!) 
+
+*NB: do not forget to add docstrings as long as you code!*
+
+---
+
+4. Implement a method `next(self, num_former_cases:int)` intended to be called by the simulator every simulated day. This method must:
+* read the regular R0 from the constructor
+* update `self.num_cases` for the current day ; based on the number of cases for the previous day: `new_cases = R0*former_cases`
+
+5. In `plot()`, repeat calls to `next()` for each simulated day and store each return values in a list of ordinates stored as the attribute `self.cases_history`
+
+6. Substitute the ordinates `self.cases_history` to the linear ordinates in `pyplot.plot()` (***ordinates** are y-values*)
+
+7. Drop the `self.num_cases` variable since it now corresponds to `self.cases_history[-1]`. Update code where necessary.
+
+**Outcome:** Now you must see an exponential curve in your plot.
+
+---
+## Part 2: Lockdown implementation
+
+1. In `next()`, check if the cases has reached the critical level. If yes, substitute the regular R0 for the "lockdown" R0
+
+2. Revert to the regular R0 when the number of cases is below the critical level again
+
+**Outcome:** You should see an exponential curve ending in shaky oscillations around the critical threshold. This is what would happen if the lockdowns were released too fast.
+
+3. Add an attribute counting the number of remaining lockdown days since it has been triggered. Change the behaviour so that lockdown is released only when `lockdown_duration` days have passed. 
+
+**Outcome:** You should see 3 peaks of ascending and descending exponential curves.
+
+---
+
+4. Store lockdowns starts and ends in a attribute `self.lockdown`. Use [`fill_between`](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.fill_between.html) to draw green areas for each lockdown, with parameters `color="green", alpha=0.1, label="lockdown"`.
+- `self.lockdown: list[dict[str, int]]` stores the start and end dates, e.g. `[{"start": 50, "end": 65}, {"start": 100, "end": 115}`
+- Do not start a new lockdown if the previous is not ended
+- In case the last lockdown is not over when the simulation ends, stop the filled area at the end of the simulation.
+
+**Outcome:** You should see 3 peaks with 3 green areas representing 3 lockdowns
+
+---
+## Part 3: Incubation delay
+So far, when a lockdown happens, the number of contaminations starts to decrease the same day. We do not consider people contaminated right before the lockdown.
+
+1. Add a `r0_history:` [`deque`](https://docs.python.org/3/library/collections.html#collections.deque) as an attribute to keep a track of previous R0, and:
+- Init the queue with a neutral R0 i.e. as many `1` as the number of incubation delay
+- `next()` must now accept the previous number of cases in parameter: `next(self, previous_num_cases: int)`
+- `next()` must now enqueue the current R0 to the history
+- `next()` must now return a new contamination case with delay: pop the r0_history from the left and use this to return the current number of contamination cases
+
+`next()` now returns a current number of cases based on a former R0 (kept into memory in the queue). **Outcome:** Every R0 change you plot is delayed by some days.
+
+---
+
+## Part 4: Celebrations
+In this mini-project, celebrations simulate a temporary decrease of the respect of mitigation measures, causing a temporary increase of the R0. Here again, this increase will be delayed by the incubations time.
+
+1. In `next()`, simply multiply the current R0 by `R0["high"]` if this day is present in the list of celebration days.
+
+2. Plot a red vertical bar with `pyplot.plot()` for every celebration day
+
+*NB: We use R0 multiplication instead of a substitution of the R0 so that the effect of mitigation measures are still visible but their impact is lowered due to the celebration.*
+
+**Outcome**: You must see delayed peaks of cases due to the celebrations. Severity of peaks is highly influenced by the severity of cases at the moment of the celebration.
