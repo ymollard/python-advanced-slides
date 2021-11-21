@@ -524,11 +524,6 @@ d.month = 99      # Will raise "Month can only be set between 1 and 12"
 TODO: Exercice idea: read-only property with a getter but no setter full_name 
 
 ---
-#### Class methods and class attributes
-*In C++ class methods and attributes are similar to static methods and attributes (but different)
-TODO
-
----
 
 #### Magic methods
 These method exist in any class with a default behaviour...unless you override them:
@@ -1982,6 +1977,9 @@ The bad news is that package managers are not compatible with each other.
 <!--#####################################################################################################-->
 ---
 # ANNEXES / EXTRA-CURRICULAR TOPICS
+
+##  Python for datascience 
+##  Common design patterns
 <!--#####################################################################################################-->
 
 ---
@@ -2034,7 +2032,33 @@ numpy.sin(x) # 100000 images of x elemets by the sin function
 ---
 ### Matplotlib
 
-TODO
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+t = np.arange(0.0, 2.0, 0.01)
+s = 1 + np.sin(2 * np.pi * t)
+
+plt.plot(t, s)
+
+plt.xlabel('time (s)')
+plt.ylabel('voltage (mV)')
+plt.title('About as simple as it gets, folks')
+plt.grid()
+
+plt.show()
+```
+
+![bg right:30% 80%](https://matplotlib.org/stable/_images/sphx_glr_simple_plot_001.png)
+
+---
+
+
+![bg 80%](https://matplotlib.org/stable/_images/sphx_glr_image_annotated_heatmap_001.png)
+
+![bg 80%](https://matplotlib.org/stable/_images/sphx_glr_horizontal_barchart_distribution_001.png)
+
+![bg 80%](https://matplotlib.org/stable/_images/sphx_glr_bar_label_demo_001.png)
 
 ---
 # Common design patterns
