@@ -5,6 +5,9 @@ marp: true
 class: invert
 paginate: true
 footer: 'Python advanced training – exercices and mini-projects – Yoan Mollard – CC-BY-NC-SA [🔗](https://advanced.python.training.aubrune.eu/)'
+title: Exercises – Python advanced training
+author: 'Yoan Mollard'
+image: https://www.python.org/static/favicon.ico
 -->
 
 <style>
