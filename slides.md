@@ -31,10 +31,50 @@ https://advanced.python.training.aubrune.eu/
 
 ---
 
-#  Programme
+#  Programme DAY 1
 
-+-------------------+
-+-------------------+
+1. [ ADVANCED PROGRAMMING TECHNIQUES](#6)
+    1.1. [ Python typing](#7)
+    1.2. [ Complexity and the `Big-O` notation](#18)
+2. [ CHARACTERISTICS AND PARADIGMS OF PYTHON](#25)
+    2.1. [ Object-oriented programming (OOP)](#26)
+    2.2. [ Metaclasses](#44)
+    2.3. [ Functional programming](#49)
+    2.4. [ Decorators](#58)
+    2.5. [ Namespaces](#61)
+    2.6. [ Mutable default parameters](#66)
+
+---
+
+#  Programme DAY 2
+
+3. [ CODE WITH QUALITY](#68)
+    3.1. [ Type annotations](#69)
+    3.2. [ Python docstrings](#71)
+    3.3. [ Logging](#73)
+    3.4. [ Virtual environments (venv)](#75)
+    3.5. [ Quality control tools](#84)
+    3.6. [ Name a function so that its behavior is explicit](#88)
+4. [ PACKAGE AND DISTRIBUTE](#90)
+    4.1. [ Reminders about Modules and packages](#90)
+    4.2. [ The Python Package Index (PyPI)](#98)
+    4.3. [ PyPI Security warning 🚨](#100)
+    4.4. [ Package distribution](#103)
+    4.5. [ Uploading your package distribution on PyPI](#108)
+
+---
+
+#  Programme DAY 3
+
+5. [ PERFORMANCE OPTIMIZATION](#110)
+    5.1. [ Refactor your code by keeping complexity in mind](#110)
+    5.2. [ Multithreading, multiprocessing ans asynchronous IO](#112)
+    5.3. [ Asynchronous code (Python coroutines)](#122)
+    5.4. [ Profiling](#131)
+    5.5. [ Alternative package managers](#132)
+6. [ ANNEXES / EXTRA-CURRICULAR TOPICS](#133)
+    6.1. [ Python for datascience](#134)
+    6.2. [ Common design patterns](#139)
 
 ---
 
@@ -2061,7 +2101,7 @@ plt.show()
 ![bg 80%](https://matplotlib.org/stable/_images/sphx_glr_bar_label_demo_001.png)
 
 ---
-# Common design patterns
+## Common design patterns
 
 **Design patterns** are patterns of code solving common software problems be reused in any object-oriented programming language.
 
@@ -2071,7 +2111,7 @@ They were introduced in 1994 for C++ language by [Gamma et al](https://www.eyrie
 A few patterns are presented here.
 
 ---
-## The factory 
+### The factory 
 
 A **factory** is a function that builds an instance with the right type and parameters:
 
@@ -2096,7 +2136,7 @@ def make_animal(animal: str):
 ```
 
 ---
-## The singleton
+### The singleton
 
 A **singleton** is a class that must have only one instance.
 
@@ -2117,7 +2157,7 @@ class USBJoystickController:
 ```
 
 ---
-## Iterators
+### Iterators
 
 An **iterator** is an object that iterates over a structure but agnostic about what it contains.
 
@@ -2158,7 +2198,7 @@ t.__next__()
 ```
 
 ---
-## The generator
+### The generator
 A **generator** is a specific type of iterator created via a function instead of a class:
 
 ```python
@@ -2176,7 +2216,7 @@ for divisor in divisors_of(50):
 **Note:** Iterators and generators do not have to stop: useful to generate infinite patterns.
 
 ---
-## The interface
+### The interface
 
 An **interface** is a class that cannot be instanciated but only used to define subclasses.
 It it used to define a model so that all subclasses implement compulsory methods.
