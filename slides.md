@@ -4,9 +4,14 @@ marp: true
 <!-- 
 class: invert
 paginate: true
-footer: 'Python advanced training – course – Yoan Mollard – CC-BY-NC-SA'
+footer: 'Python advanced training – course – Yoan Mollard – CC-BY-NC-SA [🔗](https://advanced.python.training.aubrune.eu/)'
 -->
 
+<style>
+    .hljs-string {
+    color: #cd9067;
+}
+</style>
 
 
 ![bg left:30% 90%](https://www.python.org/static/img/python-logo.png)

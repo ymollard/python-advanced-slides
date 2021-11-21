@@ -7,7 +7,11 @@ paginate: true
 footer: 'Python advanced training – exercices and mini-projects – Yoan Mollard – CC-BY-NC-SA [🔗](https://advanced.python.training.aubrune.eu/)'
 -->
 
-![bg left:30% 90%](https://www.python.org/static/img/python-logo.png)
+<style>
+    .hljs-string {
+    color: #cd9067;
+}
+</style>
 
 # **Python advanced training**, exercises
 
@@ -15,6 +19,7 @@ Yoan Mollard, for **Human Coders**
 
 https://advanced.python.training.aubrune.eu/
 
+![bg left:30% 90%](https://www.python.org/static/img/python-logo.png)
 
 ---
 # Mini-project 1. Estimate π with Nilakantha
