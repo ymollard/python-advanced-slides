@@ -160,79 +160,9 @@ The proposed rule here is that, when an account is negative after an outgoing mo
 ---
  * 3.2. Move the code computing the agios in a private method named `__check_for_agios`, explain the concept of private method and the role of the double underscore 
  * 3.3. Check your implementation with the previous scenario, pause the scenario during 5 seconds and check that in the end, $5 of agios are payed by Bob to his bank, before Alice makes him a donation.
- 
----
-# Mini-project 2 : Code optimization
-## Mini-project 2 Part 1 : Bread-First Search
-
-> BFS browses a tree data structure. It starts at the tree root and explores all nodes at the present depth prior to moving on to the nodes at the next depth level. 
-Extra memory, usually a queue, is needed to keep track of the children that were reached but not yet explored.
-
-*From [Breadth-first_search, Wikipedia](https://en.wikipedia.org/wiki/Breadth-first_search)*.
-
-📈 **Black** = explored ; **Grey** = queued to be explored later on
-ℹ️ BFS is known as *parcours en largeur* in French
-
-![bg right:25% 80%](https://upload.wikimedia.org/wikipedia/commons/4/46/Animated_BFS.gif)
 
 ---
-
-Here is the general algorithm of the BFS:
-```vb
-Input:  A graph G, 
-Input:  A root node where to start BFS
-Output: EXPLORED, the list of all nodes in BFS order
-```
-
-```ada
- 1  procedure BFS(G, ROOT) is
- 2      let Q be a list
- 2      let EXPLORED be a list 
- 3      append ROOT at the end of EXPLORED
- 4      append ROOT at the end of Q
- 5      while Q is not empty do
- 6          v := pop the first node of G
- 7          for all children of node v in G do
- 8              if w is not in EXPLORED then
- 9                  append w at the end of EXPLORED
-10                  append w at the end of Q
-```
-
----
-**1.1**. Implement and test with `timeit` a first version `naive_bfs(G: dict, root: str)` of the preceeding BFS pseudocode:
-* For `Q`, use a `list`
-* For `EXPLORED`, use a `list`
-* For `G` use a `dict` associating a list of children for each node:
-```python
-G = { # dict representing the children of all nodes
-  '5' : ['3','7', '9'], # 5 has 3 children: 3 7 and 9 
-  '3' : ['2', '4', '10'],
-  '7' : ['8'],
-  '2' : [],    # A node with an empty list is a leaf
-  '4' : ['8', '9'],
-  '8' : [],
-  '9' : ['13','12', '11'],
-  '10': ['13', '11', '8', '9'],
-  '11': ['3','7', '9'],
-  '12': [],
-  '13': []}
-```
-
-![bg right:20% 95%](./img/tree-bfs.png)
-
----
-**1.2.** : Use a graphical profiler to identify the culprints of your code:
-* Install `snakeviz` with `pip`. Read the [documentation](https://jiffyclub.github.io/snakeviz/).
-* Make sure you repeat calls to `naive_bfs()` several thousands of time to get meaningful statistics about its performance
-* Generate a profile for your naive implementation of BFS
-* What could be improved?
-
-**1.3.**: Implement a new version `fixed_bfs()` that fixes the performance issue you spotted with the profiler. Measure the difference of execution time with `timeit`.
-
-
-
----
-## Mini-project 3 – Part 4: The `account` package
+## Mini-project 4 – Part 4: The `account` package
 
 We have just coded a very simple tool simulating transactions between bank accounts in Object-Oriented Programming.
 In order to use it with a lot of other scenarii and actors, we are going to structure our code within a Python package.
@@ -312,7 +242,7 @@ Several Python package can help automate unit tests. Among them, `pytest` is the
 Note: If you create your own PyPI account, make sure you create it on the [TestPyPI index](https://test.pypi.org/account/register/) that is pruned periodically, instead of the regular PyPI.
 
 ---
-# Mini-project 4: AsyncIO
+# Mini-project 5: Write asynchronous code – The chess master
 
 In this mini-project, we will simulate **moves of chess** during a tournament in which a unique chess master faces many opponents by turns
 
@@ -356,7 +286,7 @@ Run the simulation with the same parameters (*see figure next page*).
 ![bg 90%](./img/exercises/chessmaster-async.svg)
 
 ---
-# Mini-project 5:  (Naive) Virus spread simulation
+# Mini-project 6: Draw plots – (Simplistic) Virus spread simulation
 
 This is a project to practice **numpy** and **matplotlib**. It consists into simulating a number of sick people based on a simplistic exponential contamination model.
 
@@ -478,3 +408,125 @@ In this mini-project, celebrations simulate a temporary decrease of the respect 
 *NB: We use R0 multiplication instead of a substitution of the R0 so that the effect of mitigation measures are still visible but their impact is lowered due to the celebration.*
 
 **Outcome**: You must see delayed peaks of cases due to the celebrations. Severity of peaks is highly influenced by the severity of cases at the moment of the celebration.
+
+---
+# Mini-project 2: Optimize Python – Bread-First Search optimization
+
+> BFS browses a tree data structure. It starts at the tree root and explores all nodes at the present depth prior to moving on to the nodes at the next depth level. 
+Extra memory, usually a queue, is needed to keep track of the children that were reached but not yet explored.
+
+*From [Breadth-first_search, Wikipedia](https://en.wikipedia.org/wiki/Breadth-first_search)*.
+
+📈 **Black** = explored ; **Grey** = queued to be explored later on
+ℹ️ BFS is known as *parcours en largeur* in French
+
+![bg right:25% 80%](https://upload.wikimedia.org/wikipedia/commons/4/46/Animated_BFS.gif)
+
+---
+
+Here is the general algorithm of the BFS:
+```vb
+Input:  A graph G, 
+Input:  A root node where to start BFS
+Output: EXPLORED, the list of all nodes in BFS order
+```
+
+```ada
+ 1  procedure BFS(G, ROOT) is
+ 2      let Q be a list
+ 2      let EXPLORED be a list 
+ 3      append ROOT at the end of EXPLORED
+ 4      append ROOT at the end of Q
+ 5      while Q is not empty do
+ 6          v := pop the first node of G
+ 7          for all children of node v in G do
+ 8              if w is not in EXPLORED then
+ 9                  append w at the end of EXPLORED
+10                  append w at the end of Q
+```
+
+---
+**1.**. Implement and test with `timeit` a first version `naive_bfs(G: dict, root: str)` of the preceeding BFS pseudocode:
+* For `Q`, use a `list`
+* For `EXPLORED`, use a `list`
+* For `G` use a `dict` associating a list of children for each node:
+```python
+G = { # dict representing the children of all nodes
+  '5' : ['3','7', '9'], # 5 has 3 children: 3 7 and 9 
+  '3' : ['2', '4', '10'],
+  '7' : ['8'],
+  '2' : [],    # A node with an empty list is a leaf
+  '4' : ['8', '9'],
+  '8' : [],
+  '9' : ['13','12', '11'],
+  '10': ['13', '11', '8', '9'],
+  '11': ['3','7', '9'],
+  '12': [],
+  '13': []}
+```
+
+![bg right:20% 95%](./img/tree-bfs.png)
+
+---
+**2.** : Use a graphical profiler to identify the culprints of your code:
+* Install `snakeviz` with `pip`. Read the [documentation](https://jiffyclub.github.io/snakeviz/).
+* Make sure you repeat calls to `naive_bfs()` several thousands of time to get meaningful statistics about its performance
+* Generate a profile for your naive implementation of BFS
+* What could be improved?
+
+**3.**: Implement a new version `fixed_bfs()` that fixes the performance issue you spotted with the profiler. Measure the difference of execution time with `timeit`.
+
+---
+# Mini-project X: Optimize Python – The code breaker
+MD5 is a message-digest algorithm that is no longer considered safe since 2004 when a research team managed to provoke collisions with MD5.
+
+However it is still widely used in various applications. A common pattern is the use of the MD5 digest of passwords to store them in databases.
+
+In this project, you have extracted MD5 digests from websites accepting only alphabetical (digits excluded) characters of different lengths:
+
+* `d0eedb799584d850fdd802fd3c27ae34` (length = 3)
+* `9fcce10c03dc2eaada4c361c508c4ebe` on a website accepting (length = 4)
+* `8b1a9953c4611296a827abf8c47804d7` (length = 5)
+
+---
+## Part 1: Use a profiler to identify where your code wastes time 
+
+A Python script `naive_code_breaker.py` is proposed to break the MD5 sums hereabove (i.e. reverse the md5 function with the help hints such as the password characters and size). 
+
+This script is highly unoptimized.
+
+* Install `snakeviz` with `pip`. Read the [documentation](https://jiffyclub.github.io/snakeviz/).
+* Generate a profile for the execution of the script and open it in snakeviz
+* Where does you code spends most of the CPU time?
+
+🚨 This script is HIGHLY unoptimized and may take long minutes to run with default arguments. Do not waste your time, run it on a lower password length at the beginning:
+
+```bash
+./naive_code_breaker.py --digest=d0eedb799584d850fdd802fd3c27ae34 --password-length=3
+```
+
+---
+## Part 2: Code optimization
+
+Now try to optimize this naive code. Use the results of the profiler to help.
+
+There are at least 4 points of improvements.
+
+Here are the orders of magnitude of execution duration you must reach:
+
+```bash
+code_breaker.py --digest=d0eedb799584d850fdd802fd3c27ae34 --password-length=3 (must take <100ms)
+code_breaker.py --digest=9fcce10c03dc2eaada4c361c508c4ebe --password-length=4 (must take <10s)
+code_breaker.py --digest=8b1a9953c4611296a827abf8c47804d7 --password-length=5 (must take <1000s)
+code_breaker.py --digest=4d546c773867b86b4a233a7428c46c19 --password-length=6 (must take more!)
+```
+Do not use multiprocessing here, this is the next task, just optimize the function reversing the hash.
+
+---
+## Part 3 (Optional): Make it multiprocess
+
+Make the code breaker multiprocess to break md5 hashs faster.
+
+There is no additional help here.
+
+**Note:** Brute force only is not the best approach when we deal with passwords. We should exploit the human weaknesses with a dictionary attack. But this is another topic.
