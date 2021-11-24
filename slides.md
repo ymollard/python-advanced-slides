@@ -255,7 +255,9 @@ In module `collections`, three types are made specifically for this purpose: `Us
 ```python
 class UpperCaseString(UserString):
     def __init(args):
-        super(UpperCaseString, self).__init__. TODOOOOOOO
+        super(UpperCaseString, self).__init__(args)
+        # Custom code for constructor of str here
+    # Custom re-implementation of other str methods here
 ```
 
 
@@ -562,9 +564,6 @@ d = Date()
 print(d.month)    # Will raise "This date has not been initialised"
 d.month = 99      # Will raise "Month can only be set between 1 and 12"
 ```
-
----
-TODO: Exercice idea: read-only property with a getter but no setter full_name 
 
 ---
 
@@ -1342,36 +1341,58 @@ main.py:3:1: E302 expected 2 blank lines, found 1          # Style
 ```
 
 ---
-## Name a function so that its behavior is explicit
-
-Name variables and objects so that their behavior is explicit
-
-* What is the difference between `sort()` and `sorted()`?
-* What is the difference between `revert()` and `reverted()`?
-* What is the difference between `users` and `user`?
+## Testing
+* Packages `pytest`, `unittest` or `tox` are frequently used to test Python apps
+* `unittest` relies on the regular test framework:
+  * **Setup**: Prepare every prerequisite for the test
+  * **Call**: call the tested function with input parameters setuped before
+  * **Assertion**: an assert is a ground truth that must be true
+  * **Tear down**: Cleanup everything that has been created for this test
+* `pytest` is a light test framework
+* On top of these, `tox` allows to run tests in multiple environments (e.g. Python versions)
 
 ---
-**Good practice**: make it explicit if a function has a side effect or returns a copy
+
+Test files are often placed in a `tests/` directory, file names are prefixed with `test_*.py` and test function names are also prefixed with `test_`
+
+```bash
+setup.py
+mypkg/
+    __init__.py
+    app.py
+    view.py
+tests/
+    test_app.py
+    test_view.py
+    ...
+```
+Naming tests according to these conventions will allow auto-discovery of tests by the test tool: it will go through all directories and subdirectories looking for tests to execute.
+
+---
+
 ```python
-"""
-Normalize a 3D vector [x, y, z]
-:param vector: the iterable to be normlized by side effect 
-"""
-def normalize(vector):
-    vector_sum = sum(vector)
-    for i in range(len(vector)):
-        vector[i] /= vector_sum
-"""
-Get a normalized copy of a 3D vector [x, y, z]
-:param vector: the iterable to be normlized
-:return: a normalized copy of param vector
-"""
-def normalized(vector):
-    vector_sum = sum(vector)
-    new_vector = []
-    for value in vector:
-        new_vector.append(value/vector_sum)
-    return new_vector 
+# water_tank.py
+class WaterTank:
+    def __init__(self):
+        self.level = 10
+    def pour_into(self, recipient_tank: "WaterTank", quantity: int):
+        self.level -= quantity
+        recipient_tank.level += quantity
+```
+
+```python
+# test_water_tank.py
+from water_tank import WaterTank
+def test_water_transfer():
+    a = WaterTank()
+    b = WaterTank()
+    a.pour_into(b, 6)
+    assert a.level == 4 and b.level == 16 
+```
+Then just type `pytest` and the test report will be printed in the terminal!
+
+```
+============ 1 test passed in 0.01s ============
 ```
 
 ---
@@ -1607,17 +1628,18 @@ pip install .
 python setup.py install   # equivalent but deprecated because pip is cool 😎
 ```
 
-* Build a source distribution (sdist):
-```bash
-python setup.py sdist
-```
-A **source distribution** is just a copy of all source files from your package.
+* Build distribution:
+  * sdist : Source distribution
+  * bdist_wheel : Binary distribution 
 
-* Build a binary distribution (`bdist_*`: `bdist_wheel`, `bdist_egg`, `bdist_rpm`...):
 ```bash
-pip install wheel
-python setup.py bdist_wheel
+pip install build  # The latest recommanded build tool by PyPA
+python3 -m build   # Will build both a sdist and bdist
+
+-rw-rw-r-- 1 16699  nov.  12 00:00 hampy-1.4.2-py3-none-any.whl
+-rw-rw-r-- 1 326913 nov.  12 00:00 hampy-1.4.2.tar.gz
 ```
+[🐍 Learn more about package distribution: PyPA docs](https://packaging.python.org/tutorials/packaging-projects/)
 
 ---
 
@@ -1634,7 +1656,7 @@ python setup.py bdist_wheel
   * `any` is the platform (x86_64, arm, macos...)
 
 
- [🐍 Learn more about package distribution with setuptools](https://docs.python.org/fr/3/distributing/index.html)
+ [🐍 Learn more about package distribution: Python docs](https://docs.python.org/fr/3/distributing/index.html)
 
 ---
 ## Uploading your package distribution on PyPI
@@ -1687,6 +1709,19 @@ jobs:
 # PERFORMANCE OPTIMIZATION
 <!--#####################################################################################################-->
 
+---
+## Kind reminder about complexities
+
+Check the complexity of your code:
+
+- [🐍 Time complexity of Python structures](https://wiki.python.org/moin/TimeComplexity)
+
+- [🐍 Time complexity of sorting algorithms](https://en.wikipedia.org/wiki/Sorting_algorithm#Comparison_of_algorithms)
+
+![bg right:40% 55%](./img/tweet-bigO.jpg)
+
+---
+
 ## Refactor your code by keeping complexity in mind
 
 If you wish to optimize your program in time and/or space, check time or space the complexity of any:
@@ -1696,11 +1731,7 @@ If you wish to optimize your program in time and/or space, check time or space t
 
 The final complexity of your program depends of all of these.
 
-[🐍 Learn more about time complexity of Python structures](https://wiki.python.org/moin/TimeComplexity)
-[🐍 Learn more about complexity of sorting algorithms](https://en.wikipedia.org/wiki/Sorting_algorithm#Comparison_of_algorithms)
-
 ---
-TODO EXTEND
 ℹ️ Complexity is not the only metric to look at when you optimize your program. You may also want to:
 * Increase code coverage: how much of your code that is actually run [🐍 Learn more](https://wiki.python.org/moin/CodeCoverage)
 * Identify slow/heavy operations with a profiler [🐍 Learn more](https://docs.python.org/3/library/profile.html)
