@@ -100,17 +100,17 @@ c = 1 + 1j                                      # complex
 
 Python's floats are IEE754 floats with mathematically incorrect rounding precision:
 ```python
-0.1 + 0.1 + 0.1 - 0.3 == 0    # This is WRONG :(
+0.1 + 0.1 + 0.1 - 0.3 == 0    # This is False 😿
 print(0.1 + 0.1 + 0.1 - 0.3)  # Returns 5.551115123125783e-17 but not 0
 ```
 Also, they are not able to handle large differences of precisions:
 ```python
-1e-10 + 1e10 == 1e10          # This is True :(
+1e-10 + 1e10 == 1e10          # This is True 😿
 ```
 When you deal with float number and if precision counts, use the decimal module!
 ```python
 from decimal import Decimal
-Decimal("1e-10") + Decimal("1e10") == Decimal("1e10")   # This is True
+Decimal("1e-10") + Decimal("1e10") == Decimal("1e10")   # This is False 🎉
 ```
 Beware not to initialize `Decimal` with float since the precision is already lost: `Decimal(0.1)` will show `Decimal('0.10000000000000000555111512312578270215')`
 
@@ -164,7 +164,7 @@ scores.move_to_end("Anna", last=True)
 ```
 
 ---
-##### The deque (queue)
+##### The double-ended queue (deque)
 A deque is great to append or remove elements at both extremities:  
 ```python
 from collections import deque
@@ -172,7 +172,7 @@ queue = deque(["Kylie", "Albert", "Josh"])
 queue.appendleft("Anna")   # list.insert(0, "Anna") would be slow here: O(n)
 queue.popleft()    # list.pop(0) would be slow here: O(n)
 ```
-Deques have O(1) performance for appendleft() and popleft() while lists have O(n) performance for insert(0, value) and pop(0).
+Deques perform great for `appendleft()` and `popleft()` while lists have poor performances for the equivalent operations `insert(0, value)` and `pop(0)`.
 
 ---
 #### Immutable sequences
@@ -184,16 +184,17 @@ t = ("A", "tuple", "is", "immutable")
 ```
 Example: put the first letter of these sequences in lower case:
 ```python
-# s = "This does not work"[0] = "t"
+s = "This does not work"[0] = "t"
+# TypeError: 'str' object does not support item assignment
+
 s = "t" + "This works!"[1:]
 
-# t = ("This", "does", "not", "work")[0] = "this"
-t = "this" + ("This", "works!")[1:]
+"".join(["t"] + list("This also works!")[1:])
 ```
 
 ---
 ##### The tuple
-The tuple is the Python version of an **array**.
+The tuple is the Python type for an **array**.
 ```python
 tuple1 = (42, -15, None, 5.0)
 tuple2 = True, True, 42.5
@@ -242,7 +243,7 @@ tiffany.name
    * the `dict` 
    * the `tuple`
 
-**Conclusion:** The Python dict inherits from benefits from the tuple (for fast creation and access) and named tuples (for readibilitythanks to key-access), and it is mutable!
+**Conclusion:** The Python dict inherits from benefits from the tuple (for fast creation and access) and named tuples (for readibility thanks to key-access), and it is mutable!
 
 ---
 ### Subclassing existing types
@@ -252,10 +253,13 @@ If you require a data structure than behaves like an existing one (`dict`, `list
 In module `collections`, three types are made specifically for this purpose: `UserDict`, `UserString` and `UserList`.
 
 ```python
+from collections import UserString
+
 class UpperCaseString(UserString):
     def __init(args):
         super(UpperCaseString, self).__init__(args)
         # Custom code for constructor of str here
+    
     # Custom re-implementation of other str methods here
 ```
 
@@ -266,17 +270,17 @@ In computer science, optimization consists into improving:
 * **Time complexity**: the quantity of CPU/GPU cycles used by an operation
 * **Space complexity**: the quantity of memory used by an operation 
 
-Optimizing **time** often requires **more space**.
-Optimizing **space** often requires **more time**. 
+Optimizing **time** often requires **more space** to solve the same problem.
+Optimizing **space** often requires **more time** to solve the same problem.
 
 The less complex an operation is in terms of time / space, the better it is optimized. 
 
-According to the usecase, we may opt for a best optimization in space or in time.
+According to the usecase, we may opt for the best optimization either in space or time.
 
 An optimized program is **faster**, **greener** and **more economic**, since both time (CPUs and GPUs) and space (Hard drives and networks) consume energy.
 
 ---
-`Big-O` is a notation that helps measure complexity (in time or space) of programs.
+`Big-O` is a notation that helps measure complexity of programs in time and space.
 
 It describes how greedy an operation is according the size of its input, in terms of time (CPU cycles) or space (Memory space). It is thus a function of the input size (`n`).
 
@@ -297,8 +301,8 @@ From best to worst performance:
 |:------------------------------------:|:------------------------:|:------------------------:|
 | O(1)                        |   Constant  | Read value at index `[i]`
 | O(n)               | Linear                         | A single `for i in range(n)` loop |
-| O(n.log(n)))        | Logarithmic | Sort list (with the quicksort method)
 | O(2*n), O(3*n) ... | Linear                         | Several consecutive `for` loops |
+| O(n.log(n)))        | Logarithmic | Sort list (with the quicksort method)
 | O(n²), O(n³) ...                    | Polynomial       | `for` loops nested inside `for` loops |
 | O(2ⁿ), O(10ⁿ) ...          | Exponential | Single `for i in range(k**n)` loop
 | O(2^(2ⁿ))          | Superexponential  | Nested `for i in range(k**n)` loops
@@ -313,6 +317,8 @@ If you wish to optimize your program in time and/or space, check time or space t
 The final complexity of your program depends of all of these.
 
 **Conclusion**: If performance matters for your application, read the documentation about any data structure/function/algorithm that you are willing to use, and be careful about their behaviour and performance.
+
+[🐍 Time complexity of Python structures](https://wiki.python.org/moin/TimeComplexity)
 
 ---
 
@@ -343,15 +349,16 @@ For magics dealing with cells instead of a single line, use `%%timeit`
 ---
 From a Python module:
 ```python
-from timeit import repeat
+from timeit import timeit
 import math, numpy
+
 print(timeit("math.sqrt(25)", globals=globals()))
 print(timeit("numpy.sqrt(25)", globals=globals()))
 
 ```
 🚨 timeit is a benchmarking tool, its results depend of your current CPU load
 
-[🐍 Learn more](https://docs.python.org/3/library/timeit.html)
+[🐍 Learn more about timeit](https://docs.python.org/3/library/timeit.html)
 
 
 ---
@@ -373,12 +380,12 @@ sentence = "How do you do?"
 ## Object-oriented programming (OOP)
 
 ```python
-class Apartment():
+class Apartment:
     def __init__(self, surface):
-        self.surface = round(surface)
+        self._surface = round(surface)
     
-    def __str__(self):
-        return "This flat has {}m²".format(self.surface)
+    def get_description(self):
+        return "This flat has {}m²".format(self._surface)
 
 
 class FurnishedApartment(Apartment):
@@ -386,13 +393,18 @@ class FurnishedApartment(Apartment):
         super(FurnishedApartment, self).__init__(surface)
         self.furniture = list(furniture)
 
-    def __str__(self):
-        return "This flat of {}m² has: {}".format(self.surface, self.furniture)
+    def get_description(self):
+        return "This flat of {}m² has: {}".format(self._surface, self.furniture)
 
-str(FurnishedApartment(50))    # All methods are virtual in Python
+FurnishedApartment(surface=50).get_description()    
 ```
 
 ---
+### Virtual methods
+In Python, all methods are virtual.
+
+It means that when accessing a method e.g. `a.method()` the interpreter will first try to resolve that method in class `type(a)`, and if not present, in parent classes. 
+
 ### Polymorphism
 **Generic definition**: Using heterogeneous data types in the same scope
 
@@ -428,18 +440,34 @@ mystr(1e3).split(".")    # Methods & attributes inherited from the parent
 * **protected**: read and write access from methods of the same class or its child classes only
 * **public**: read and write access from methods of any class
 
----
 Python has similar concepts but does not enforce them:
-* **private** attributes or methods start with a double underscore (name mangling)
+* **private** attributes or methods start with a double underscore
 * **protected** attributes or methods start with an underscore
 * otherwise they are **public**
+
+---
 
 ```python
 class Foo:
     def __init__(self):
         self.public = 0
         self._protected = 0
-        self.__private = 0        # ⚠️ Name mangling
+        self.__private = 0        # ⚠️ Name mangling applies here
+```
+
+Respect of protected attributes is not enforced but private ones rely on name mangling:
+
+```python
+class BankAccount:
+     def __init__(self):
+         self.__balance = 3000
+         
+class Client:
+     def make_transaction(self, bank_account: "BankAccount"):
+         bank_account.__balance += 1000
+         
+Client().make_transaction(BankAccount())
+# AttributeError: 'BankAccount' object has no attribute '_Client__balance'
 ```
 
 ---
@@ -496,6 +524,7 @@ A Python **property** is an entity able to get, set or delete the attribute of a
 Properties are useful to add code filters to public attributes
 * **Example**: raise exceptions when attributes are set to inconsistent values
 * **Example:** make sure that the `self.month` integer is between 1 and 12
+* **Example** make an attribute read-only (with a getter but no setter)
 
 ---
 
