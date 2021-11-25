@@ -1509,16 +1509,21 @@ Moral entity or individual, which company, experience...
 
 ---
 ## Package distribution
-`setuptools`, and particulary file `setup.py` at the parent root of your package, simplifies the package distribution. The setup file holds:
+`setuptools` simplifies the package distribution. [🐍 Learn more](https://setuptools.readthedocs.io/en/latest/setuptools.html)
+
+You need a  `setup.py` file that tells:
 * The list of modules and data files embedded in the package (*replaces the `MANIFEST` file*)
 * Package version number
 * The list of dependencies on other packages from PyPI, git repos, ...
 * The entry points (executables, commands, ...)
-* ... [🐍 Learn more about setuptools](https://setuptools.readthedocs.io/en/latest/setuptools.html)
 
-Note: `setuptools` replaces the legacy `distutils`
+You need `pyproject.toml` that tells how to build the package
 
-![bg right:30% 90%](img/package-with-init-setup.png)
+*Note: `setuptools` replaces the legacy `distutils`*
+
+
+
+![bg right:24% 85%](img/package-with-init-setup.png)
 
 ---
 Most basic setup file to distribute a single module:
@@ -1530,16 +1535,23 @@ from setuptools import setup
 
 setup(name='foo',
       version='1.0',
-      py_modules=['foo'],
+      py_modules=['foo'], # distribute a single module foo.py under name foo
       )
 ```
 
-This setup file distributes a single module `foo.py` under name `foo`.
+The most basic `pyproject.toml` just tells pip to build with `setuptools` and `wheel`:
+```python
+[build-system]
+requires = [
+    "setuptools>=42",
+    "wheel"]
+build-backend = "setuptools.build_meta"
+```
+
+---
 
 Now let's see a more complete setup file distributing a package:
 
-
----
 ```python
 from setuptools import setup, find_packages
 
