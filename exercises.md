@@ -33,7 +33,7 @@ https://advanced.python.training.aubrune.eu/
 2. [ Mini-project 2: Draw plots – (Simplistic) Virus spread simulation](#2)
 3. [ Mini-project 3. Build a full package – Money transfer simulator](#12)
 4. [ Mini-project 4: Optimize Python – The code breaker](#27)
-5. [ Mini-project 5: Optimize Python – Bread-First Search optimization](#31)
+5. [ Mini-project 5: Optimize Python – Bread-First Search optimization](#30)
 6. [ Mini-project 6. Estimate π with Nilakantha](#35)
 7. [ Mini-project 7: Write asynchronous code – The chess master](#39)
 
@@ -45,9 +45,9 @@ We will use Jupyter Lab in this mini-project.
 
 2. Launch it by typing `jupyter lab` in the same terminal
 
-3. Download the noteook in your PyCharm project's folder and check your browser again
+3. Download [the notebook](https://github.com/ymollard/python-advanced-slides/raw/main/exercises/Mini-project%201.%20A%20dataset.ipynb) in your PyCharm project's folder and check your browser again
 
-If you cannot install it in short time, do not spend too much time, copy/paste cells in a regular PyCharm script from the online notebook.
+If you cannot install it in short time, do not spend too much time, copy/paste cells in a regular PyCharm script from the [online notebook](https://github.com/ymollard/python-advanced-slides/blob/main/exercises/Mini-project%201.%20A%20dataset.ipynb).
 
 ---
 
@@ -324,6 +324,8 @@ Several Python package can help automate unit tests. Among them, `pytest` is the
 
 *Note: If you create your own PyPI account, make sure you create it on the [TestPyPI index](https://test.pypi.org/account/register/) that is pruned periodically, instead of the regular PyPI*.
 
+---
+
 # Mini-project 4: Optimize Python – The code breaker
 MD5 is a message-digest algorithm that is no longer considered safe since 2004 when a research team managed to provoke collisions with MD5.
 
@@ -338,7 +340,7 @@ In this project, you have extracted MD5 digests from websites accepting only alp
 ---
 ## Part 1: Use a profiler to identify where your code wastes time 
 
-A Python script `naive_code_breaker.py` is proposed to break the MD5 sums hereabove (i.e. reverse the md5 function with the help hints such as the password characters and size). 
+Download the script [`naive_code_breaker.py`](https://github.com/ymollard/python-advanced-slides/blob/main/exercises/naive_code_breaker.py) that breaks the MD5 sums hereabove (i.e. reverse the md5 function with hints such as the password characters and size). 
 
 This script is highly unoptimized.
 
