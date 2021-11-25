@@ -4,8 +4,8 @@ marp: true
 <!-- 
 class: invert
 paginate: true
-footer: 'Python advanced training – course – Yoan Mollard – CC-BY-NC-SA [🔗](https://advanced.python.training.aubrune.eu/)'
-title: Course – Python advanced training
+footer: 'Advanced Python training – course – Yoan Mollard – CC-BY-NC-SA [🔗](https://advanced.python.training.aubrune.eu/)'
+title: Course – Advanced Python training
 author: 'Yoan Mollard'
 image: https://www.python.org/static/favicon.ico
 -->
@@ -27,57 +27,56 @@ https://advanced.python.training.aubrune.eu/
 
 
 ---
-#  Pictograms
 
-🐍  Reference to the Python official documentation
-
-
----
-
-#  Programme DAY 1
+#  Schedule of DAY 1
 
 1. [ ADVANCED PROGRAMMING TECHNIQUES](#6)
     1.1. [ Python typing](#7)
     1.2. [ Complexity and the `Big-O` notation](#18)
 2. [ CHARACTERISTICS AND PARADIGMS OF PYTHON](#25)
     2.1. [ Object-oriented programming (OOP)](#26)
-    2.2. [ Metaclasses](#44)
-    2.3. [ Functional programming](#49)
-    2.4. [ Decorators](#58)
-    2.5. [ Namespaces](#61)
-    2.6. [ Mutable default parameters](#66)
+    2.2. [ Metaclasses](#43)
+    2.3. [ Functional programming](#47)
+    2.4. [ Decorators](#56)
+    2.5. [ Context manager: the `with` statement](#59)
 
 ---
 
-#  Programme DAY 2
+#  Schedule of DAY 2
 
-3. [ CODE WITH QUALITY](#68)
-    3.1. [ Type annotations](#69)
-    3.2. [ Python docstrings](#71)
-    3.3. [ Logging](#73)
-    3.4. [ Virtual environments (venv)](#75)
-    3.5. [ Quality control tools](#84)
-    3.6. [ Name a function so that its behavior is explicit](#88)
-4. [ PACKAGE AND DISTRIBUTE](#90)
-    4.1. [ Reminders about Modules and packages](#90)
-    4.2. [ The Python Package Index (PyPI)](#98)
-    4.3. [ PyPI Security warning 🚨](#100)
-    4.4. [ Package distribution](#103)
-    4.5. [ Uploading your package distribution on PyPI](#108)
+3. [ CODE WITH QUALITY](#61)
+    3.1. [ Type annotations](#62)
+    3.2. [ Python docstrings](#64)
+    3.3. [ Logging](#66)
+    3.4. [ Virtual environments (venv)](#68)
+    3.5. [ Quality control tools](#77)
+    3.6. [ Testing](#81)
+4. [ PACKAGE AND DISTRIBUTE](#84)
+    4.1. [ Reminders about Modules and packages](#84)
+    4.2. [ The Python Package Index (PyPI)](#92)
+    4.3. [ PyPI Security warning 🚨](#94)
+    4.4. [ Package distribution](#97)
+    4.5. [ Uploading your package distribution on PyPI](#102)
 
 ---
 
-#  Programme DAY 3
+#  Schedule of DAY 3
 
-5. [ PERFORMANCE OPTIMIZATION](#110)
-    5.1. [ Refactor your code by keeping complexity in mind](#110)
-    5.2. [ Multithreading, multiprocessing ans asynchronous IO](#112)
-    5.3. [ Asynchronous code (Python coroutines)](#122)
-    5.4. [ Profiling](#131)
-    5.5. [ Alternative package managers](#132)
-6. [ ANNEXES / EXTRA-CURRICULAR TOPICS](#133)
-    6.1. [ Python for datascience](#134)
-    6.2. [ Common design patterns](#139)
+5. [ PERFORMANCE OPTIMIZATION](#104)
+    5.1. [ Kind reminder about complexities](#105)
+    5.2. [ Refactor your code by keeping complexity in mind](#106)
+    5.3. [ Multithreading, multiprocessing ans asynchronous IO](#108)
+    5.4. [ Asynchronous code (Python coroutines)](#118)
+    5.5. [ Profiling](#128)
+    5.6. [ Alternative package managers](#129)
+6. [ ANNEXES / EXTRA-CURRICULAR TOPICS](#130)
+    6.1. [ Python for datascience](#131)
+    6.2. [ Common design patterns](#136)
+
+---
+
+# Exercises and mini-projects
+
 
 ---
 
@@ -87,7 +86,7 @@ https://advanced.python.training.aubrune.eu/
 
 ---
 ## Python typing
-Python typing is **dynamic** and infered from the value: **duck typing** 🦆
+Python typing is **dynamic** and inferred from the value: **duck typing** 🦆
 
 ### Primitive types
 ```python
@@ -767,17 +766,6 @@ Some usecases of metaclasses:
 * Class mutation (e.g. remove some existing mathods when inheriting from another class)
 
 ---
-##### Classes hide dictionaries
-Behind the scenes all mutable attributes and methods from a class are stored in dictionaries:
-
-```python
-class Car:
-    IS_VEHICLE = True
-    def __init__(self):
-        self.speed = 0
-```
-
----
 ## Functional programming
 
 In functional programming your program is the result of the mathematical composition of several function calls that all take an input and return an output:
@@ -966,128 +954,51 @@ def get_bookings_list():
 ```
 
 ---
-## Namespaces
-**Definition**: a namespace is a specific mapping of variable values to variable names
+## Context manager: the `with` statement
 
-e.g. `pi = 3.14`... from which namespace the variable `pi` is changed? Local to the module `numpy.pi`? Global to the script? Local to the function? ...
-
-Python creates, evaluates and destroys namespaces automatically during the lifetime of your program . All you need to know is which namespace you're using when performing a variable read or write.
-
-[🐍 Learn more](https://docs.python.org/3/tutorial/classes.html#python-scopes-and-namespaces)
-
----
-The interpreter resolves names according to this priority:
-1. The innermost scope: which is searched first, contains the local names
-2. Inner scopes: from enclosing function calls
-3. Module scope, if any, or `__main__`
-4. Last scope: Built-in
-
-the next-to-last scope contains the current module’s global names
-
-the outermost scope (searched last) is the namespace containing built-in names
-
----
-**Case 1**: Built-in namespace
-
-Namespace is:
-* created when the interpreter starts
-* destroyed when the interpreter closes
-
-```bash
-python -c "print('Hello')"
-```
-In this namespace, `print()` is mapped to `builtins.print()`
+The keyword `with` is a context manager that protects a resource to make sure it is actually teared down after allocation in any case.
 
 ```python
-def print(thing): 
-    raise NotImplementedError("I do not want to print")
-print("Hello")            # Will raise exception
-builtins.print("Hello")   # Will print because builtins still resolves to builtins
+f = open("file.json", "w")
+f.write()
+# PROCESSING WRITING [...] 
+f.write()
+f.close()
 ```
 
+What if an exception occurs during the processing of the file? It wouldn't be closed.
 
----
-**Case 2**: Local namespace to a function
-
-Namespace is:
-* created when entering the function call (⚠️ not definition)
-* destroyed when leaving the function call
+The context manager ensures that the resource is automatically closed in any case:
 
 ```python
-variable = 1                                                                                                
-
-def print_var():
-    print(variable)
-
-variable = 2
-
-print_var()       # Will print ??? because ??? 
+with open("file.json", "w") as f:
+    f.write()
 ```
 
 ---
-Example from the Python doc:
-![bg right:40% w:510px](img/scopes.svg)
-
-
+The standard library is compatible with context managers for files, locks, and synchronisation primitives. But you may also create your own:
 
 ```python
-def middle_scope():
-    def do_local():
-        spam = "local"
+class ProtectedResource:
+   def __enter__(self):
+       print("The resource is being open")
 
-    def do_nonlocal():
-        nonlocal spam
-        spam = "nonlocal"
-
-    def do_global():
-        global spam
-        spam = "global"
-
-    spam = "middle"
-    do_local()
-    print("After local assignment:", spam)     # middle
-    do_nonlocal()
-    print("After nonlocal assignment:", spam)  # nonlocal
-    do_global()
-    print("After global assignment:", spam)    # nonlocal
-
-scope_test()
-print("In global scope:", spam)                # global
+   def __exit__(self, type, value, traceback):
+       print("The resource is being closed, with or without exception")
 ```
-
----
-## Mutable default parameters
-```python
-def add_fruit(fruit, recipient=[]):
-    recipient.append(fruit)
-    return recipient
-
-fridge = add_fruit("apple")
-print("Content of the fridge:", fridge)   # Will print ["apple"]
-
-trash = add_fruit("apple")
-print("Content of the trash:", trash)     # Guess what's in the trash??
-```
-
----
 
 ```python
-def add_fruit(fruit, recipient=[]):
-    recipient.append(fruit)
-    return recipient
+resource = ProtectedResource()
+with resource:
+    raise ValueError("Let's see if it works")
 
-fridge = add_fruit("apple")
-print("Content of the fridge:", fridge)   # Will print ["apple"]
-
-trash = add_fruit("apple")
-print("Content of the trash:", trash)     # Will print ["apple", "apple"]
+# The resource is being open
+# The resource is being closed, with or without exception
+# Traceback (most recent call last):
+#  File "<input>", line 3, in <module>
+# ValueError: Let's see if it works
 ```
 
-Default parameters are evaluated **during function definition**!
-
-Thus, if the default parameter is mutable (*list, dict, object...*), later on it will refer to the same instance every time the default parameter is invoked.
-
-**Good practice**: use only immuable types for default parameters, e.g. `recipient=()`
 
 <!--#####################################################################################################-->
 ---
@@ -2022,6 +1933,16 @@ async def fetch(url):
 
 asyncio.run(fetch("http://example.com"))
 ```
+
+---
+### Async streams
+
+Streams provide async tools made for network communication where you need to:
+* Read from the recipient: using a `StreamReader` instance
+* Write to the recipient: using a `StreamWriter` instance
+
+### 
+
 ---
 ## Profiling
 
@@ -2097,11 +2018,9 @@ With numpy:
 ```python
 import numpy
 x = numpy.linspace(-3.14, 3.14, 100000) # 100000 values in range [-3.14, 3.14]
-numpy.sin(x) # 100000 images of x elemets by the sin function
+numpy.sin(x)  # 100000 images of x by the sin() function
 ```
 
-
--> Ideal for plots
 
 ---
 ### Matplotlib

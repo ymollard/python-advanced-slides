@@ -1,0 +1,53 @@
+{
+    "Marie Dupont": {
+        "french": "9",
+        "maths": "14"
+    },
+    "Hubert Georges": {
+        "french": "N/A",
+        "maths": "7.5",
+        "philosophy ": "8.5"
+    },
+    "Bob Dupont": {
+        "french": "15",
+        "maths": "15.5",
+        "Philosophy": "17"
+    },
+    "Paul Georges": {
+        "french": "13",
+        "maths": "7.5",
+        "Philosophy ": "18"
+    },
+    "Alex Georges": {
+        "french": "6",
+        "maths": "14.5",
+        "Philosophy": "11.5"
+    },
+    "Luc Mercier": {
+        "French": "14",
+        "maths": "11.5",
+        "philosophy": "8.5"
+    },
+    "Robert Dupont": {
+        "french": "9.5",
+        "maths": "15",
+        "philosophy": "9.5"
+    },
+    "Dylan Mercier": {
+        "french": "11.5",
+        "maths ": "0",
+        "philosophy": "0"
+    },
+    "Bob-L\u00e9a Dupont": {
+        "french": "11.5",
+        "maths": "13.5",
+        "philosophy": "9"
+    },
+    "Bob-Richard Dupont": [],
+    "Georges Dupont": {
+        "french": "0",
+        "maths": "",
+        "Philosophy": "{\"Paul\": {\"maths\": \"0\"}}"
+    },
+    "Maria Mercier": {}
+}
