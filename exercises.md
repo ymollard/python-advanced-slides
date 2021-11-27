@@ -317,7 +317,8 @@ Several Python package can help automate unit tests. Among them, `pytest` is the
 * 7.1. Create `setup.py` and `pyproject.toml` in your package and update them
 * 7.2. Name your package `accounts-MYNAME` by replacing your name
 * 7.3. Install `wheel` and `twine`, build `sdist` and `bdist_wheel` distributions
-* 7.5. Upload both distributions to TestPyPI with account `python-trainings-testpypi@aubrune.eu` password `Human/Coders/42` (*ask for pwd updates*)
+* 7.5. Upload both distributions to TestPyPI with login `__token__`
+(*for the password, ask for the token*)
 * 7.6. Make sure you can then install your package via pip if you target the TestPyPI index ith `--index-url https://test.pypi.org/simple/`
 * 7.7. Update your package (e.g. add `numpy` dependency) and publish a new version 1.1. Make sure both versions are now on TestPyPI
 
