@@ -235,8 +235,8 @@ In real life another kind of account exists: the account whose balance can actua
 The proposed rule here is that, when an account is negative after an outgoing money transfer, each second will cost $1 to the owner until the next money credit.
 
 ---
-* 3.1. Implement a class `AgioBankAccount` so that:
-  * the `AgioBankAccount` inherits from `BankAccount`. Make sure you do not forget to call parent method with the `super()` keyword if necessary
+* 3.1. Implement a class `AgiosBankAccount` so that:
+  * the `AgiosBankAccount` inherits from `BankAccount`. Make sure you do not forget to call parent method with the `super()` keyword if necessary
   * the constructor of this account takes in parameter the account of the bank so that agios can be credited on their account.
   * the  `transfer_to` methode overloads the parent method, with the only difference that it it records the time from which the balance becomes negative. You need an additional attribute for this.
   * the `credit` method overload the methode from the parent class, with the only difference that it computes the agios to be payed to the bank and transfer the money to the bank. Round agios to integer values.
@@ -262,14 +262,12 @@ from account.external.agios import AgiosBankAccount
 from account.external.blocked import BlockedBankAccount
 from account.internal import BankAccount
 ```
-This hierarchy sets the file/directory hierarchy to use in your package:
-
-![File and folder hierarchy](./images/package.png)
+This hierarchy sets the file/directory hierarchy to use in your package.
 
 ---
 * 4.1. Re-organize your code in order to create this hierarchy of empty `.py` files first. Create an empty script `scenario1.py`for the future scenario.
 
-* 4.2. Move the class declaration of `AgioBankAccount` in `agio.py`
+* 4.2. Move the class declaration of `AgiosBankAccount` in `agios.py`
 
 * 4.3. Move the class declaration of `BlockedBankAccount` in `blocked.py`
 
@@ -315,11 +313,11 @@ Several Python package can help automate unit tests. Among them, `pytest` is the
 * 6.3. With the documentation of `pytest`, implement a few unit tests for your classes and run the test with pytest 
 
 ---
-## Part 7: Distribute your package to TestPyPi
-* 7.1. Add a `setup.py` file to your package and update all its values
+## Part 7: Distribute your package to TestPyPi (cf [doc](https://packaging.python.org/tutorials/packaging-projects/))
+* 7.1. Create `setup.py` and `pyproject.toml` in your package and update them
 * 7.2. Name your package `accounts-MYNAME` by replacing your name
 * 7.3. Install `wheel` and `twine`, build `sdist` and `bdist_wheel` distributions
-* 7.5. Upload both distributions to TestPyPI with account `python-trainings-testpypi@aubrune.eu` password `Human/Coders/42` (ask for pwd updates)
+* 7.5. Upload both distributions to TestPyPI with account `python-trainings-testpypi@aubrune.eu` password `Human/Coders/42` (*ask for pwd updates*)
 * 7.6. Make sure you can then install your package via pip if you target the TestPyPI index ith `--index-url https://test.pypi.org/simple/`
 * 7.7. Update your package (e.g. add `numpy` dependency) and publish a new version 1.1. Make sure both versions are now on TestPyPI
 
