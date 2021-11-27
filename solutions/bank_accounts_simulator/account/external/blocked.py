@@ -1,4 +1,10 @@
 from ..internal import BankAccount
+from datetime import datetime
+from typing import Optional
+
+
+class UnauthorizedTransfer(ValueError):
+    pass
 
 
 class BlockedBankAccount(BankAccount):
@@ -6,7 +12,7 @@ class BlockedBankAccount(BankAccount):
         super(BlockedBankAccount, self).__init__(owner, initial_balance)
         self.limit = 0
 
-    def transfer_to(self, recipient_account, value):
+    def transfer_to(self, recipient_account: "BankAccount", value: float, transaction_date: Optional[datetime] = None):
         if self.balance - value < self.limit:
-            raise ValueError("{} does not have enough money".format(self.owner))
-        super(BlockedBankAccount, self).transfer_to(recipient_account, value)
+            raise UnauthorizedTransfer(f"{self.owner} does not have enough money")
+        super(BlockedBankAccount, self).transfer_to(recipient_account, value, transaction_date)

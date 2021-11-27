@@ -180,8 +180,10 @@ In this mini-project, celebrations simulate a temporary decrease of the respect 
 # Mini-project 3. Build a full package – Money transfer simulator
 
 In this exercise we are going to create a simplified Information System that is able to handle and simulate bank transactions.
-In our scenario there are 4 actors: a bank, a Walmart supermarket, and 2 individuals Alice and Bob.
-Each actor has its own bank account.
+
+In our scenario there are 4 actors: a bank (HSBC), a supermarket (Walmart), and 2 individuals Alice and Bob.
+
+Each actor has his/her own bank account.
 
 ---
 ## Part 1: The basic scenario
@@ -206,9 +208,9 @@ bob = BankAccount("Bob Müller", 100)
   - `_credit(value)` that credits the current account with the value passed in parameter. We will explain the goal of the initial underscore later.
   - `transfer_to(recipient, value)` that transfers the value passed in parameter to the recipient passed in parameter
   
-- 1.4. After each of the following transactions, print the state of all accounts to make sure the intermediary result is correct:
+- 1.4. Run the following scenario and check that end balances are right:
   - 1.4.1. Alice buys $100 of goods at Walmart
-  - 1.4.2. Bob fbuys $100 of goods at Walmart
+  - 1.4.2. Bob buys $100 of goods at Walmart
   - 1.4.3. Alice makes a donation of $100 to Bob
   - 1.4.4. Bob buys $200 at Walmart
 
@@ -217,7 +219,7 @@ bob = BankAccount("Bob Müller", 100)
 
 Bob is currently overdrawn. To prevent this kind of situation, its customer adviser prefers to convert his account into a blocked account. This way, any purchase would be refused if Bob had not enough money.
 
-- 2.1. Implement a class `BlockBankAccount` so that:
+- 2.1. Implement a class `BlockedBankAccount` so that:
   - the `BlockedBankAccount` inherits from `BankAccount`. Make sure you do not forget to call parent method with the `super()` keyword if necessary
   - the `transfer_to` methods overloads the parent method, with the only difference that it raises an exception if the balance is not sufficiently provided to execute the transfer
 
@@ -232,40 +234,52 @@ Bob is currently overdrawn. To prevent this kind of situation, its customer advi
 ## Part 3: The account with agios
 
 In real life another kind of account exists: the account whose balance can actually be negative, but it that case the owner must pay agios to his(her) bank.
-The proposed rule here is that, when an account is negative after an outgoing money transfer, each second will cost $1 to the owner until the next money credit.
+
+The proposed rule here is that, when an account is negative after an outgoing money transfer, each day will cost $1 to the owner until the next money credit.
+
+To do so, we need to introduce **transaction dates** in our simulation.
 
 ---
 - 3.1. Implement a class `AgiosBankAccount` so that:
   - the `AgiosBankAccount` inherits from `BankAccount`. Make sure you do not forget to call parent method with the `super()` keyword if necessary
   - the constructor of this account takes in parameter the account of the bank so that agios can be credited on their account.
-  - the  `transfer_to` methode overloads the parent method, with the only difference that it it records the time from which the balance becomes negative. You need an additional attribute for this.
-  - the `credit` method overload the methode from the parent class, with the only difference that it computes the agios to be payed to the bank and transfer the money to the bank. Round agios to integer values.
+  - the  `transfer_to` method overloads the parent method:
+    - it takes the `transaction_date` in parameter, of type `datetime` (also change the parent class)
+    - it records the time from which the balance becomes negative. You need an additional attribute for this.
+  - the `credit` method overloads the method from the parent class, with the only difference that it computes the agios to be payed to the bank and transfer the money to the bank. Round agios to integer values.
 
 ---
  - 3.2. Move the code computing the agios in a private method named `__check_for_agios`, explain the concept of private method and the role of the double underscore 
- - 3.3. Check your implementation with the previous scenario, pause the scenario during 5 seconds and check that in the end, $5 of agios are payed by Bob to his bank, before Alice makes him a donation.
+ - 3.3. Check your implementation with the previous scenario: After Bob has a negative balance, Alice makes him a transfer 5 days later: make sure that $5 of agios are payed by Bob to his bank.
 
 ---
 ## Part 4: The `account` package
 
 We have just coded a very simple tool simulating transactions between bank accounts in Object-Oriented Programming.
+
 In order to use it with a lot of other scenarii and actors, we are going to structure our code within a Python package.
 
 We will organise our accounts with the following terminology:
 - **bank-internal** accounts do not create agios and are not blocked, there are `BankAccount` and only banks can own such account
-- **bank-externes** accounts are for individuals or companies, they can be either blocked or agios accounts.
+- **bank-external** accounts are for individuals or companies, they can be either blocked or agios accounts.
 
 ---
 We would like to be able to import ther classes from than manner:
-```
+```python
 from account.external.agios import AgiosBankAccount
 from account.external.blocked import BlockedBankAccount
 from account.internal import BankAccount
 ```
-This hierarchy sets the file/directory hierarchy to use in your package.
+
+
+- 4.1. Re-organize your code in order to create this hierarchy of empty `.py` files first as on the figure.
+Create an empty script `scenario1.py`for the scenario.
+
+![bg right:25% 80%](./img/exercises/package-init.png)
 
 ---
-- 4.1. Re-organize your code in order to create this hierarchy of empty `.py` files first. Create an empty script `scenario1.py`for the future scenario.
+
+- 4.2. Create a logger for each module: `agios.py`, `blocked.py`, `internal.py`. Make sure you log unseful debug info in the next questions.
 
 - 4.2. Move the class declaration of `AgiosBankAccount` in `agios.py`
 
@@ -273,21 +287,22 @@ This hierarchy sets the file/directory hierarchy to use in your package.
 
 - 4.4. Move the class declaration of `BankAccount` in `internal.py`
 
+
 - 4.5. Move the scenario (i.e. the successive instanciation of all accounts of companies and individuals) in `scenario1.py`
 
-- 4.6. Open `blocked.py`, it misses an import from the parent class `BankAccount`. Add the import as a relative one.
+---
+
+- 4.6. Check each module and add missing relative import statements 
+Relative imports start with `.` or `..`
+
+- 4.7. Check each module and add missing absolute import statements such as `datetime`
+
+⚠️ Import statements in the scenario must not be relative because `scenario1.py` will be located outside package `account`. 
+
+ℹ️ Since package `account` is in the same directory as the scneario script, there will not be any issue to import it. If it had to be in another path, we could fix it by adding the path to `account` to the `sys.path` value.
 
 ---
-- 4.7. Open `agio.py`, it missed the same import as well as an import of the  `time` module (or any package your used to deal with time)
-
-- 4.8. Complete the missing imports i the scenario file. Be careful: the imports in the scenario must not be relative because `scenario1.py` will be located outside package `account`. 
-
-_Nota Bene:_ Since package `account` is in the same directory as the scneario script, there will not be any issue to import it. If it had to be in another path, we could fix it by adding the path to `account` to the `sys.path` value.
-
----
-- 4.9. Add empty `__init__.py` files to all directories of the package. You must have:
-
-![bg right:40% 70%](./img/package-init.png)
+- 4.9. Add empty `__init__.py` files to all directories of the package.
 
 - 4.10. Execute the scenario and check that it leads to the same result as before this refactoring
 
@@ -306,11 +321,10 @@ What would be the type resulting from this sum?
 ## Part 6: Unit tests for the package with `pytest`
 
 Unit tests consits into testing functions one after the other, by checking individually their output accourding to a given input.
-Several Python package can help automate unit tests. Among them, `pytest` is the best compromise between efficiency and simplicity
 
 - 6.1. Install `pytest` with pip
-- 6.2. Creat an empty file `tests.py`in the same folder than the scenario
-- 6.3. With the documentation of `pytest`, implement a few unit tests for your classes and run the test with pytest 
+- 6.2. Create an empty file `tests.py`in the same folder than the scenario
+- 6.3. With the documentation of `pytest`, implement a few unit tests for your classes and run the tests with pytest 
 
 ---
 ## Part 7: Distribute your package to TestPyPi (cf [doc](https://packaging.python.org/tutorials/packaging-projects/))
