@@ -1566,9 +1566,9 @@ setup(name='my_math',
       version='2.0',
       description='Custom math tools and functions',
       license='MIT',
-      author='Yoan Mollard',
-      author_email='yoan@aubrune.eu',
-      url='https://github.com/ymollard/my_math',
+      author='Bob Dupont',
+      author_email='bob@example.org',
+      url='https://github.com/bobdupont42/my_math',
       packages=find_packages(),                 # Embedded (sub-)packages
       install_requires=['numpy', 'matplotlib']  # Dependencies to install
      )
