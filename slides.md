@@ -242,13 +242,13 @@ tiffany.name
 
 **Exercise**: With `timeit`, compare performance of:
 1. Multiple declarations of:
-   * instances of type `HighScores` (namedtuple)
-   * instances of type `dict` (with equivalent data fields)
-   * instances of type `tuple` (with equivalent data sequence)
+   - instances of type `HighScores` (namedtuple)
+   - instances of type `dict` (with equivalent data fields)
+   - instances of type `tuple` (with equivalent data sequence)
 2. Multiple access to the score of:
-   * the `HighScores` (namedtuple)
-   * the `dict` 
-   * the `tuple`
+   - the `HighScores` (namedtuple)
+   - the `dict` 
+   - the `tuple`
 
 **Conclusion:** The Python dict inherits from benefits from the tuple (for fast creation and access) and named tuples (for readibility thanks to key-access), and it is mutable!
 
@@ -274,8 +274,8 @@ class UpperCaseString(UserString):
 ---
 ## Complexity and the `Big-O` notation
 In computer science, optimization consists into improving:
-* **Time complexity**: the quantity of CPU/GPU cycles used by an operation
-* **Space complexity**: the quantity of memory used by an operation 
+- **Time complexity**: the quantity of CPU/GPU cycles used by an operation
+- **Space complexity**: the quantity of memory used by an operation 
 
 Optimizing **time** often requires **more space** to solve the same problem.
 Optimizing **space** often requires **more time** to solve the same problem.
@@ -292,8 +292,8 @@ An optimized program is **faster**, **greener** and **more economic**, since bot
 It describes how greedy an operation is according the size of its input, in terms of time (CPU cycles) or space (Memory space). It is thus a function of the input size (`n`).
 
 Examples:
-* `O(n)` in time = for an input of size `n`, the operation requires `n` CPU cycles 
-* `O(n*n)` in time = for an input of size `n`, the oepration requires `n*n` CPU cycles
+- `O(n)` in time = for an input of size `n`, the operation requires `n` CPU cycles 
+- `O(n*n)` in time = for an input of size `n`, the oepration requires `n*n` CPU cycles
 
 ℹ️ Here, *CPU cycle* and `n` do not refer to a precise quantity (e.g. bytes, assembly instructions, time in seconds...), only the order of magnitude is important.
 
@@ -317,9 +317,9 @@ From best to worst performance:
 ---
 ### Deal with complexity in practice
 If you wish to optimize your program in time and/or space, check time or space the complexity of any:
-* **data structure** that you are using
-* **function** that you are using
-* **algorithm** that you are using
+- **data structure** that you are using
+- **function** that you are using
+- **algorithm** that you are using
 
 The final complexity of your program depends of all of these.
 
@@ -371,9 +371,9 @@ print(timeit("numpy.sqrt(25)", globals=globals()))
 ---
 # CHARACTERISTICS AND PARADIGMS OF PYTHON
 Python is multi-paradigm:
-* **Imperative**: *instructions create state changes*
-* **Object-oriented**: *instructions are grouped with their data in objects/classes*
-* **Functional**: *instructions are math function evaluations*
+- **Imperative**: *instructions create state changes*
+- **Object-oriented**: *instructions are grouped with their data in objects/classes*
+- **Functional**: *instructions are math function evaluations*
 
 All 3 paradigms are popular in the Python community, and often mixed all together, e.g:
 
@@ -421,16 +421,16 @@ It means that when accessing a method e.g. `a.method()` the interpreter will fir
 
 ---
 #### How does polymorphism apply to OOP?
-* **ad-hoc**: same name from different classes
+- **ad-hoc**: same name from different classes
 ```python
 ["H", "e", "y"].index("e")
 "Hey".index("y")
 ```
-* **parametric**: same method with different parameter types (⚠️ overloading in Java)
+- **parametric**: same method with different parameter types (⚠️ overloading in Java)
 ```python
 print("It is", True, "that the Ultimate Question of Life is", 42)
 ```
-* **inheritance**: method is inherited from a different (parent) type
+- **inheritance**: method is inherited from a different (parent) type
 
 ```python
 class mystr(str): pass
@@ -443,14 +443,14 @@ mystr(1e3).split(".")    # Methods & attributes inherited from the parent
 ---
 ### Reminder about public, protected and private scopes
 *In C++, the scope of attributes or methods can be:*
-* **private**: read and write access from methods of the same class only
-* **protected**: read and write access from methods of the same class or its child classes only
-* **public**: read and write access from methods of any class
+- **private**: read and write access from methods of the same class only
+- **protected**: read and write access from methods of the same class or its child classes only
+- **public**: read and write access from methods of any class
 
 Python has similar concepts but does not enforce them:
-* **private** attributes or methods start with a double underscore
-* **protected** attributes or methods start with an underscore
-* otherwise they are **public**
+- **private** attributes or methods start with a double underscore
+- **protected** attributes or methods start with an underscore
+- otherwise they are **public**
 
 ---
 
@@ -529,9 +529,9 @@ A Python **property** is an entity able to get, set or delete the attribute of a
 
 
 Properties are useful to add code filters to public attributes
-* **Example**: raise exceptions when attributes are set to inconsistent values
-* **Example:** make sure that the `self.month` integer is between 1 and 12
-* **Example** make an attribute read-only (with a getter but no setter)
+- **Example**: raise exceptions when attributes are set to inconsistent values
+- **Example:** make sure that the `self.month` integer is between 1 and 12
+- **Example** make an attribute read-only (with a getter but no setter)
 
 ---
 
@@ -542,10 +542,10 @@ property(fget=None, fset=None, fdel=None, doc=None)
 ```
 
 Where:
-* `fget` is a function to get the value of the attribute (the getter)
-* `fset` is a function to set the value of the attribute (the setter)
-* `fdel` is a function to delete the attribute
-* `doc` is a docstring
+- `fget` is a function to get the value of the attribute (the getter)
+- `fset` is a function to set the value of the attribute (the setter)
+- `fdel` is a function to delete the attribute
+- `doc` is a docstring
 
 ---
 ```python
@@ -735,8 +735,8 @@ class Tiger(Animal, Mammalia): pass  # The superclass Animal is before Mammalia
 #   for bases Animal, Mammalia
 ```
 A consistent MRO requires to validate the following:
-* The first superclasses list must be before in the MRO than the ones it lists later.
-* A class in the MRO must be before its superclasses: `Tiger(Mammalia, Animal)`
+- The first superclasses list must be before in the MRO than the ones it lists later.
+- A class in the MRO must be before its superclasses: `Tiger(Mammalia, Animal)`
 
 ---
 ## Metaclasses
@@ -797,9 +797,9 @@ Cat().meow()    # MEOW!
 ---
 
 Some usecases of metaclasses:
-* Class generation at runtime (e.g. from classes described in a configuration file)
-* Class checking (e.g. check the existance of compulsory/forbidden methods or attributes)
-* Class mutation (e.g. remove some existing mathods when inheriting from another class)
+- Class generation at runtime (e.g. from classes described in a configuration file)
+- Class checking (e.g. check the existance of compulsory/forbidden methods or attributes)
+- Class mutation (e.g. remove some existing mathods when inheriting from another class)
 
 ---
 ## Functional programming
@@ -977,8 +977,8 @@ class Animal:
 
 ---
 **Example 2:** Web frameworks usually use decorators to associate a function e.g. `get_bookings_list()` to:
-* an endpoint e.g. `/bookings/list`
-* a HTTP method e.g. `GET`
+- an endpoint e.g. `/bookings/list`
+- a HTTP method e.g. `GET`
 
 Here is how Flask works:
 ```python
@@ -1065,11 +1065,11 @@ Mistakes will NOT raise exception or prevent the interpreter from running the co
 
 ---
 To specify more complex annotations, import them from `typing`:
-* `Any`: every type
-* `Union[X, Y, Z]`: one among several types (e.g. `int`, `float` or `str`)
-* `Tuple[X, Y, Z]`: tuple (sequence) of several types (e.g. `bool`, `str`)
-* `Callable[[X], Y]`: function that takes X in input and returns Y
-* `TypeVar`: a name of variable type
+- `Any`: every type
+- `Union[X, Y, Z]`: one among several types (e.g. `int`, `float` or `str`)
+- `Tuple[X, Y, Z]`: tuple (sequence) of several types (e.g. `bool`, `str`)
+- `Callable[[X], Y]`: function that takes X in input and returns Y
+- `TypeVar`: a name of variable type
 
 ```python
 from typing import Union
@@ -1116,11 +1116,11 @@ def is_same_sign_than_or_positive(a: Union[float, int], b: Optional[Union[float,
 ---
 ### What should have a docstring?
 Everything that is exported by a module:
-* modules
-* functions
-* classes
-* public methods (including the __init__ constructor)
-* packages (via their `__init__.py`) 
+- modules
+- functions
+- classes
+- public methods (including the __init__ constructor)
+- packages (via their `__init__.py`) 
 
 Let your IDE (e.g. Pycharm) autocomplete the docstring syntax for you!
 
@@ -1245,8 +1245,8 @@ PEP8 codes start with E (Errors) or W (Warnings)
 
 ---
 Linters can be customized in configuration files in:
-* `~/.config/pep8` if it's user-wide
-* `<PROJECT_ROOT>/setup.cfg` or `<PROJECT_ROOT>/tox.ini` if it's project-wide
+- `~/.config/pep8` if it's user-wide
+- `<PROJECT_ROOT>/setup.cfg` or `<PROJECT_ROOT>/tox.ini` if it's project-wide
 
 Example:
 ```conf
@@ -1289,14 +1289,14 @@ main.py:3:1: E302 expected 2 blank lines, found 1          # Style
 
 ---
 ## Testing
-* Packages `pytest`, `unittest` or `tox` are frequently used to test Python apps
-* `unittest` relies on the regular test framework:
-  * **Setup**: Prepare every prerequisite for the test
-  * **Call**: call the tested function with input parameters setuped before
-  * **Assertion**: an assert is a ground truth that must be true
-  * **Tear down**: Cleanup everything that has been created for this test
-* `pytest` is a light test framework
-* On top of these, `tox` allows to run tests in multiple environments (e.g. Python versions)
+- Packages `pytest`, `unittest` or `tox` are frequently used to test Python apps
+- `unittest` relies on the regular test framework:
+  - **Setup**: Prepare every prerequisite for the test
+  - **Call**: call the tested function with input parameters setuped before
+  - **Assertion**: an assert is a ground truth that must be true
+  - **Tear down**: Cleanup everything that has been created for this test
+- `pytest` is a light test framework
+- On top of these, `tox` allows to run tests in multiple environments (e.g. Python versions)
 
 ---
 
@@ -1349,8 +1349,8 @@ Then just type `pytest` and the test report will be printed in the terminal!
 A **module** is a Python file, e.g. `mymodule.py`. The module name is `mymodule`
 
 Either the module is made to be:
-* imported: it is a **package**: `import mymodule`
-* executed: it is a **script**: `python mymodule.py`
+- imported: it is a **package**: `import mymodule`
+- executed: it is a **script**: `python mymodule.py`
 
 A package is a folder containing modules.
 Modules can also be bindings, e.g. Python bindings to a C++ library.
@@ -1375,17 +1375,17 @@ The Windows shell ignore shebangs.
 
 ---
 ### Structure of Python packages
-* Packages and sub-packages allow to bring a hierarchy to your code
-* The package's hierarchy is inherited from the files-and-folders hierarchy 
-* Modules hold resources that can be imported later on, e.g.:
-  * Constants
-  * Classes
-  * Functions...
+- Packages and sub-packages allow to bring a hierarchy to your code
+- The package's hierarchy is inherited from the files-and-folders hierarchy 
+- Modules hold resources that can be imported later on, e.g.:
+  - Constants
+  - Classes
+  - Functions...
 ![bg right:40% 70%](img/package-init.png)
 
 ---
-* All packages and sub-packages must contain an `__init__.py` file each
-* In general `__init__.py` is empty but may contain code to be executed at import time
+- All packages and sub-packages must contain an `__init__.py` file each
+- In general `__init__.py` is empty but may contain code to be executed at import time
 
 ![bg right:30% 90%](img/package-with-init.png)
 
@@ -1424,8 +1424,8 @@ from ..my_math import my_sqrt
 value = sqrt(25)
 ```
 
-* Do not put any slash such as ~~`import ../my_math`~~
-* Only current and parent folders can be retrieved with a relative import
+- Do not put any slash such as ~~`import ../my_math`~~
+- Only current and parent folders can be retrieved with a relative import
 
 ---
 
@@ -1496,19 +1496,19 @@ pip install matplotlib
 ---
 ### Perform sanity checks before installing a package
 
-* Is the package still maintained **and** documented?
+- Is the package still maintained **and** documented?
 ```
 Last update: November, 2017
 ```
-* Does the developer consider bugs and improvements?
+- Does the developer consider bugs and improvements?
 ```
 # of solved Github issues
 ```
-* Is the package developer reliable?
+- Is the package developer reliable?
 ```
 Moral entity or individual, which company, experience...
 ```
-* If not opensource, is the development of this package likely to continue?
+- If not opensource, is the development of this package likely to continue?
 ```
 # of opensource users, # of clients, company financial health if not opensource, ...
 ```
@@ -1519,10 +1519,10 @@ Moral entity or individual, which company, experience...
 `setuptools` simplifies the package distribution. [🐍 Learn more](https://setuptools.readthedocs.io/en/latest/setuptools.html)
 
 You need a  `setup.py` file that tells:
-* The list of modules and data files embedded in the package (*replaces the `MANIFEST` file*)
-* Package version number
-* The list of dependencies on other packages from PyPI, git repos, ...
-* The entry points (executables, commands, ...)
+- The list of modules and data files embedded in the package (*replaces the `MANIFEST` file*)
+- Package version number
+- The list of dependencies on other packages from PyPI, git repos, ...
+- The entry points (executables, commands, ...)
 
 You need `pyproject.toml` that tells how to build the package
 
@@ -1581,15 +1581,15 @@ There is 1 sub-package per `__init__.py` file.
 
 ---
 The setup file then offers distribution tools:
-* Install the package in the current environement:
+- Install the package in the current environement:
 ```bash
 pip install .
 python setup.py install   # equivalent but deprecated because pip is cool 😎
 ```
 
-* Build distribution:
-  * sdist : Source distribution
-  * bdist_wheel : Binary distribution 
+- Build distribution:
+  - sdist : Source distribution
+  - bdist_wheel : Binary distribution 
 
 ```bash
 pip install build  # The latest recommanded build tool by PyPA
@@ -1603,16 +1603,16 @@ python3 -m build   # Will build both a sdist and bdist
 ---
 
 ### Remarks about binary distribution bdist_*
-* Binary format at platform-dependant (OS, arch, Python implementation and ABI)
-* `.egg` files are just zip files containing sdist or bdist, you can unzip them
-* Optional `setup.cfg` customizes the setup behaviour (e.g. ignore some flake8...)
-* Several binary formats exist: wheel, egg... As of 2021, `wheel` format is preferred
-* wheel files are named this way: `my_math-3.0.4-py3-none-any.whl` where:
-  * `my_math` is the package name
-  * `3.0.4` is the version
-  * `py3` is the Python implementation tag
-  * `none` is the ABI tag ([the C API for Python](https://docs.python.org/3/c-api/stable.html))
-  * `any` is the platform (x86_64, arm, macos...)
+- Binary format at platform-dependant (OS, arch, Python implementation and ABI)
+- `.egg` files are just zip files containing sdist or bdist, you can unzip them
+- Optional `setup.cfg` customizes the setup behaviour (e.g. ignore some flake8...)
+- Several binary formats exist: wheel, egg... As of 2021, `wheel` format is preferred
+- wheel files are named this way: `my_math-3.0.4-py3-none-any.whl` where:
+  - `my_math` is the package name
+  - `3.0.4` is the version
+  - `py3` is the Python implementation tag
+  - `none` is the ABI tag ([the C API for Python](https://docs.python.org/3/c-api/stable.html))
+  - `any` is the platform (x86_64, arm, macos...)
 
 
  [🐍 Learn more about package distribution: Python docs](https://docs.python.org/fr/3/distributing/index.html)
@@ -1625,8 +1625,8 @@ As of 2021, uploading to PyPI with `twine` is the preferred option:
 1. Create an account on [PyPI](https://pypi.org/account/register/) or in the sandbox [TestPyPI](https://test.pypi.org/account/register/) if you're just testing
 2. ` pip install twine`
 3. `twine upload dist/* --repository testpypi`
-   * Drop the `--repository` argument if you want to upload to the regular pypi
-   * `--repository` can also target your company's own pypi server [Learn more](https://packaging.python.org/guides/hosting-your-own-index/)
+   - Drop the `--repository` argument if you want to upload to the regular pypi
+   - `--repository` can also target your company's own pypi server [Learn more](https://packaging.python.org/guides/hosting-your-own-index/)
 
 ---
 ### Python package deployment with Continuous Integration (Github actions)
@@ -1684,29 +1684,29 @@ Check the complexity of your code:
 ## Refactor your code by keeping complexity in mind
 
 If you wish to optimize your program in time and/or space, check time or space the complexity of any:
-* **data structure** that you are using
-* **function** that you are using
-* **algorithm** that you are using
+- **data structure** that you are using
+- **function** that you are using
+- **algorithm** that you are using
 
 The final complexity of your program depends of all of these.
 
 ---
 ℹ️ Complexity is not the only metric to look at when you optimize your program. You may also want to:
-* Increase code coverage: how much of your code that is actually run [🐍 Learn more](https://wiki.python.org/moin/CodeCoverage)
-* Identify slow/heavy operations with a profiler [🐍 Learn more](https://docs.python.org/3/library/profile.html)
-* Use state-of-the-art algorithms instead of custom ones e.g. scipy, numpy...
-* Refactor your code: prevent multiple computations of the same value, ... 
-* Optimize the infrastructure: use caching in the database, web server, change hard drive for a SSD...
-* Use another Python env in production: Pypy and Extensions compiled with Cython (.pyx) are powerful alternatives (most popular Python interpreter is CPython)
+- Increase code coverage: how much of your code that is actually run [🐍 Learn more](https://wiki.python.org/moin/CodeCoverage)
+- Identify slow/heavy operations with a profiler [🐍 Learn more](https://docs.python.org/3/library/profile.html)
+- Use state-of-the-art algorithms instead of custom ones e.g. scipy, numpy...
+- Refactor your code: prevent multiple computations of the same value, ... 
+- Optimize the infrastructure: use caching in the database, web server, change hard drive for a SSD...
+- Use another Python env in production: Pypy and Extensions compiled with Cython (.pyx) are powerful alternatives (most popular Python interpreter is CPython)
 
 
 ---
 ## Multithreading, multiprocessing ans asynchronous IO
 **Definitions**:
 
-* **Multithreading**: Split work into several threads within the same process and CPU.
-* **Multiprocessing**: Split work into several processes dispatched to several CPUs.
-* **Asynchronous tasks**: Release the CPU and yield to another task when an IO is needed (e.g. network or hard disk response) 
+- **Multithreading**: Split work into several threads within the same process and CPU.
+- **Multiprocessing**: Split work into several processes dispatched to several CPUs.
+- **Asynchronous tasks**: Release the CPU and yield to another task when an IO is needed (e.g. network or hard disk response) 
 
 ---
 
@@ -1741,10 +1741,10 @@ The GIL is a mutex that protects access to the reference counters of Python obje
 However it prevents multiple threads from executing Python bytecodes at once. It offers poor performance for multi-threaded programs, if they are CPU-bound.
 
 Several implementations of the Python interpreter exist, for instance:
-* CPython (By far the most popular)
-* Jython
-* IronPython
-* PyPy
+- CPython (By far the most popular)
+- Jython
+- IronPython
+- PyPy
 
 Only some of them "suffer" from the GIL. If it is an issue, use another implementation.
 [The GIL is a regular debate within the Python community](https://wiki.python.org/moin/GlobalInterpreterLock)
@@ -1753,17 +1753,17 @@ Only some of them "suffer" from the GIL. If it is an issue, use another implemen
 Because of the GIL, multiprocessing is way more efficient that multithreading.
 
 But also harder to deal with since processes are insulated in their own memory spaces. Solutions exist:
-* Use stdin and stdout from the [`subprocess`](https://docs.python.org/fr/3.8/library/subprocess.html) library (call a binary and read/write std in/out)
-* Use queues and pipes from the [`multiprocessing`](https://docs.python.org/3.7/library/multiprocessing.html) library (Python only)
-* Use network messaging libraries [`zmq`](https://zeromq.org/), [`rabbitmq`](https://www.rabbitmq.com/), [`redis`](https://redis.io/)... (language-agnostic)
+- Use stdin and stdout from the [`subprocess`](https://docs.python.org/fr/3.8/library/subprocess.html) library (call a binary and read/write std in/out)
+- Use queues and pipes from the [`multiprocessing`](https://docs.python.org/3.7/library/multiprocessing.html) library (Python only)
+- Use network messaging libraries [`zmq`](https://zeromq.org/), [`rabbitmq`](https://www.rabbitmq.com/), [`redis`](https://redis.io/)... (language-agnostic)
 
 ![bg right:35% 95%](img/multiprocess-communication.svg)
 
 ---
 When to use these libs?
-* **`subprocess`**: call a system command (e.g. `traceroute`, `tar`, `useradd`...) or an existing executable whose code cannot be changed, from a Python module.
-* **`multiprocessing`**: split a Python-only program from which you write all the code into processes to improve performance.
-* **messaging libs**: build a decentralized application made of multiple technologies and languages (e.g. on top of a cloud infrastructure OVH, Gandi, AWS, ...)
+- **`subprocess`**: call a system command (e.g. `traceroute`, `tar`, `useradd`...) or an existing executable whose code cannot be changed, from a Python module.
+- **`multiprocessing`**: split a Python-only program from which you write all the code into processes to improve performance.
+- **messaging libs**: build a decentralized application made of multiple technologies and languages (e.g. on top of a cloud infrastructure OVH, Gandi, AWS, ...)
 
 ---
 ### Multithreading example
@@ -1877,15 +1877,15 @@ say("Hello world!")
 ---
 
 If we want to execute a coroutine, we can:
-* call it in `asyncio.run()` i.e:
+- call it in `asyncio.run()` i.e:
 ```python 
 asyncio.run(say("Hello"))  # It also creates an event loop
 ```
-* await it with keyword `await` i.e:
+- await it with keyword `await` i.e:
 ```python 
 await say("Hello")     # It does NOT create an event loop
 ```
-* create a task from it i.e:
+- create a task from it i.e:
  ```python 
 asyncio.create_task(say("Hello"))     # It does NOT create an event loop
 ```
@@ -1914,8 +1914,8 @@ asyncio.run(main())        # Creates and destroys the event loop
 ```
 
 Forgetting to await a task is like giving birth to a child and forgetting it: **DON'T**. Thus, keep track of the task and await it:
-* with `await task` ; or
-* with: `asyncio.wait(task)` (or equivalent) 
+- with `await task` ; or
+- with: `asyncio.wait(task)` (or equivalent) 
 
 Grouping task creations and waiting for them in the same function is handy because `asyncio.run()` creates and destroys the event loop ; everything inside requires a loop
 
@@ -1928,11 +1928,11 @@ If needed though, [executors](https://docs.python.org/3/library/asyncio-eventloo
 
 ---
 Not all coroutines have to run *asap*. Some will first:
-* wait for another coroutine to end: `await` is made for it
-* wait for a returned value: `asyncio.Future` is made for it
-* wait for aquiring the right to access a resource: `asyncio.Lock` is made for it
-* wait for an event to happen: `asyncio.Event` is made for it
-* wait for a specific time or delay: `asyncio.sleep` is made for it
+- wait for another coroutine to end: `await` is made for it
+- wait for a returned value: `asyncio.Future` is made for it
+- wait for aquiring the right to access a resource: `asyncio.Lock` is made for it
+- wait for an event to happen: `asyncio.Event` is made for it
+- wait for a specific time or delay: `asyncio.sleep` is made for it
 
 These [Synchronization primitives](https://docs.python.org/3/library/asyncio-sync.html) are the same as the `threading` module, but they are not thread-safe.
 
@@ -1986,8 +1986,8 @@ asyncio.run(fetch("http://example.com"))
 ### Async streams
 
 Streams provide async tools made for network communication where you need to:
-* Read from the recipient: using a `StreamReader` instance
-* Write to the recipient: using a `StreamWriter` instance
+- Read from the recipient: using a `StreamReader` instance
+- Write to the recipient: using a `StreamWriter` instance
 
 ### 
 
@@ -1998,9 +1998,9 @@ Streams provide async tools made for network communication where you need to:
 
 A profiler usually returns a table of each function call during execution, with:
 
-* `ncalls`: the number of calls of this function
-* `tottime`: the total time spent in the internal body of the function only
-* `cumtime`: the total time spent in the function + all functions that this function called
+- `ncalls`: the number of calls of this function
+- `tottime`: the total time spent in the internal body of the function only
+- `cumtime`: the total time spent in the function + all functions that this function called
 
 If a function does not call any other then `tottime=cumtime`. Some tools draw profiles:
 
@@ -2009,10 +2009,10 @@ If a function does not call any other then `tottime=cumtime`. Some tools draw pr
 ---
 ## Alternative package managers
 Not happy with PyPI and pip? Here are other ones:
-* `conda`: Useful if you also deal with non-Python dependencies. Compatible with Ruby, Java, JS, C/ C++, FORTRAN, ...
-* `miniconda`: Minimal conda
-* `mamba`: Ultrafast conda reimplementation in C++
-* `micromamba`: ...
+- `conda`: Useful if you also deal with non-Python dependencies. Compatible with Ruby, Java, JS, C/ C++, FORTRAN, ...
+- `miniconda`: Minimal conda
+- `mamba`: Ultrafast conda reimplementation in C++
+- `micromamba`: ...
 
 The bad news is that package managers are not compatible with each other.
 
