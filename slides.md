@@ -799,7 +799,7 @@ Cat().meow()    # MEOW!
 Some usecases of metaclasses:
 - Class generation at runtime (e.g. from classes described in a configuration file)
 - Class checking (e.g. check the existance of compulsory/forbidden methods or attributes)
-- Class mutation (e.g. remove some existing mathods when inheriting from another class)
+- Class mutation (e.g. remove some existing methods when inheriting from another class)
 
 ---
 ## Functional programming
