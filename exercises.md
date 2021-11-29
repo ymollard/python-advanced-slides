@@ -175,6 +175,21 @@ In this mini-project, celebrations simulate a temporary decrease of the respect 
 
 **Outcome**: You must see delayed peaks of cases due to the celebrations. Severity of peaks is highly influenced by the severity of cases at the moment of the celebration.
 
+---
+## Part 5: Log your library
+
+5.1. Split your code in 2 modules:
+* `simulator.py`: the class running the actual simulation
+* `main.py`: the main entry point importing the first module in order to run a scenario
+
+5.2. Use the [`logging`](https://docs.python.org/3/howto/logging.html) library in order to log the simulator module:
+  * a WARNING entry when a lockdown is triggered
+  * an INFO entry when a lockdown has just finished
+  * a DEBUG entry telling the number of remaining lockddown days 
+
+5.3. In the main script, activate the `basicConfig` to display all DEBUGs in the terminal
+
+5.4. En extra library pollutes the stream. Drop the basic config and activate only logs from `simulator` (make sure you do not forget the handler).
 
 ---
 # Mini-project 3. Build a full package – Money transfer simulator
@@ -264,11 +279,12 @@ We will organise our accounts with the following terminology:
 - **bank-external** accounts are for individuals or companies, they can be either blocked or agios accounts.
 
 ---
-We would like to be able to import ther classes from than manner:
+We would like to be able to import the classes from than manner:
 ```python
 from account.external.agios import AgiosBankAccount
 from account.external.blocked import BlockedBankAccount
 from account.internal import BankAccount
+from account.monitor import monitor
 ```
 
 
@@ -281,21 +297,21 @@ Create an empty script `scenario1.py`for the scenario.
 
 - 4.2. Create a logger for each module: `agios.py`, `blocked.py`, `internal.py`. Make sure you log unseful debug info in the next questions.
 
-- 4.2. Move the class declaration of `AgiosBankAccount` in `agios.py`
+- 4.3. Move the class declaration of `AgiosBankAccount` in `agios.py`
 
-- 4.3. Move the class declaration of `BlockedBankAccount` in `blocked.py`
+- 4.4. Move the class declaration of `BlockedBankAccount` in `blocked.py`
 
-- 4.4. Move the class declaration of `BankAccount` in `internal.py`
+- 4.5. Move the class declaration of `BankAccount` in `internal.py`
 
 
-- 4.5. Move the scenario (i.e. the successive instanciation of all accounts of companies and individuals) in `scenario1.py`
+- 4.6. Move the scenario (i.e. the successive instanciation of all accounts of companies and individuals) in `scenario1.py`
 
 ---
 
-- 4.6. Check each module and add missing relative import statements 
+- 4.7. Check each module and add missing relative import statements 
 Relative imports start with `.` or `..`
 
-- 4.7. Check each module and add missing absolute import statements such as `datetime`
+- 4.8. Check each module and add missing absolute import statements such as `datetime`
 
 ⚠️ Import statements in the scenario must not be relative because `scenario1.py` will be located outside package `account`. 
 
@@ -306,29 +322,47 @@ Relative imports start with `.` or `..`
 
 - 4.10. Execute the scenario and check that it leads to the same result as before this refactoring
 
-- 4.11. Create other `scenario2` scripts, with transactions adn actors of your choice...
+- 4.11. *Optional*. Create other `scenario2` scripts, with new scenarii 
 
 ---
-## Part 5: Operator and magic methods overloading
+## Part 5: Extra features for all account types
 
-According to you, would it make sense to add several bank account, e.g. `account1 + account2`?
-What would be the type resulting from this sum?
+- 5.1. Implement the *magic method* corresponding to the sum: `__add__(self, other)` so that accounts can be added if they share the same owner, resulting in a new account with the sum of balances.
 
-- 5.1. Implement the *magic method* corresponding to the sum: `__add__(self, other)` in one of your classes. Choose a behaviour to deal with the name of owners and balance.
-- 5.2. Test your sum operator by adding two actual accounts in a new scenario
+- 5.2. Write a `monitor` decorator for the `transfer_to` methods to print a warning if this user has never transferred an amount of money higher than `value` before.
+    * Recall that it is possible to assign an attribute to a function
+    * Recall that a decorator takes a function in input and returns a function 
+    * Recall that decorators are not bound to class instances
 
----
-## Part 6: Unit tests for the package with `pytest`
-
-Unit tests consits into testing functions one after the other, by checking individually their output accourding to a given input.
-
-- 6.1. Install `pytest` with pip
-- 6.2. Create an empty file `tests.py`in the same folder than the scenario
-- 6.3. With the documentation of `pytest`, implement a few unit tests for your classes and run the tests with pytest 
+- 5.3. Use matplotlib to plot the balance history of all users at the end of the simulation.
 
 ---
-## Part 7: Distribute your package to TestPyPi (cf [doc](https://packaging.python.org/tutorials/packaging-projects/))
-- 7.1. Create `setup.py` and `pyproject.toml` in your package and update them
+## Part 6: Tests your package with `pytest`
+
+- 6.1. Install your own library in the venv with pip
+- 6.2. Install `pytest` with pip
+- 6.3. Create independant test files `tests/<module>.py` for each module of your package
+- 6.4. As a first step, modify `sys.path` in test files so that pytest is able to locate and import your package
+- 6.5. With the documentation of [`pytest`](https://docs.pytest.org/), implement unit tests for your classes and run the tests with pytest 
+
+---
+## Part 7: Automate package building and testing with `tox`
+
+`sys.path` is a nice fix to import libraries locally but it cannot be generalized since paths are not generic. especially if it is to be done against several Python versions. `tox` is the answer.
+
+- 6.1. Create and fill in a basic [`setup.py`](https://packaging.python.org/tutorials/packaging-projects/#configuring-metadata) for your project (*)
+
+- 6.1. Install [tox](https://tox.readthedocs.io/en/latest/) with pip
+
+- 6.3. Create a basic `tox.ini` so that your packaged is built and tested both with Python 3.8 and 3.9.
+
+- 6.4. Run tox and make sure all tests pass in both environments
+
+(*) *Note:* `pip install . --editable` may be used so that the installed package points to your dev directory. This is handy for the dev stage (but `tox` is even better).
+
+---
+## Part 8: Distribute your package to TestPyPi (cf [doc](https://packaging.python.org/tutorials/packaging-projects/))
+- 7.1. Create `pyproject.toml` in your package with the minimum setup
 - 7.2. Name your package `accounts-MYNAME` by replacing your name
 - 7.3. Install `wheel` and `twine`, build `sdist` and `bdist_wheel` distributions
 - 7.5. Upload both distributions to TestPyPI with login `__token__`
@@ -394,7 +428,6 @@ There is no additional help here.
 
 **Note:** Brute force only is not the best approach when we deal with passwords. We should exploit the human weaknesses with a dictionary attack. But this is another topic.
 
---
 
 ---
 # Mini-project 5: Optimize Python – Bread-First Search optimization

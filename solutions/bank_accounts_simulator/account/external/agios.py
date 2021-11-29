@@ -1,4 +1,5 @@
 from ..internal import BankAccount
+from ..monitor import monitor
 from datetime import datetime
 from typing import Optional
 
@@ -20,6 +21,7 @@ class AgiosBankAccount(BankAccount):
                 self.balance -= agios
                 self.negative_date = None
 
+    @monitor
     def transfer_to(self, recipient_account: "BankAccount", value: float, transaction_date: Optional[datetime] = None):
         if transaction_date is None:
             raise ValueError("Transaction date is compulsory for transfers with AgiosBankAccount")

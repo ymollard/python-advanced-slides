@@ -2,6 +2,7 @@ from account.external.agios import AgiosBankAccount
 from account.external.blocked import BlockedBankAccount
 from account.internal import BankAccount
 from datetime import datetime
+import matplotlib.pyplot as plt
 
 bank = BankAccount("HSBC", 10000)
 walmart = BlockedBankAccount("Walmart", 5000)
@@ -16,4 +17,8 @@ alice.transfer_to(bob, 300, datetime(2021, 11, 26))
 
 for account in [bank, walmart, alice, bob]:
     account.print()
+    account.plot()
 
+plt.title("History of balances")
+plt.legend()
+plt.show()
