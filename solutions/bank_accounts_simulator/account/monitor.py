@@ -9,7 +9,7 @@ def monitor(f):
     monitor.thresholds = {}
 
     @wraps(f)   # @wraps ensures the decorated function still behave as the original e.g. for its __doc__
-    def __wrapper_function(self, recipient_account, value, transaction_date):
+    def __wrapper_function(self, recipient_account, value, transaction_date=None):
         if self.owner not in monitor.thresholds:
             monitor.thresholds[self.owner] = 50
         if value > monitor.thresholds[self.owner]:

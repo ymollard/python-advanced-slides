@@ -15,7 +15,6 @@ class AgiosBankAccount(BankAccount):
         if self.negative_date is not None:
             difference = current_time - self.negative_date
             agios = int(difference.days)
-            print(agios)
             if agios > 0:
                 self.bank_account._credit(agios, current_time)
                 self.balance -= agios
