@@ -1352,7 +1352,8 @@ Either the module is made to be:
 - imported: it is a **package**: `import mymodule`
 - executed: it is a **script**: `python mymodule.py`
 
-A package is a folder containing modules.
+A package can also be a folder containing modules and sub-packages.
+
 Modules can also be bindings, e.g. Python bindings to a C++ library.
 
 ---
@@ -1366,7 +1367,7 @@ Usually, we invoke the `env` command to tell which is the interpreter for `pytho
 #!/usr/bin/env python3
 ```
 
-Direct call to the interpreter is possible but NOT recommanded, since it will force the interpreter bby ignoring any virtual environment you could be in:
+Direct call to the interpreter is possible but NOT recommended, since it will force the interpreter bby ignoring any virtual environment you could be in:
 ```python
 #!/usr/local/bin/python3
 ```
@@ -1592,7 +1593,7 @@ python setup.py install   # equivalent but deprecated because pip is cool 😎
   - bdist_wheel : Binary distribution 
 
 ```bash
-pip install build  # The latest recommanded build tool by PyPA
+pip install build  # The latest recommended build tool by PyPA
 python3 -m build   # Will build both a sdist and bdist
 
 -rw-rw-r-- 1 16699  nov.  12 00:00 hampy-1.4.2-py3-none-any.whl

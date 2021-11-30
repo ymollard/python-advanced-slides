@@ -185,11 +185,11 @@ In this mini-project, celebrations simulate a temporary decrease of the respect 
 5.2. Use the [`logging`](https://docs.python.org/3/howto/logging.html) library in order to log the simulator module:
   * a WARNING entry when a lockdown is triggered
   * an INFO entry when a lockdown has just finished
-  * a DEBUG entry telling the number of remaining lockddown days 
+  * a DEBUG entry telling the number of remaining lockdown days 
 
 5.3. In the main script, activate the `basicConfig` to display all DEBUGs in the terminal
 
-5.4. En extra library pollutes the stream. Drop the basic config and activate only logs from `simulator` (make sure you do not forget the handler).
+5.4. An extra library pollutes the stream. Drop the basic config and activate only logs from `simulator` (make sure you do not forget the handler).
 
 ---
 # Mini-project 3. Build a full package – Money transfer simulator
@@ -339,26 +339,27 @@ Relative imports start with `.` or `..`
 ---
 ## Part 6: Tests your package with `pytest`
 
-- 6.1. Install your own library in the venv with pip
-- 6.2. Install `pytest` with pip
-- 6.3. Create independant test files `tests/<module>.py` for each module of your package
-- 6.4. As a first step, modify `sys.path` in test files so that pytest is able to locate and import your package
-- 6.5. With the documentation of [`pytest`](https://docs.pytest.org/), implement unit tests for your classes and run the tests with pytest 
+- 6.1. Install `pytest` with pip
+- 6.2. Create independant test files `tests/<module>.py` for each module of your package
+- 6.3. As a first step, modify `sys.path` in test files so that pytest is able to locate and import your `account` package (*)
+- 6.4. With the documentation of [`pytest`](https://docs.pytest.org/), implement unit tests for your classes and run the tests with pytest 
+
+(*) *Note:This workaround is not ideal since this path is different on each system, and the situation will be fixed once the package will be made installable in Part 7.*
 
 ---
 ## Part 7: Automate package building and testing with `tox`
 
 `sys.path` is a nice fix to import libraries locally but it cannot be generalized since paths are not generic. especially if it is to be done against several Python versions. `tox` is the answer.
 
-- 6.1. Create and fill in a basic [`setup.py`](https://packaging.python.org/tutorials/packaging-projects/#configuring-metadata) for your project (*)
+- 6.1. Make your package installable: Create and fill [`setup.py`](https://packaging.python.org/tutorials/packaging-projects/#configuring-metadata) for your project (*)
 
 - 6.1. Install [tox](https://tox.readthedocs.io/en/latest/) with pip
 
-- 6.3. Create a basic `tox.ini` so that your packaged is built and tested both with Python 3.8 and 3.9.
+- 6.3. Create a basic `tox.ini` so that your packaged is built and tested both with e.g. Python 3.8 and 3.9 (or any Python version available on your system)
 
 - 6.4. Run tox and make sure all tests pass in both environments
 
-(*) *Note:* `pip install . --editable` may be used so that the installed package points to your dev directory. This is handy for the dev stage (but `tox` is even better).
+(*) *Note: `pip install . --editable` may be used so that the installed package points to your dev directory. This is handy for the dev stage (but `tox` is even better).*
 
 ---
 ## Part 8: Distribute your package to TestPyPi (cf [doc](https://packaging.python.org/tutorials/packaging-projects/))
@@ -366,11 +367,11 @@ Relative imports start with `.` or `..`
 - 7.2. Name your package `accounts-MYNAME` by replacing your name
 - 7.3. Install `wheel` and `twine`, build `sdist` and `bdist_wheel` distributions
 - 7.5. Upload both distributions to TestPyPI with login `__token__`
-(*for the password, ask for the token*)
+*For the password, ask for the token ; or create your own TestPyPI account (\*)*
 - 7.6. Make sure you can then install your package via pip if you target the TestPyPI index ith `--index-url https://test.pypi.org/simple/`
 - 7.7. Update your package (e.g. add `numpy` dependency) and publish a new version 1.1. Make sure both versions are now on TestPyPI
 
-*Note: If you create your own PyPI account, make sure you create it on the [TestPyPI index](https://test.pypi.org/account/register/) that is pruned periodically, instead of the regular PyPI*.
+(*) *Note: If you create your own PyPI account, make sure you create it on the [TestPyPI index](https://test.pypi.org/account/register/) that is pruned periodically, instead of the regular PyPI*.
 
 ---
 
