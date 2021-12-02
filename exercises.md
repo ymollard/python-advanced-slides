@@ -362,8 +362,8 @@ Relative imports start with `.` or `..`
 (*) *Note: `pip install . --editable` may be used so that the installed package points to your dev directory. This is handy for the dev stage (but `tox` is even better).*
 
 ---
-## Part 8: Distribute your package to TestPyPi (cf [doc](https://packaging.python.org/tutorials/packaging-projects/))
-- 7.1. Create `pyproject.toml` in your package with the minimum setup
+## Part 8: Distribute your package to TestPyPi
+- 7.1. Create `pyproject.toml` in your package with the bare minimum from the [doc](https://packaging.python.org/tutorials/packaging-projects/)
 - 7.2. Name your package `accounts-MYNAME` by replacing your name
 - 7.3. Install `wheel` and `twine`, build `sdist` and `bdist_wheel` distributions
 - 7.5. Upload both distributions to TestPyPI with login `__token__`
@@ -455,15 +455,15 @@ Output: EXPLORED, the list of all nodes in BFS order
 ```ada
  1  procedure BFS(G, ROOT) is
  2      let Q be a list
- 2      let EXPLORED be a list 
- 3      append ROOT at the end of EXPLORED
- 4      append ROOT at the end of Q
- 5      while Q is not empty do
- 6          v := pop the first node of G
- 7          for all children of node v in G do
- 8              if w is not in EXPLORED then
- 9                  append w at the end of EXPLORED
-10                  append w at the end of Q
+ 3      let EXPLORED be a list 
+ 4      append ROOT at the end of EXPLORED
+ 5      append ROOT at the end of Q
+ 6      while Q is not empty do
+ 7          v := pop the first node of Q
+ 8          for all children of node v in G do
+ 9              if w is not in EXPLORED then
+10                  append w at the end of EXPLORED
+11                  append w at the end of Q
 ```
 
 ---

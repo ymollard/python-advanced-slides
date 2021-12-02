@@ -35,12 +35,12 @@ def bfs_naive(graph, root='5') -> list:
                 queue.append(child)
                 visited.append(child)
 
-#from timeit import Timer
-#print(Timer("bfs_naive(graph)", globals=globals()).repeat())
+from timeit import Timer
+print(Timer("bfs_naive(graph)", globals=globals()).repeat())
 #print(Timer("bfs_with_queue(graph)", globals=globals()).repeat())
 
 def generate_graph(n:int):
     from random import randint, choice
     return {k: [randint(1, n-1) for _ in range(randint(0, n//3))] for k in range(n)}
 
-bfs_naive(generate_graph(10000), root=1)
+# bfs_naive(generate_graph(10000), root=1)

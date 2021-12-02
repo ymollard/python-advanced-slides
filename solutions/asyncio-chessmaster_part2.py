@@ -17,7 +17,7 @@ class ChessMaster:
             await opponent.player_is_done.wait()
             opponent.player_is_done.clear()
             log("Master is thinking for round {} with opponent {}...".format(round, opponent.id))
-            await asyncio.sleep(0.1)
+            await asyncio.sleep(1)
             opponent.master_is_done.set()
 
 
@@ -46,7 +46,7 @@ class Player:
         self.master_is_done.clear()
         async with self.is_busy:
             log("Player {} is thinking for round {}...".format(self.id, round))
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(5)
             self.player_is_done.set()
 
 class Simulator:
@@ -72,5 +72,8 @@ class Simulator:
         log("Simulation is over")
 
 
+async def main():
+    await Simulator().simulate()
+
 if __name__ == "__main__":
-    asyncio.run(Simulator().simulate(), debug=True)
+    asyncio.run(main(), debug=True)
