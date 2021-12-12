@@ -355,7 +355,7 @@ Relative imports start with `.` or `..`
 
 - 6.1. Install [tox](https://tox.readthedocs.io/en/latest/) with pip
 
-- 6.3. Create a basic `tox.ini` so that your packaged is built and tested both with e.g. Python 3.8 and 3.9 (or any Python version available on your system)
+- 6.3. Create a basic `tox.ini` so that your package is built and tested both with e.g. Python 3.8 and 3.9 (or any Python version available on your system)
 
 - 6.4. Run tox and make sure all tests pass in both environments
 

@@ -37,45 +37,45 @@ https://advanced.python.training.aubrune.eu/
     2.1. [ Object-oriented programming (OOP)](#26)
     2.2. [ Metaclasses](#43)
     2.3. [ Functional programming](#47)
-    2.4. [ Decorators](#56)
-    2.5. [ Context manager: the `with` statement](#59)
+    2.4. [ Decorators](#52)
+    2.5. [ Context manager: the `with` statement](#56)
 
 ---
 
 #  Schedule of DAY 2
 
-3. [ CODE WITH QUALITY](#61)
-    3.1. [ Type annotations](#62)
-    3.2. [ Python docstrings](#64)
-    3.3. [ Logging](#66)
-    3.4. [ Virtual environments (venv)](#68)
-    3.5. [ Quality control tools](#77)
-    3.6. [ Testing](#81)
-4. [ PACKAGE AND DISTRIBUTE](#84)
-    4.1. [ Reminders about Modules and packages](#84)
-    4.2. [ The Python Package Index (PyPI)](#92)
-    4.3. [ PyPI Security warning 🚨](#94)
-    4.4. [ Package distribution](#97)
-    4.5. [ Uploading your package distribution on PyPI](#102)
+3. [ CODE WITH QUALITY](#58)
+    3.1. [ Type annotations](#59)
+    3.2. [ Python docstrings](#61)
+    3.3. [ Logging](#63)
+    3.4. [ Virtual environments (venv)](#65)
+    3.5. [ Quality control tools](#74)
+    3.6. [ Testing](#78)
+4. [ PACKAGE AND DISTRIBUTE](#81)
+    4.1. [ Reminders about Modules and packages](#81)
+    4.2. [ The Python Package Index (PyPI)](#89)
+    4.3. [ PyPI Security warning 🚨](#91)
+    4.4. [ Package distribution](#94)
+    4.5. [ Uploading your package distribution on PyPI](#99)
 
 ---
 
 #  Schedule of DAY 3
 
-5. [ PERFORMANCE OPTIMIZATION](#104)
-    5.1. [ Kind reminder about complexities](#105)
-    5.2. [ Refactor your code by keeping complexity in mind](#106)
-    5.3. [ Multithreading, multiprocessing ans asynchronous IO](#108)
-    5.4. [ Asynchronous code (Python coroutines)](#118)
-    5.5. [ Profiling](#128)
-    5.6. [ Alternative package managers](#129)
-6. [ ANNEXES / EXTRA-CURRICULAR TOPICS](#130)
-    6.1. [ Python for datascience](#131)
-    6.2. [ Common design patterns](#136)
+5. [ PERFORMANCE OPTIMIZATION](#101)
+    5.1. [ Kind reminder about complexities](#102)
+    5.2. [ Refactor your code by keeping complexity in mind](#103)
+    5.3. [ Multithreading, multiprocessing ans asynchronous IO](#105)
+    5.4. [ Asynchronous code (Python coroutines)](#115)
+    5.5. [ Profiling](#125)
+    5.6. [ Alternative package managers](#126)
+6. [ ANNEXES / EXTRA-CURRICULAR TOPICS](#127)
+    6.1. [ Python for datascience](#128)
+    6.2. [ Common design patterns](#133)
 
 ---
 
-# Exercises and mini-projects
+#  Exercises and mini-projects
 
 1. [ Mini-project 1: WARMUP – The dataset generator](/exercises.html#3)
 2. [ Mini-project 2: Draw plots – (Simplistic) Virus spread simulation](/exercises.html#4)
@@ -692,12 +692,10 @@ class Tiger(Felidae, Mammalia, Animal):
 Tiger().avglifetime() # Returns 35: left-to-right resolution
 ```
 
-![bg right:30% 70%](./img/multiple-heritage.png)
-
 ---
 
 ### Multiple inheritance: the MRO
-Now let's consider that Mamalia and Felidae are also Animal:
+Now let's consider that Mamalia & Felidae are also Animal:
 ```python
 class Animal:
     def avglifetime(self):
@@ -714,7 +712,10 @@ class Felidae(Animal):
 class Tiger(Animal, Mammalia):
     pass
 ```
-There are now multiple paths for resolving `Tiger.avglifetime()`?
+There are now multiple paths for `Tiger.avglifetime()`
+
+![bg right:28% 70%](./img/multiple-heritage.png)
+
 
 ---
 Python 3 uses the C3 linearization algorithm. Resolution order is in a class attribute:
@@ -735,8 +736,8 @@ class Tiger(Animal, Mammalia): pass  # The superclass Animal is before Mammalia
 #   for bases Animal, Mammalia
 ```
 A consistent MRO requires to validate the following:
-- The first superclasses list must be before in the MRO than the ones it lists later.
-- A class in the MRO must be before its superclasses: `Tiger(Mammalia, Animal)`
+- All classes appear before their parents
+- All classes keep the same parent class order than their `class` statement
 
 ---
 ## Metaclasses
@@ -813,77 +814,29 @@ In strict functional programming, no side effect is allowed, which means that ev
 [🐍 Learn more](https://docs.python.org/3/howto/functional.html)
 
 ---
-### Inline unpacking
+
+### Comprehensions
+A **comprehension** is an inline notation to build a new sequence (list, dict, set).
+Here is a **list-comprehension**:
 ```python
-# Unpack from iterables
-a, b, c = 1, 2, 3
-a, b, c = [1, 2, 3]
-a, b, c = "abc"
-
-# It can also be used to swap elements
-a, b = b, a
-
-# Unpacking requires a consistent number of data to process
-a, b = 1, 2, 3             
--------------------------------------------------------------------------
-ValueError                              Traceback (most recent call last)
-----> 1 a, b = 1, 2, 3
-ValueError: too many values to unpack (expected 2)
+l = [i*i for i in range(10)]  # Select i*i for each i in the original "range" sequence
+# Returns [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
 ```
 
----
-During a function call, if `l` is a list, the starred expression `*l` is the unpacking of all elemnts from `l` into parameters
+You may optionally filter the selected values with an `if` statement:
+
 ```python
-random.gauss(mu, sigma) # Returns a random float with gaussian
-                        # distribution of mean "mu" and deviation "sigma"
+l = [i*i for i in range(100) if i*i % 10 == 0]  # Select values that are multiple of 10
+# Returns [0, 100, 400, 900, 1600, 2500, 3600, 4900, 6400, 8100]
 
-my_distribution = [0, 10]
-
-random.gauss(my_distribution)     # gauss() does not accept list as input
-
-# Starred expression: Unpacking arbitrary number of elements
-random.gauss(*my_distribution)
+l = [(i, 2*i, 3*i) for i in range(5)] # Here we select tuples of integers:
+# Returns [(0, 0, 0), (1, 2, 3), (2, 4, 6), (3, 6, 9), (4, 8, 12)]
 ```
 
----
-During a function call, if `d` is a dict, the double-starred expression `**d` is the unpacking of all elemnts from `d` into named parameters (aka keyword arguments)
-
+Dict-comprehensions also work:
 ```python
-my_distribution = {"sigma": 15, "mu": 1}
-
-random.gauss(**my_distribution)
-
-random.gauss(sigma=15, mu=1)           # This is equivalent
-```
-
----
-During a function defintition, packing is widely used under function parameters named `*args` and `**kwargs` to accept unlimited number of respectively parameters and named parameters.
-
-```python
-def f(*args, **kwargs):
-    # Stared parameters are received as lists
-    for arg in args:
-        print("You passed {} as a parameter".format(arg))
-    
-    # Double-stars parameters are received as dicts
-    for arg_key, arg_val in kwargs.items():
-        print("You passed {} as a parameter named {}".format(arg_val, arg_key))
-
-f(1, 2, mu=3, sigma=4)
-
-# You passed 1 as a parameter
-# You passed 2 as a parameter
-# You passed 3 as a parameter named mu
-# You passed 4 as a parameter named sigma
-```
----
-
-Popular use of `args` and `kwargs`: transmit all parameters to another function:
-
-```python
-class Example:
-    def __init__(self, *args, **kwargs):
-        super(Example, self).__init__(self, *args, **kwargs)
+d = {i: i*i for i in range(10)}
+# Returns {0: 0, 1: 1, 2: 4, 3: 9, 4: 16, 5: 25, 6: 36, 7: 49, 8: 64, 9: 81}
 ```
 
 ---
@@ -919,7 +872,7 @@ map(f, l)
 map(squared, [-5, 15, 10, -20])  # Returns [25, 225, 100, 400]
 ```
 
-### Mapping example: Get all hexadecimal notations of a list of integers
+**Mapping example**: Get all hexadecimal notations of a list of integers
  
 ```python
 hex(1024)          # Returns the hexadecimal notation of an integer (here "0x400")
@@ -928,7 +881,7 @@ map(hex, [2**x for x in range(5)])  # Returns ['0x1', '0x2', '0x4', '0x8', '0x10
 ```
 
 ---
-### Functional programming example: capitalize each word
+**Functional programming example**: capitalize each word
 ```python
 sentence = "hello my friend"
 ````
@@ -988,6 +941,30 @@ app = Flask()   # We create a web app
 def get_bookings_list():
     return "<ul><li>Booking A</li><li>Booking B</li></ul>"
 ```
+
+---
+To define your own decorator, you need to write a function returning a function:
+```python
+from functools import wraps
+
+def log_this(f):
+    def __wrapper_function(*args, **kwargs):
+        print("Call with params", args, kwargs)
+        f(*args, **kwargs)
+    return __wrapper_function
+```
+```python
+@log_this
+def mean(a, b, round=False):
+    m = (a + b)/2
+    return int(m) if round else m
+```
+
+```python
+mean(5, 15, round=True) # shows: Call with params (5, 15) {'round': True}
+```
+
+The [`functools` module](https://docs.python.org/3/library/functools.html) is a set of decorators intended to alter functions. 
 
 ---
 ## Context manager: the `with` statement
