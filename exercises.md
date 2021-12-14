@@ -27,15 +27,15 @@ https://advanced.python.training.aubrune.eu/
 
 ---
 
-# List of exercises and mini-projects
+#  List of mini-projects
 
-1. [ Mini-project 1: WARMUP – The dataset generator](#3)
-2. [ Mini-project 2: Draw plots – (Simplistic) Virus spread simulation](#4)
-3. [ Mini-project 3. Build a full package – Money transfer simulator](#14)
-4. [ Mini-project 4: Optimize Python – The code breaker](#30)
-5. [ Mini-project 5: Optimize Python – Bread-First Search optimization](#34)
-6. [ Mini-project 6. Estimate π with Nilakantha](#38)
-7. [ Mini-project 7: Write asynchronous code – The chess master](#42)
+[ Mini-project 1: WARMUP – The dataset generator](#3)
+[ Mini-project 2: Draw plots – (Simplistic) Virus spread simulation](#4)
+[ Mini-project 3. Build a full package – Money transfer simulator](#15)
+[ Mini-project 4: Optimize Python – The code breaker](#32)
+[ Mini-project 5: Optimize Python – Bread-First Search optimization](#36)
+[ Mini-project 6. Estimate π with Nilakantha](#40)
+[ Mini-project 7: Write asynchronous code – The chess master](#44)
 
 
 ---
@@ -179,8 +179,8 @@ In this mini-project, celebrations simulate a temporary decrease of the respect 
 ## Part 5: Log your library (Optional)
 
 5.1. Split your code in 2 modules:
-* `simulator.py`: the class running the actual simulation
-* `main.py`: the main entry point importing the first module in order to run a scenario
+- `simulator.py`: the class running the actual simulation
+- `main.py`: the main entry point importing the first module in order to run a scenario
 
 5.2. Use the [`logging`](https://docs.python.org/3/howto/logging.html) library in order to log the simulator module:
   * a WARNING entry when a lockdown is triggered
@@ -376,9 +376,9 @@ Refer to the [abc documentation](https://docs.python.org/3/library/abc.html) to 
 
 ### 8.2. Write a decorator
 Implement a `monitor` decorator for the `transfer_to` methods to print a warning if this user has never transferred an amount of money higher than `value` before.
-    * Recall that it is possible to assign an attribute to a function
-    * Recall that a decorator takes a function in input and returns a function 
-    * Recall that decorators are not bound to class instances
+    - Recall that it is possible to assign an attribute to a function
+    - Recall that a decorator takes a function in input and returns a function 
+    - Recall that decorators are not bound to class instances
 
 ### 8.3. Overload magic methods
 Implement the *magic method* `__add__(self, other)` so that accounts can be added if they share the same owner, resulting in a new account with the sum of balances.
