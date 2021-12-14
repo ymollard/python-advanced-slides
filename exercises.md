@@ -76,9 +76,9 @@ In our simplistic model:
   - a regular value for all other periods
 - Time is measured in number of days from day 0, for a certain **simulation duration**
 - **Incubation time** is taken into account: it is materialized by a delay of a few days every time the R0 changes
-- Lockdown is triggered automatically when the number of contaminations goes beyond a **critical threshold**, causing the R0 to
+- Lockdown is triggered automatically when the number of contaminations goes beyond a **critical threshold**, causing the R0 to decrease.
 
-**bold values** are taken as parameters of the simulation.
+**Bold values** are taken as parameters of the simulation.
 
 ---
 
@@ -131,7 +131,7 @@ Store the parameters as attributes.
 ---
 ## Part 2: Lockdown implementation
 
-1. In `next()`, check if the cases has reached the critical level. If yes, substitute the regular R0 for the "lockdown" R0
+1. In `next()`, check if the cases has reached the critical level. If yes, substitute the regular R0 by the "lockdown" R0
 
 2. Revert to the regular R0 when the number of cases is below the critical level again
 
@@ -155,7 +155,7 @@ Store the parameters as attributes.
 So far, when a lockdown happens, the number of contaminations starts to decrease the same day. We do not consider people contaminated right before the lockdown.
 
 1. Add a `r0_history:` [`deque`](https://docs.python.org/3/library/collections.html#collections.deque) as an attribute to keep a track of previous R0, and:
-- Init the queue with a neutral R0 i.e. as many `1` as the number of incubation delay
+- Init the queue with a neutral R0 i.e. as many `1` as the number of `incubation_duration`
 - `next()` must now accept the previous number of cases in parameter: `next(self, previous_num_cases: int)`
 - `next()` must now enqueue the current R0 to the history
 - `next()` must now return a new contamination case with delay: pop the r0_history from the left and use this to return the current number of contamination cases
@@ -169,14 +169,14 @@ In this mini-project, celebrations simulate a temporary decrease of the respect 
 
 1. In `next()`, simply multiply the current R0 by `R0["high"]` if this day is present in the list of celebration days.
 
-2. Plot a red vertical bar with `pyplot.plot()` for every celebration day
-
 *NB: We use R0 multiplication instead of a substitution of the R0 so that the effect of mitigation measures are still visible but their impact is lowered due to the celebration.*
+
+2. Plot a red vertical bar with `pyplot.plot()` for every celebration day
 
 **Outcome**: You must see delayed peaks of cases due to the celebrations. Severity of peaks is highly influenced by the severity of cases at the moment of the celebration.
 
 ---
-## Part 5: Log your library
+## Part 5: Log your library (Optional)
 
 5.1. Split your code in 2 modules:
 * `simulator.py`: the class running the actual simulation
@@ -187,7 +187,9 @@ In this mini-project, celebrations simulate a temporary decrease of the respect 
   * an INFO entry when a lockdown has just finished
   * a DEBUG entry telling the number of remaining lockdown days 
 
-5.3. In the main script, activate the `basicConfig` to display all DEBUGs in the terminal
+
+
+5.3. In the main script, activate the [`basicConfig`](https://docs.python.org/3/library/logging.html#logging.basicConfig) to display all DEBUGs in the terminal
 
 5.4. An extra library pollutes the stream. Drop the basic config and activate only logs from `simulator` (make sure you do not forget the handler).
 
@@ -571,13 +573,13 @@ Limit to 30s of computation max. What is the best number of digits you can achie
 
 In this mini-project, we will simulate **moves of chess** during a tournament in which a unique chess master faces many opponents by turns
 
-We will simulate only the **timeslots for each move and each player**, but we will not simulate the pieces their play or their actual outcome.
+We will simulate only the **timeslots for each move and each player**, but we will not simulate the pieces that they play nor their actual outcome.
 
 In a tournament in general, many games are being played in parallel on many boards. The I/O resource that slows down the games here is the time allotted to think-and-play.
 
 **Laws of the simulation:**
-- A player (master or opponent) cannot play moves against several players at a time
-- A player (master or opponent) cannot play the other has not finished their move
+- A player (master or opponent) cannot think-n-play against several players at a time
+- A player (master or opp.) cannot think-n-play if the other has not finished his move
 
 ---
 
@@ -585,10 +587,11 @@ In a tournament in general, many games are being played in parallel on many boar
 Create a synchronous version of the simulator in which only 1 single move can be played on a board at a time in the entire crowd of participants. Implement the following:
 - A `Chessmaster` class with method `think_and_play(self, round: "Round", opponent: "Player")` that waits 1 sec to simulate the player's move
 - A `Round` class with method `play(self, opponent_id: int)` that allows the player and then the master to think-and-play.
-- A `Player` class with method `think_and_play(self, round: "Round", opponent: "Player")` that waits 5 secs to simualte the player's move
+- A `Player` class with method `think_and_play(self, round: "Round", opponent: "Player")` that waits 5 secs to simulate the player's move
 - A `Simulator` class with a single function `main()` being the entry point
 
-Run a simulation between 3 players against the master, playing 2 rounds each. Report the overall simulation time (*see figure next page*).
+Run a simulation between 3 players against the master, playing 2 rounds each.
+Report the overall simulation time (*see figure next page*).
 
 ---
 
@@ -599,10 +602,10 @@ Run a simulation between 3 players against the master, playing 2 rounds each. Re
 ## Part 2. Asynchronous simulation
 In the synchronous version IOs were waited for return every time but they can be optimized: several players can play their move on their board at a time, as long as the laws of the simulator here above are met. 
 
-1. Trasform relevant functions in coroutines `async` and await them. Start the event loop with `asyncio.run(entry_point)`. This first step is still a **sequential run**
+1. Transform relevant functions in `async` coroutines and await them. Start the event loop with `asyncio.run(entry_point)`. This first step is still a **sequential run**
 2. Identify which coroutines will need to be concurrent in the final run.
-3. Create tasks for the latter so that their are scheduled by the event loop, and awit for their terminaison. This new step is a **full-concurrent run**
-4. Choose the number and the different types of [synchonization primives](https://docs.python.org/3/library/asyncio-sync.html) that will enforce the laws in any case, so that tasks wait the right time to run. 
+3. Create tasks for the latter so that their are scheduled by the event loop, and await for their termination. This new step is a **full-concurrent run**
+4. Choose the number and the different types of [synchonization primives](https://docs.python.org/3/library/asyncio-sync.html) that will enforce the simulation laws in any case, so that tasks wait the right time to run. 
 
 Run the simulation with the same parameters (*see figure next page*).
 

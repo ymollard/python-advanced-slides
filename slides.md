@@ -1677,6 +1677,30 @@ The final complexity of your program depends of all of these.
 - Optimize the infrastructure: use caching in the database, web server, change hard drive for a SSD...
 - Use another Python env in production: Pypy and Extensions compiled with Cython (.pyx) are powerful alternatives (most popular Python interpreter is CPython)
 
+---
+## Profiling
+
+**Profiling** measures time complexity of programs, in terms of CPU time spent in each function and number of function calls.
+
+A profiler usually returns a table of each function call during execution, with:
+
+- `ncalls`: the number of calls of this function
+- `tottime`: the total time spent in the internal body of the function only
+- `cumtime`: the total time spent in the function + all functions that this function called
+
+If a function does not call any other then `tottime=cumtime`. Some tools draw profiles:
+
+![](./img/profiler.png)
+
+---
+## Alternative package managers
+Not happy with PyPI and pip? Here are other ones:
+- `conda`: Useful if you also deal with non-Python dependencies. Compatible with Ruby, Java, JS, C/ C++, FORTRAN, ...
+- `miniconda`: Minimal conda
+- `mamba`: Ultrafast conda reimplementation in C++
+- `micromamba`: ...
+
+The bad news is that package managers are not compatible with each other.
 
 ---
 ## Multithreading, multiprocessing ans asynchronous IO
@@ -1967,32 +1991,8 @@ Streams provide async tools made for network communication where you need to:
 - Read from the recipient: using a `StreamReader` instance
 - Write to the recipient: using a `StreamWriter` instance
 
-### 
+### Async transports and protocols
 
----
-## Profiling
-
-**Profiling** measures time complexity of programs, in terms of CPU time spent in each function and number of function calls.
-
-A profiler usually returns a table of each function call during execution, with:
-
-- `ncalls`: the number of calls of this function
-- `tottime`: the total time spent in the internal body of the function only
-- `cumtime`: the total time spent in the function + all functions that this function called
-
-If a function does not call any other then `tottime=cumtime`. Some tools draw profiles:
-
-![](./img/profiler.png)
-
----
-## Alternative package managers
-Not happy with PyPI and pip? Here are other ones:
-- `conda`: Useful if you also deal with non-Python dependencies. Compatible with Ruby, Java, JS, C/ C++, FORTRAN, ...
-- `miniconda`: Minimal conda
-- `mamba`: Ultrafast conda reimplementation in C++
-- `micromamba`: ...
-
-The bad news is that package managers are not compatible with each other.
 
 
 <!--#####################################################################################################-->
@@ -2006,7 +2006,7 @@ The bad news is that package managers are not compatible with each other.
 ---
 ## Python for datascience
 ### numpy
-`numpy` (numerical python) is the Python library dedicated to numerical calculs.
+`numpy` (numerical python) is the Python library dedicated to numerical calculus.
 
 `numpy` adds features to Python based on objects and classes that behaves the same way a mathematician would expect.
 
@@ -2195,15 +2195,15 @@ for divisor in divisors_of(50):
 **Note:** Iterators and generators do not have to stop: useful to generate infinite patterns.
 
 ---
-### The interface
+### The Abstract Base Class
 
-An **interface** is a class that cannot be instanciated but only used to define subclasses.
-It it used to define a model so that all subclasses implement compulsory methods.
+An **Abstract Base Class** is a class that cannot be instanciated but only subclassed.
+All subclasses must implement compulsory methods **and respect their semantics**.
 
 ```python
-from abc import abstractmethod   # THis is the Abstract Base Classe module
+from abc import ABC, abstractmethod   # This is the Abstract Base Class module
 
-class Animal:
+class Animal(ABC):
     @abstractmethod
     def vocalize(self):
         raise NotImplementedError("vocalize() must be overriden")
@@ -2214,5 +2214,7 @@ class Dog(Animal):
 
 class Cat(Animal): pass
 ```
-In this example the linter will report that `vocalize()` must be defined in `Cat`.
+In this example the linter will report that `vocalize()` must be defined in `Cat` and `TypeError` will be raised at runtime.
+
+
 
