@@ -245,7 +245,7 @@ Bob is currently overdrawn. To prevent this kind of situation, its customer advi
 
 - 2.3. Protect the portion of code that looks coherent with `try..except` in order to catch the exception without interrupting the script
 
-- 2.4. Explain the concept of protected method and the role of the underscore in front of the method name ; and why it is preferable than `_credit` is protected
+- 2.4. Explain the concept of protected method and the role of the underscore in front of the method name ; and why it is preferable that `_credit` is protected
 
 ---
 ## Part 3: The account with agios
@@ -317,63 +317,74 @@ Relative imports start with `.` or `..`
 
 ⚠️ Import statements in the scenario must not be relative because `scenario1.py` will be located outside package `account`. 
 
-ℹ️ Since package `account` is in the same directory as the scneario script, there will not be any issue to import it. If it had to be in another path, we could fix it by adding the path to `account` to the `sys.path` value.
-
----
 - 4.9. Add empty `__init__.py` files to all directories of the package.
 
 - 4.10. Execute the scenario and check that it leads to the same result as before this refactoring
 
-- 4.11. *Optional*. Create other `scenario2` scripts, with new scenarii 
+---
+## Part 5: Test your package with `pytest`
+
+- 5.1. Install `pytest` with pip
+- 5.2. Create independant test files `tests/<module>.py` for each module of your package
+- 5.3. Add an entry in `sys.path` pointing to the parent folder of your package so that pytest is able to locate and import your `account` package (*)
+- 5.4. With the documentation of [`pytest`](https://docs.pytest.org/), implement unit tests for your classes and run the tests with pytest 
+
+(*) *Note: This workaround is not ideal since this path is different on each system, and the situation will be fixed once the package will be made installable in Part 7.*
 
 ---
-## Part 5: Extra features for all account types
+## Part 6: Automate package building and testing with `tox`
+### 6.1. Make your package installable
 
-- 5.1. Implement the *magic method* corresponding to the sum: `__add__(self, other)` so that accounts can be added if they share the same owner, resulting in a new account with the sum of balances.
+Refer to the doc about [package creation](https://packaging.python.org/tutorials/packaging-projects). Create a dynamic metadata file `setup.py`:
+- In `setup()`, add `install_requires` and assign it to the list of your deps: 
+`numpy` and `matplotlib`
+- Update other metadata (author, license, description...)
 
-- 5.2. Write a `monitor` decorator for the `transfer_to` methods to print a warning if this user has never transferred an amount of money higher than `value` before.
+Delete the `sys.path` workaround in test files since your package is now installable. 
+
+### 6.2. Install, configure and run `tox`
+Refer to the [`tox` basic example](https://tox.wiki/en/latest/#basic-example). Create a basic `tox.ini` so that your package is built and tested against Python 3.10 and 3.9.
+
+Install and run tox in your project. Make sure all tests pass in both environments.
+
+
+---
+## Part 7: Distribute your package on TestPyPi
+- 7.1. Refer to the doc about [package creation](https://packaging.python.org/en/latest/tutorials/packaging-projects/#creating-pyproject-toml) to create a minimal `pyproject.toml`
+- 7.2. Name your package `accounts-<MYNAME>` and substitute your name
+- 7.3. Install `build`, `wheel` and `twine`
+- 7.4. Refer to the [doc](https://packaging.python.org/en/latest/tutorials/packaging-projects/#generating-distribution-archives) to build `sdist` and `bdist_wheel` distributions
+- 7.5. Upload both distributions to TestPyPI using login `__token__`. For the password, ask for the token or create your own [TestPyPI account](https://test.pypi.org/account/register/) and new token.
+- 7.6. Make sure you can install your package from the TestPyPI index via pip:
+`pip install accounts-MYNAME --index-url https://test.pypi.org/simple/`
+
+
+---
+## Part 8: Implement extra features and distribute a new version on TestPyPI (Optional)
+
+Questions 8.1, 8.2 and 8.3 and independant from each other. Choose the most interesting ones for you and publish a new version of your package with question 8.4. 
+
+### 8.1. Define an Abstract Base Class (ABC) for bank accounts
+
+Since `BankAccount` is meant to be subclassed, a better design option would be to:
+- Transform `BankAccount` as an ABC in module `account.abc`
+- Implement the ABC with a concrete class `InternalBankAccount` for the internal use of banks in module `account.internal`
+
+Refer to the [abc documentation](https://docs.python.org/3/library/abc.html) to implement and test this new design.
+
+---
+
+### 8.2. Write a decorator
+Implement a `monitor` decorator for the `transfer_to` methods to print a warning if this user has never transferred an amount of money higher than `value` before.
     * Recall that it is possible to assign an attribute to a function
     * Recall that a decorator takes a function in input and returns a function 
     * Recall that decorators are not bound to class instances
 
-- 5.3. Use matplotlib to plot the balance history of all users at the end of the simulation.
+### 8.3. Overload magic methods
+Implement the *magic method* `__add__(self, other)` so that accounts can be added if they share the same owner, resulting in a new account with the sum of balances.
 
----
-## Part 6: Tests your package with `pytest`
-
-- 6.1. Install `pytest` with pip
-- 6.2. Create independant test files `tests/<module>.py` for each module of your package
-- 6.3. As a first step, modify `sys.path` in test files so that pytest is able to locate and import your `account` package (*)
-- 6.4. With the documentation of [`pytest`](https://docs.pytest.org/), implement unit tests for your classes and run the tests with pytest 
-
-(*) *Note:This workaround is not ideal since this path is different on each system, and the situation will be fixed once the package will be made installable in Part 7.*
-
----
-## Part 7: Automate package building and testing with `tox`
-
-`sys.path` is a nice fix to import libraries locally but it cannot be generalized since paths are not generic. especially if it is to be done against several Python versions. `tox` is the answer.
-
-- 6.1. Make your package installable: Create and fill [`setup.py`](https://packaging.python.org/tutorials/packaging-projects/#configuring-metadata) for your project (*)
-
-- 6.1. Install [tox](https://tox.readthedocs.io/en/latest/) with pip
-
-- 6.3. Create a basic `tox.ini` so that your package is built and tested both with e.g. Python 3.8 and 3.9 (or any Python version available on your system)
-
-- 6.4. Run tox and make sure all tests pass in both environments
-
-(*) *Note: `pip install . --editable` may be used so that the installed package points to your dev directory. This is handy for the dev stage (but `tox` is even better).*
-
----
-## Part 8: Distribute your package to TestPyPi
-- 7.1. Create `pyproject.toml` in your package with the bare minimum from the [doc](https://packaging.python.org/tutorials/packaging-projects/)
-- 7.2. Name your package `accounts-MYNAME` by replacing your name
-- 7.3. Install `wheel` and `twine`, build `sdist` and `bdist_wheel` distributions
-- 7.5. Upload both distributions to TestPyPI with login `__token__`
-*For the password, ask for the token ; or create your own TestPyPI account (\*)*
-- 7.6. Make sure you can then install your package via pip if you target the TestPyPI index ith `--index-url https://test.pypi.org/simple/`
-- 7.7. Update your package (e.g. add `numpy` dependency) and publish a new version 1.1. Make sure both versions are now on TestPyPI
-
-(*) *Note: If you create your own PyPI account, make sure you create it on the [TestPyPI index](https://test.pypi.org/account/register/) that is pruned periodically, instead of the regular PyPI*.
+### 8.4. Publish a new version of your package
+In `setup.py` set the version to `0.0.1`. Build and publish the package again on TestPyPI. Make sure that both versions are now hosted on TestPyPI.
 
 ---
 

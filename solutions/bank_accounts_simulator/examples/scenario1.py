@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from account.external.agios import AgiosBankAccount
 from account.external.blocked import BlockedBankAccount
 from account.internal import BankAccount

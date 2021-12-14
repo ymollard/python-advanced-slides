@@ -7,7 +7,8 @@ setup(name='accounts-correction',
       author='Bob Dupont',
       author_email='bob@example.com',
       url='https://advanced.python.training.aubrune.eu',
-      packages=find_packages(),
-      install_requires=['numpy', 'matplotlib'] # Dependencies to install
+      package_dir={"": "src"},
+      packages=find_packages(where="src"),
+      install_requires=['numpy', 'matplotlib']
 )
 
