@@ -342,11 +342,16 @@ Refer to the doc about [package creation](https://packaging.python.org/tutorials
 
 Delete the `sys.path` workaround in test files since your package is now installable. 
 
+---
+
 ### 6.2. Install, configure and run `tox`
 Refer to the [`tox` basic example](https://tox.wiki/en/latest/#basic-example). Create a basic `tox.ini` so that your package is built and tested against Python 3.10 and 3.9.
 
 Install and run tox in your project. Make sure all tests pass in both environments.
 
+You can re-organise your project structure as proposed in the figure.
+
+![bg right:25% 80%](./img/exercises/package-structure.png)
 
 ---
 ## Part 7: Distribute your package on TestPyPi
@@ -384,7 +389,7 @@ Implement a `monitor` decorator for the `transfer_to` methods to print a warning
 Implement the *magic method* `__add__(self, other)` so that accounts can be added if they share the same owner, resulting in a new account with the sum of balances.
 
 ### 8.4. Publish a new version of your package
-In `setup.py` set the version to `0.0.1`. Build and publish the package again on TestPyPI. Make sure that both versions are now hosted on TestPyPI.
+In `setup.py` set the version to `0.0.2`. Build and publish the package again on TestPyPI. Make sure that both versions are now hosted on TestPyPI.
 
 ---
 
