@@ -46,32 +46,32 @@ https://advanced.python.training.aubrune.eu/
 
 3. [ CODE WITH QUALITY](#58)
     3.1. [ Type annotations](#59)
-    3.2. [ Python docstrings](#61)
-    3.3. [ Logging](#63)
-    3.4. [ Virtual environments (venv)](#65)
-    3.5. [ Quality control tools](#74)
-    3.6. [ Testing](#78)
-4. [ PACKAGE AND DISTRIBUTE](#81)
-    4.1. [ Reminders about Modules and packages](#81)
-    4.2. [ The Python Package Index (PyPI)](#89)
-    4.3. [ PyPI Security warning 🚨](#91)
-    4.4. [ Package distribution](#94)
-    4.5. [ Uploading your package distribution on PyPI](#99)
+    3.2. [ Python docstrings](#62)
+    3.3. [ Logging](#64)
+    3.4. [ Virtual environments (venv)](#66)
+    3.5. [ Quality control tools](#75)
+    3.6. [ Testing](#81)
+4. [ PACKAGE AND DISTRIBUTE](#84)
+    4.1. [ Reminders about Modules and packages](#84)
+    4.2. [ The Python Package Index (PyPI)](#92)
+    4.3. [ Package distribution](#97)
+    4.4. [ Uploading your package distribution on PyPI](#102)
 
 ---
 
 #  Schedule of DAY 3
 
-5. [ PERFORMANCE OPTIMIZATION](#101)
-    5.1. [ Kind reminder about complexities](#102)
-    5.2. [ Refactor your code by keeping complexity in mind](#103)
-    5.3. [ Multithreading, multiprocessing ans asynchronous IO](#105)
-    5.4. [ Asynchronous code (Python coroutines)](#115)
-    5.5. [ Profiling](#125)
-    5.6. [ Alternative package managers](#126)
-6. [ ANNEXES / EXTRA-CURRICULAR TOPICS](#127)
-    6.1. [ Python for datascience](#128)
-    6.2. [ Common design patterns](#133)
+5. [ PERFORMANCE OPTIMIZATION](#104)
+    5.1. [ Kind reminder about complexities](#105)
+    5.2. [ Refactor your code by keeping complexity in mind](#106)
+    5.3. [ Profiling](#108)
+    5.4. [ Alternative package managers](#109)
+    5.5. [ Common design patterns](#110)
+6. [ PARALLELIZE PYTHON APPLICATIONS](#119)
+    6.1. [ Multithreading, multiprocessing and asynchronous IO](#120)
+    6.2. [ Asynchronous code (Python coroutines)](#130)
+7. [ ANNEXES / EXTRA-CURRICULAR TOPICS](#140)
+    7.1. [ Python for datascience](#141)
 
 ---
 
@@ -1749,6 +1749,7 @@ If a function does not call any other then `tottime=cumtime`. Some tools draw pr
 ![](./img/profiler.png)
 
 ---
+
 ## Alternative package managers
 Not happy with PyPI and pip? Here are other ones:
 - `conda`: Useful if you also deal with non-Python dependencies. Compatible with Ruby, Java, JS, C/ C++, FORTRAN, ...
@@ -1757,383 +1758,6 @@ Not happy with PyPI and pip? Here are other ones:
 - `micromamba`: ...
 
 The bad news is that package managers are not compatible with each other.
-
----
-## Multithreading, multiprocessing ans asynchronous IO
-**Definitions**:
-
-- **Multithreading**: Split work into several threads within the same process and CPU.
-- **Multiprocessing**: Split work into several processes dispatched to several CPUs.
-- **Asynchronous tasks**: Release the CPU and yield to another task when an IO is needed (e.g. network or hard disk response) 
-
----
-
-![bg center 95%](./img/multiprocessing-multithreading-async.svg)
-
----
-### The reference counter
-The interpreter holds a counter counting how many references point to a literal.
-
-```ipython
-In [1]: s = "Hello world!" 
-
-In [2]: sys.getrefcount(s)
-Out[2]: 2
-
-In [3]: s2 = s             
-
-In [4]: sys.getrefcount(s)
-Out[4]: 3
-
-In [5]: del s2             
-
-In [6]: sys.getrefcount(s)
-Out[6]: 2
-```
-If the counter reaches 0, the literal is destroyed. This is how Python frees memory.
-
----
-### The Python Global Interpreter Lock (GIL)
-The GIL is a mutex that protects access to the reference counters of Python objects.
-
-However it prevents multiple threads from executing Python bytecodes at once. It offers poor performance for multi-threaded programs, if they are CPU-bound.
-
-Several implementations of the Python interpreter exist, for instance:
-- CPython (By far the most popular)
-- Jython
-- IronPython
-- PyPy
-
-Only some of them "suffer" from the GIL. If it is an issue, use another implementation.
-[The GIL is a regular debate within the Python community](https://wiki.python.org/moin/GlobalInterpreterLock)
-
----
-Because of the GIL, multiprocessing is way more efficient that multithreading.
-
-But also harder to deal with since processes are insulated in their own memory spaces. Solutions exist:
-- Use stdin and stdout from the [`subprocess`](https://docs.python.org/fr/3.8/library/subprocess.html) library (call a binary and read/write std in/out)
-- Use queues and pipes from the [`multiprocessing`](https://docs.python.org/3.7/library/multiprocessing.html) library (Python only)
-- Use network messaging libraries [`zmq`](https://zeromq.org/), [`rabbitmq`](https://www.rabbitmq.com/), [`redis`](https://redis.io/)... (language-agnostic)
-
-![bg right:35% 90%](img/multiprocess-communication.svg)
-
----
-When to use these libs?
-- **`subprocess`**: call a system command (e.g. `traceroute`, `tar`, `useradd`...) or an existing executable whose code cannot be changed, from a Python module.
-- **`multiprocessing`**: split a Python-only program from which you write all the code into processes to improve performance.
-- **messaging libs**: build a decentralized application made of multiple technologies and languages (e.g. on top of a cloud infrastructure OVH, Gandi, AWS, ...)
-
----
-### Multithreading example
-```python
-import time, threading
-def second_thread():
-    for i in range(10):
-        print("Hello from the second thread!")
-        time.sleep(1)
-
-new_thread = threading.Thread(target=second_thread)
-new_thread.start()
-
-for i in range(10):
-    print("Hello from the main thread!")
-    time.sleep(1)
-
-new_thread.join()
-```
-```bash
-Hello from the second thread! # We can't tell in which order the prints will happen
-Hello from the main thread!   # The OS schedules threads as fairly as possible
-Hello from the main thread!   # ...according to the system load.
-Hello from the second thread! # The GIL limits Python to 1 CPU 
-```
----
-### Multiprocessing example
-```python
-import time, multiprocessing
-def second_process():
-    for i in range(10):
-        print("Hello from the second process!")
-        sleep(1)
-
-new_process = multiprocessing.Process(target=second_process)
-new_process.start()
-
-for i in range(10):
-    print("Hello from the first process!")
-    sleep(1)
-
-new_process.join()
-```
-```bash
-Hello from the first process!  # Pretty much the same as threads
-Hello from the second process! # But mutliprocessing may use  all CPUs
-Hello from the second process! # The OS schedules the processes on the CPUs
-Hello from the first process!
-```
----
-What if we want to communicate between between 2 threads?
-`threading` relies on thread-safe* synchronization primitives:
- * `threading.Lock` (aka Mutex): authorizes a single thread at once
- * `threading.Semaphore`: authorizes a maximum of `n` threads at once
- * `threading.Event`: an event can be emitted `event.set()` by a thread and waited by other threads (`event.wait()`) 
-
-```python
-lock = threading.Lock()  # Lock share dby all threads
-my_list = [0]            # List shared by all threads
-
-with lock:               # All threads lock the lock before writing the list 
-    my_list[0] += 1  # += is not an atomic operation: not thread-safe
-```
-**thread-safe**: ability to be manipulate by several threads at once with no risk of unintended interaction with unpredictable issue
-
----
-What if we want to communicate between between 2 processes?
-`multiprocessing` relies on thread-safe* synchronization primitives:
- * `multiprocessing.Lock` (aka Mutex): authorizes a single process at once
- * `multiprocessing.Semaphore`: authorizes a maximum of `n` processes at once
- * `multiprocessing.Event`: an event can be emitted `event.set()` by a process and waited by other processes (`event.wait()`) 
- * `multiprocessing.Queue`: shared queue between all processes. They can put data into it and retrieve data from it
- * `multiprocessing.Pipe`: bidiretionnal pipe with only two ends to put an retrieve data between a maximum of 2 processes
- * It is also possible to share lists, dicts, ...
----
-
-## Asynchronous code (Python coroutines)
-
-A **coroutine** is an asynchronous function. To be executed it must be awaited or run in an event loop.
-
-A **task** is an execution scheduling of a coroutine. It knows when a coroutine is done (if it returned a value, a result, or an exception).
-
-A **future** is a placeholder in which a future result value will be stored later.
-
-An **awaitable** is anything that can be awaited with `await`: a coroutine, a task, or future
-
-An async program is built as a concurrent one but it is a **single-threaded process**.
-
-The OS is **NOT** involved with `asyncio`: the library handles parrallelization by itself. 
-
----
-```python
-def say(sentence):
-    print(sentence)
-
-say("Hello world!")
-```
-
-
-Let's add the keyword `async`:
-```python
-async def say(sentence):
-    print(sentence)
-
-say("Hello world!")
-# Returns a <coroutine object say at 0x7fe4f837dbc0>
-```
-*Note: asyncio evolves fast, our slides are based on Python 3.7+*.
-
-
----
-
-If we want to execute a coroutine, we can:
-- call it in `asyncio.run()` i.e:
-```python 
-asyncio.run(say("Hello"))  # It also creates an event loop
-```
-- await it with keyword `await` i.e:
-```python 
-await say("Hello")     # It does NOT create an event loop
-```
-- create a task from it i.e:
- ```python 
-asyncio.create_task(say("Hello"))     # It does NOT create an event loop
-```
-The event loop is declared in the main thread (outermost scope).
-As a consequence, `await` and `create_task` are forbidden outside an async function
-
----
-
-A the heart of the async app there is an **event loop**: This is a **scheduler**: you register tasks to be executed in the future ; and you retrieve them when they are done.
-
-![](https://digitalpress.fra1.cdn.digitaloceanspaces.com/9hob7gz/2021/05/Event-Loop-4.png)
-
----
-
-```python
-async def wait(duration):
-    await asyncio.sleep(duration)
-    print("Finished to wait {}secs".format(duration))
-
-async def main():
-    l3 = asyncio.create_task(wait(3))   # Plan for execution asap
-    l5 = asyncio.create_task(wait(5))   # Plan for execution asap
-    await asyncio.wait([l3, l5]) # Your moment of glory: don't abandon tasks
-
-asyncio.run(main())        # Creates and destroys the event loop
-```
-
-Forgetting to await a task is like giving birth to a child and forgetting it: **DON'T**. Thus, keep track of the task and await it:
-- with `await task` ; or
-- with: `asyncio.wait(task)` (or equivalent) 
-
-Grouping task creations and waiting for them in the same function is handy because `asyncio.run()` creates and destroys the event loop ; everything inside requires a loop
-
----
-**No synchronous code** (e.g. `time.sleep()` or `requests.get()`) or heavy code (e.g. a `while loop` that will take years) should be mixed with async code.
-
-AsynIO is single-threaded, the event loop uses it too. If you block it with synchronous code, the event loop will be delayed as well as all other planned tasks.
-
-If needed though, [executors](https://docs.python.org/3/library/asyncio-eventloop.html#executing-code-in-thread-or-process-pools) can run synchronous code in thread or process pools.
-
----
-Not all coroutines have to run *asap*. Some will first:
-- wait for another coroutine to end: `await` is made for it
-- wait for a returned value: `asyncio.Future` is made for it
-- wait for aquiring the right to access a resource: `asyncio.Lock` is made for it
-- wait for an event to happen: `asyncio.Event` is made for it
-- wait for a specific time or delay: `asyncio.sleep` is made for it
-
-These [Synchronization primitives](https://docs.python.org/3/library/asyncio-sync.html) are the same as the `threading` module, but they are not thread-safe.
-
----
-### Example of task synchronisation with Event
-```python
-async def coroutine(go):
-    await go.wait()  # The coroutine waits for the event to happen
-    print("I've received your go!")
-    go.clear()   # The vent is clear so that it can be set again
-
-async def trigger_event(go):
-    await asyncio.sleep(5)
-    go.set()
-
-async def main():
-    go = asyncio.Event()  # We trigger this event to launch the coroutine
-    event_receiver = asyncio.create_task(coroutine(go))
-    event_emitter = asyncio.create_task(trigger_event(go))
-    await asyncio.wait([event_receiver, event_emitter])
-
-asyncio.run(main())   
-```
----
-### Example of fetching a web page (sync vs async)
-
-```python
-import requests
-response = requests.get("http://example.com")
-print("Status:", response.status_code)
-print("Content-type:", response.headers['content-type'])
-print(response.content[:15], "...")
-```
-
-```python
-import asyncio, aiohttp
-async def fetch(url):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-
-            print("Status:", response.status)
-            print("Content-type:", response.headers['content-type'])
-
-            html = await response.text()
-            print("Body:", html[:15], "...")
-
-asyncio.run(fetch("http://example.com"))
-```
-
----
-### Async streams
-
-Streams provide async tools made for network communication where you need to:
-- Read from the recipient: using a `StreamReader` instance
-- Write to the recipient: using a `StreamWriter` instance
-
-### Async transports and protocols
-
-
-
-<!--#####################################################################################################-->
----
-# ANNEXES / EXTRA-CURRICULAR TOPICS
-
-##  Python for datascience 
-##  Common design patterns
-<!--#####################################################################################################-->
-
----
-## Python for datascience
-### numpy
-`numpy` (numerical python) is the Python library dedicated to numerical calculus.
-
-`numpy` adds features to Python based on objects and classes that behaves the same way a mathematician would expect.
-
-The core feature in `numpy` is the multi-dimensional array type `numpy.array` aka `numpy.ndarray`. Here is a 3-dimensional array:
-
-```python
-pixels = numpy.array([[[255, 255, 255], [255, 0, 0], [0, 0, 255],
-                     [255, 0, 255], [255, 255, 0], [0, 255, 255],
-                     [0, 255, 255], [255, 0, 255], [0, 255, 255]]])
-```
----
-With a regular Python list, default operators apply:
-```python
-2 * [1, 2, 3, 4]
-# will repeat the list:  [1, 2, 3, 4, 1, 2, 3, 5]
-```
-
-With a numpy array, operators behave differently:
-```python
-import numpy
-2 * numpy.array([1, 2, 3, 4])
-# will run an element-wise multiplication:  numpy.array([2, 4, 6, 8])
-```
-
----
-Example 2:
-Without numpy, try to compute several images by a function:
-```python
-import math
-x = [-3.14, -1.57, 0, 1.57, 3.14]
-math.sin(x)   # raises a TypeError because sin() expects float, not list 
-```
-
-With numpy:
-```python
-import numpy
-x = numpy.linspace(-3.14, 3.14, 100000) # 100000 values in range [-3.14, 3.14]
-numpy.sin(x)  # 100000 images of x by the sin() function
-```
-
-
----
-### Matplotlib
-
-```python
-import matplotlib.pyplot as plt
-import numpy as np
-
-t = np.arange(0.0, 2.0, 0.01)
-s = 1 + np.sin(2 * np.pi * t)
-
-plt.plot(t, s)
-
-plt.xlabel('time (s)')
-plt.ylabel('voltage (mV)')
-plt.title('About as simple as it gets, folks')
-plt.grid()
-
-plt.show()
-```
-
-![bg right:30% 80%](https://matplotlib.org/stable/_images/sphx_glr_simple_plot_001.png)
-
----
-
-
-![bg 80%](https://matplotlib.org/stable/_images/sphx_glr_image_annotated_heatmap_001.png)
-
-![bg 80%](https://matplotlib.org/stable/_images/sphx_glr_horizontal_barchart_distribution_001.png)
-
-![bg 80%](https://matplotlib.org/stable/_images/sphx_glr_bar_label_demo_001.png)
 
 ---
 ## Common design patterns
@@ -2311,3 +1935,383 @@ def some_function(animal: Animal): # Cat instance will be accepted here
     pass
 ```
 A protocol has benefits for static type checking. At runtime it just acts as an ABC.
+
+---
+
+# PARALLELIZE PYTHON APPLICATIONS
+
+---
+## Multithreading, multiprocessing and asynchronous IO
+**Definitions**:
+
+- **Multithreading**: Split work into several threads within the same process and CPU.
+- **Multiprocessing**: Split work into several processes dispatched to several CPUs.
+- **Asynchronous tasks**: Release the CPU and yield to another task when an IO is needed (e.g. network or hard disk response) 
+
+---
+
+![bg center 95%](./img/multiprocessing-multithreading-async.svg)
+
+---
+### The bottleneck of Python Multithreading: the reference counter
+The interpreter holds a counter counting how many references point to a literal.
+
+```ipython
+In [1]: s = "Hello world!" 
+
+In [2]: sys.getrefcount(s)
+Out[2]: 2
+
+In [3]: s2 = s             
+
+In [4]: sys.getrefcount(s)
+Out[4]: 3
+
+In [5]: del s2             
+
+In [6]: sys.getrefcount(s)
+Out[6]: 2
+```
+If the counter reaches 0, the literal is destroyed. This is how Python frees memory.
+
+---
+### The Python Global Interpreter Lock (GIL)
+The GIL is a mutex that protects access to the reference counters of Python objects.
+
+However it prevents multiple threads from executing Python bytecodes at once. It offers poor performance for multi-threaded programs, if they are CPU-bound.
+
+Several implementations of the Python interpreter exist, for instance:
+- CPython (By far the most popular)
+- Jython
+- IronPython
+- PyPy
+
+Only some of them "suffer" from the GIL. If it is an issue, use another implementation.
+[The GIL is a regular debate within the Python community](https://wiki.python.org/moin/GlobalInterpreterLock)
+
+---
+Because of the GIL, multiprocessing is way more efficient that multithreading.
+
+But also harder to deal with since processes are insulated in their own memory spaces. Solutions exist:
+- Use stdin and stdout from the [`subprocess`](https://docs.python.org/fr/3.8/library/subprocess.html) library (call a binary and read/write std in/out)
+- Use queues and pipes from the [`multiprocessing`](https://docs.python.org/3.7/library/multiprocessing.html) library (Python only)
+- Use network messaging libraries [`zmq`](https://zeromq.org/), [`rabbitmq`](https://www.rabbitmq.com/), [`redis`](https://redis.io/)... (language-agnostic)
+
+![bg right:35% 90%](img/multiprocess-communication.svg)
+
+---
+When to use these libs?
+- **`subprocess`**: call a system command (e.g. `traceroute`, `tar`, `useradd`...) or an existing executable whose code cannot be changed, from a Python module.
+- **`multiprocessing`**: split a Python-only program from which you write all the code into processes to improve performance.
+- **messaging libs**: build a decentralized application made of multiple technologies and languages (e.g. on top of a cloud infrastructure OVH, Gandi, AWS, ...)
+
+---
+### Multithreading example
+```python
+import time, threading
+def second_thread():
+    for i in range(10):
+        print("Hello from the second thread!")
+        time.sleep(1)
+
+new_thread = threading.Thread(target=second_thread)
+new_thread.start()
+
+for i in range(10):
+    print("Hello from the main thread!")
+    time.sleep(1)
+
+new_thread.join()
+```
+```bash
+Hello from the second thread! # We can't tell in which order the prints will happen
+Hello from the main thread!   # The OS schedules threads as fairly as possible
+Hello from the main thread!   # ...according to the system load.
+Hello from the second thread! # The GIL limits Python to 1 CPU 
+```
+---
+### Multiprocessing example
+```python
+import time, multiprocessing
+def second_process():
+    for i in range(10):
+        print("Hello from the second process!")
+        sleep(1)
+
+new_process = multiprocessing.Process(target=second_process)
+new_process.start()
+
+for i in range(10):
+    print("Hello from the first process!")
+    sleep(1)
+
+new_process.join()
+```
+```bash
+Hello from the first process!  # Pretty much the same as threads
+Hello from the second process! # But mutliprocessing may use  all CPUs
+Hello from the second process! # The OS schedules the processes on the CPUs
+Hello from the first process!
+```
+---
+What if we want to communicate between between 2 threads?
+`threading` relies on thread-safe* synchronization primitives:
+ * `threading.Lock` (aka Mutex): authorizes a single thread at once
+ * `threading.Semaphore`: authorizes a maximum of `n` threads at once
+ * `threading.Event`: an event can be emitted `event.set()` by a thread and waited by other threads (`event.wait()`) 
+
+```python
+lock = threading.Lock()  # Lock share dby all threads
+my_list = [0]            # List shared by all threads
+
+with lock:               # All threads lock the lock before writing the list 
+    my_list[0] += 1  # += is not an atomic operation: not thread-safe
+```
+**thread-safe**: ability to be manipulate by several threads at once with no risk of unintended interaction with unpredictable issue
+
+---
+What if we want to communicate between between 2 processes?
+`multiprocessing` relies on thread-safe* synchronization primitives:
+ * `multiprocessing.Lock` (aka Mutex): authorizes a single process at once
+ * `multiprocessing.Semaphore`: authorizes a maximum of `n` processes at once
+ * `multiprocessing.Event`: an event can be emitted `event.set()` by a process and waited by other processes (`event.wait()`) 
+ * `multiprocessing.Queue`: shared queue between all processes. They can put data into it and retrieve data from it
+ * `multiprocessing.Pipe`: bidiretionnal pipe with only two ends to put an retrieve data between a maximum of 2 processes
+ * It is also possible to share lists, dicts, ...
+---
+
+## Asynchronous code (Python coroutines)
+
+A **coroutine** is an asynchronous function. To be executed it must be awaited or run in an event loop.
+
+A **task** is an execution scheduling of a coroutine. It knows when a coroutine is done (if it returned a value, a result, or an exception).
+
+A **future** is a placeholder in which a future result value will be stored later.
+
+An **awaitable** is anything that can be awaited with `await`: a coroutine, a task, or future
+
+An async program is built as a concurrent one but it is a **single-threaded process**.
+
+The OS is **NOT** involved with `asyncio`: the library handles parallelization by itself. 
+
+---
+```python
+def say(sentence):
+    print(sentence)
+
+say("Hello world!")
+```
+
+
+Let's add the keyword `async`:
+```python
+async def say(sentence):
+    print(sentence)
+
+say("Hello world!")
+# Returns a <coroutine object say at 0x7fe4f837dbc0>
+```
+*Note: asyncio evolves fast, our slides are based on Python 3.7+*.
+
+
+---
+
+If we want to execute a coroutine, we can:
+- call it in `asyncio.run()` i.e:
+```python 
+asyncio.run(say("Hello"))  # It also creates an event loop
+```
+- await it with keyword `await` i.e:
+```python 
+await say("Hello")     # It does NOT create an event loop
+```
+- create a task from it i.e:
+ ```python 
+asyncio.create_task(say("Hello"))     # It does NOT create an event loop
+```
+The event loop is declared in the main thread (outermost scope).
+As a consequence, `await` and `create_task` are forbidden outside an async function
+
+---
+
+A the heart of the async app there is an **event loop**: This is a **scheduler**: you register tasks to be executed in the future ; and you retrieve them when they are done.
+
+![](https://digitalpress.fra1.cdn.digitaloceanspaces.com/9hob7gz/2021/05/Event-Loop-4.png)
+
+---
+
+```python
+async def wait(duration):
+    await asyncio.sleep(duration)
+    print("Finished to wait {}secs".format(duration))
+
+async def main():
+    l3 = asyncio.create_task(wait(3))   # Plan for execution asap
+    l5 = asyncio.create_task(wait(5))   # Plan for execution asap
+    await asyncio.wait([l3, l5]) # Your moment of glory: don't abandon tasks
+
+asyncio.run(main())        # Creates and destroys the event loop
+```
+
+Forgetting to await a task is like giving birth to a child and forgetting it: **DON'T**. Thus, keep track of the task and await it:
+- with `await task` ; or
+- with: `asyncio.wait(task)` (or equivalent) 
+
+Grouping task creations and waiting for them in the same function is handy because `asyncio.run()` creates and destroys the event loop ; everything inside requires a loop
+
+---
+**No synchronous code** (e.g. `time.sleep()` or `requests.get()`) or heavy code (e.g. a `while loop` that will take years) should be mixed with async code.
+
+AsynIO is single-threaded, the event loop uses it too. If you block it with synchronous code, the event loop will be delayed as well as all other planned tasks.
+
+If needed though, [executors](https://docs.python.org/3/library/asyncio-eventloop.html#executing-code-in-thread-or-process-pools) can run synchronous code in thread or process pools.
+
+---
+Not all coroutines have to run *asap*. Some will first:
+- wait for another coroutine to end: `await` is made for it
+- wait for a returned value: `asyncio.Future` is made for it
+- wait for aquiring the right to access a resource: `asyncio.Lock` is made for it
+- wait for an event to happen: `asyncio.Event` is made for it
+- wait for a specific time or delay: `asyncio.sleep` is made for it
+
+These [Synchronization primitives](https://docs.python.org/3/library/asyncio-sync.html) are the same as the `threading` module, but they are not thread-safe.
+
+---
+### Example of task synchronisation with Event
+```python
+async def coroutine(go):
+    await go.wait()  # The coroutine waits for the event to happen
+    print("I've received your go!")
+    go.clear()   # The vent is clear so that it can be set again
+
+async def trigger_event(go):
+    await asyncio.sleep(5)
+    go.set()
+
+async def main():
+    go = asyncio.Event()  # We trigger this event to launch the coroutine
+    event_receiver = asyncio.create_task(coroutine(go))
+    event_emitter = asyncio.create_task(trigger_event(go))
+    await asyncio.wait([event_receiver, event_emitter])
+
+asyncio.run(main())   
+```
+---
+### Example of fetching a web page (sync vs async)
+
+```python
+import requests
+response = requests.get("http://example.com")
+print("Status:", response.status_code)
+print("Content-type:", response.headers['content-type'])
+print(response.content[:15], "...")
+```
+
+```python
+import asyncio, aiohttp
+async def fetch(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+
+            print("Status:", response.status)
+            print("Content-type:", response.headers['content-type'])
+
+            html = await response.text()
+            print("Body:", html[:15], "...")
+
+asyncio.run(fetch("http://example.com"))
+```
+
+---
+### Async streams
+
+Streams provide async tools made for network communication where you need to:
+- Read from the recipient: using a `StreamReader` instance
+- Write to the recipient: using a `StreamWriter` instance
+
+### Async transports and protocols
+
+
+
+<!--#####################################################################################################-->
+---
+# ANNEXES / EXTRA-CURRICULAR TOPICS
+
+<!--#####################################################################################################-->
+
+---
+## Python for datascience
+### numpy
+`numpy` (numerical python) is the Python library dedicated to numerical calculus.
+
+`numpy` adds features to Python based on objects and classes that behaves the same way a mathematician would expect.
+
+The core feature in `numpy` is the multi-dimensional array type `numpy.array` aka `numpy.ndarray`. Here is a 3-dimensional array:
+
+```python
+pixels = numpy.array([[[255, 255, 255], [255, 0, 0], [0, 0, 255],
+                     [255, 0, 255], [255, 255, 0], [0, 255, 255],
+                     [0, 255, 255], [255, 0, 255], [0, 255, 255]]])
+```
+---
+With a regular Python list, default operators apply:
+```python
+2 * [1, 2, 3, 4]
+# will repeat the list:  [1, 2, 3, 4, 1, 2, 3, 5]
+```
+
+With a numpy array, operators behave differently:
+```python
+import numpy
+2 * numpy.array([1, 2, 3, 4])
+# will run an element-wise multiplication:  numpy.array([2, 4, 6, 8])
+```
+
+---
+Example 2:
+Without numpy, try to compute several images by a function:
+```python
+import math
+x = [-3.14, -1.57, 0, 1.57, 3.14]
+math.sin(x)   # raises a TypeError because sin() expects float, not list 
+```
+
+With numpy:
+```python
+import numpy
+x = numpy.linspace(-3.14, 3.14, 100000) # 100000 values in range [-3.14, 3.14]
+numpy.sin(x)  # 100000 images of x by the sin() function
+```
+
+
+---
+### Matplotlib
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+t = np.arange(0.0, 2.0, 0.01)
+s = 1 + np.sin(2 * np.pi * t)
+
+plt.plot(t, s)
+
+plt.xlabel('time (s)')
+plt.ylabel('voltage (mV)')
+plt.title('About as simple as it gets, folks')
+plt.grid()
+
+plt.show()
+```
+
+![bg right:30% 80%](https://matplotlib.org/stable/_images/sphx_glr_simple_plot_001.png)
+
+---
+
+
+![bg 80%](https://matplotlib.org/stable/_images/sphx_glr_image_annotated_heatmap_001.png)
+
+![bg 80%](https://matplotlib.org/stable/_images/sphx_glr_horizontal_barchart_distribution_001.png)
+
+![bg 80%](https://matplotlib.org/stable/_images/sphx_glr_bar_label_demo_001.png)
+
