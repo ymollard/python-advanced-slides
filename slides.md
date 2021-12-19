@@ -1510,23 +1510,10 @@ Pip installs packages in the current Python installation's `site-packages` direc
 3. Inside system's directories such as `/usr/lib/python3.8/` if you are root (🚨 This is dangerous and not advisable in general)
 
 ---
-## PyPI Security warning 🚨
+### PyPI Security warning 🚨
 [PyPI packages caught stealing credit card numbers & Discord tokens](https://www.bleepingcomputer.com/news/security/pypi-packages-caught-stealing-credit-card-numbers-discord-tokens/)
-![left:auto right:auto width:600px](img/pypi-noblesse-bleeping.png)
 
----
-### PyPI Typosquatting warning 🚨
-
-```python
-pip install -r requirements.txt
-# 🚨 pip install requirements.txt
-
-pip install rabbitmq
-# 🚨 pip install rabitmq
-
-pip install matplotlib
-# 🚨 pip install matploltib
-```
+![width:600px](img/pypi-noblesse-bleeping.png)
 
 ---
 ### Perform sanity checks before installing a package
@@ -1548,6 +1535,19 @@ Moral entity or individual, which company, experience...
 # of opensource users, # of clients, company financial health if not opensource, ...
 ```
 
+---
+### PyPI Typosquatting warning 🚨
+
+```python
+pip install -r requirements.txt
+# 🚨 pip install requirements.txt
+
+pip install rabbitmq
+# 🚨 pip install rabitmq
+
+pip install matplotlib
+# 🚨 pip install matploltib
+```
 
 ---
 ## Package distribution

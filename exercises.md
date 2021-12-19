@@ -32,10 +32,11 @@ https://advanced.python.training.aubrune.eu/
 [ Mini-project 1: WARMUP – The dataset generator](#3)
 [ Mini-project 2: Draw plots – (Simplistic) Virus spread simulation](#4)
 [ Mini-project 3. Build a full package – Money transfer simulator](#15)
-[ Mini-project 4: Optimize Python – The code breaker](#32)
-[ Mini-project 5: Optimize Python – Bread-First Search optimization](#36)
-[ Mini-project 6. Estimate π with Nilakantha](#40)
-[ Mini-project 7: Write asynchronous code – The chess master](#44)
+[ Mini-project 4: Optimize Python – The code breaker](#34)
+[ Mini-project 5: Optimize Python – Bread-First Search optimization](#38)
+[ Mini-project 6. Estimate π with Nilakantha](#42)
+[ Mini-project 7: Write asynchronous code – The chess master](#46)
+
 
 
 ---
