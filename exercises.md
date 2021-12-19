@@ -155,7 +155,7 @@ Store the parameters as attributes.
 So far, when a lockdown happens, the number of contaminations starts to decrease the same day. We do not consider people contaminated right before the lockdown.
 
 1. Add a `r0_history:` [`deque`](https://docs.python.org/3/library/collections.html#collections.deque) as an attribute to keep a track of previous R0, and:
-- Init the queue with a neutral R0 i.e. as many `1` as the number of `incubation_duration`
+- Init the queue with neutral R0s: `1` repeated `incubation_duration` times
 - `next()` must now accept the previous number of cases in parameter: `next(self, previous_num_cases: int)`
 - `next()` must now enqueue the current R0 to the history
 - `next()` must now return a new contamination case with delay: pop the r0_history from the left and use this to return the current number of contamination cases
@@ -329,16 +329,15 @@ Relative imports start with `.` or `..`
 - 5.3. Add an entry in `sys.path` pointing to the parent folder of your package so that pytest is able to locate and import your `account` package (*)
 - 5.4. With the documentation of [`pytest`](https://docs.pytest.org/), implement unit tests for your classes and run the tests with pytest 
 
-(*) *Note: This workaround is not ideal since this path is different on each system, and the situation will be fixed once the package will be made installable in Part 7.*
+(*) *Note: This workaround is not ideal since this path is different on each system, and the situation will be fixed once the package will be made installable in Part 6.*
 
 ---
 ## Part 6: Automate package building and testing with `tox`
 ### 6.1. Make your package installable
 
-Refer to the doc about [package creation](https://packaging.python.org/tutorials/packaging-projects). Create a dynamic metadata file `setup.py`:
-- In `setup()`, add `install_requires` and assign it to the list of your deps: 
-`numpy` and `matplotlib`
-- Update other metadata (author, license, description...)
+Refer to the doc about [package creation](https://packaging.python.org/tutorials/packaging-projects).
+
+Create a dynamic metadata file `setup.py` and update its metadata (package name, author, license, description...)
 
 Delete the `sys.path` workaround in test files since your package is now installable. 
 
@@ -349,7 +348,7 @@ Refer to the [`tox` basic example](https://tox.wiki/en/latest/#basic-example). C
 
 Install and run tox in your project. Make sure all tests pass in both environments.
 
-You can re-organise your project structure as proposed in the figure.
+Re-organise your project structure as proposed in the figure. In Pycharm *File > Settings > Project > Project Structure*, identify `src` as a source folder so that the linter can identify your source files.
 
 ![bg right:25% 80%](./img/exercises/package-structure.png)
 
@@ -367,7 +366,7 @@ You can re-organise your project structure as proposed in the figure.
 ---
 ## Part 8: Implement extra features and distribute a new version on TestPyPI (Optional)
 
-Questions 8.1, 8.2 and 8.3 and independant from each other. Choose the most interesting ones for you and publish a new version of your package with question 8.4. 
+Questions 8.1, 8.2, 8.3 and 8.4 are independant from each other. Choose the most interesting ones for you and publish a new version of your package with question 8.5. 
 
 ### 8.1. Define an Abstract Base Class (ABC) for bank accounts
 
@@ -388,8 +387,22 @@ Implement a `monitor` decorator for the `transfer_to` methods to print a warning
 ### 8.3. Overload magic methods
 Implement the *magic method* `__add__(self, other)` so that accounts can be added if they share the same owner, resulting in a new account with the sum of balances.
 
-### 8.4. Publish a new version of your package
-In `setup.py` set the version to `0.0.2`. Build and publish the package again on TestPyPI. Make sure that both versions are now hosted on TestPyPI.
+---
+
+### 8.4. Plot the balance history of all accounts
+
+For each account, keep a record of the balance between each transaction and their associated date.
+
+Install matplotlib in your venv and show a single graph at the end of the simulation with a plot for each account owner.
+
+### 8.5. Publish a new version of your package
+
+If you have implemented the plots, add a new dependency to `matplotlib` in the `install_requires` list of the `setup.py` metadada.
+
+In `setup.py` set the version to `0.0.2`. Drop former distribution versions from `dist/` so that you do not upload them again.
+
+Build and publish this new version on TestPyPI. 
+
 
 ---
 

@@ -93,7 +93,11 @@ https://advanced.python.training.aubrune.eu/
 
 ---
 ## Python typing
-Python typing is **dynamic** and inferred from the value: **duck typing** 🦆
+Python typing is **dynamic** and inferred from the value.
+
+🦆 Definition of **duck typing**: An object that has certain properties is treated independently of its actual runtime class. 
+
+**Example**: As soon as methods `__next__` and `__iter__` exist in class `C`, then `C` is considered an iterable.
 
 ### Primitive types
 ```python
@@ -1057,9 +1061,31 @@ sum(5.0, 5)
 # Now this call is valid for the linter
 ```
 
-[🐍 Learn more](https://docs.python.org/3/library/typing.html)
+---
+
+```python
+class Foo:
+    def bar(self, foo:"Foo"):
+        pass
+```
+
+
+```python
+from typing import Literal
+
+UInt8 = Literal[0, 1, 2, 3, 4, 5, 6, 7]
+
+def accepts_only_uint8(x: UInt8) -> None:
+    pass
+
+accepts_only_uint8(10)
+# Expected type Literal[0, 1, 2, 3, 4, 5, 6, 7], got Literal[10] instead
+```
+
+[🐍 Learn more about type annotations](https://docs.python.org/3/library/typing.html)
 
 ---
+
 ## Python docstrings
 
 [PEP 257](https://www.python.org/dev/peps/pep-0257/) describes how RST documentation strings should be inserted in Python code:
@@ -1096,7 +1122,7 @@ Everything that is exported by a module:
 - modules
 - functions
 - classes
-- public methods (including the __init__ constructor)
+- public methods (including the `__init__` constructor)
 - packages (via their `__init__.py`) 
 
 Let your IDE (e.g. Pycharm) autocomplete the docstring syntax for you!
@@ -1249,7 +1275,7 @@ variable = inexisting_variable
 ```
 
 ---
-### Flake8 (also Pylint, Pychecker)
+### Flake8
 Flake8 = PEP 8 + Pyflakes (syntax + semantic analysis)
 
 ```python
@@ -1262,6 +1288,37 @@ def f():
 ```
 main.py:1:1: F401 'numpy' imported but unused              # Semantic
 main.py:3:1: E302 expected 2 blank lines, found 1          # Style
+```
+
+---
+
+### Pytype, the typing checker for untyped code
+Pytype infers types of your code and performs a static check.
+
+```python
+def f(i):
+    return i + 1
+
+f(None)
+```
+```bash
+FAILED: No attribute '__add__' on 'i: None' or '__radd__' on '1: int'
+```
+
+---
+
+### Mypy, the static typing checker for annotated code
+Mypy performs type checking on annotated code.
+
+```python
+def talk(i: int) -> None:
+    print(f"There are {i} potatoes in the bucket")
+
+talk([1, 2, 3])
+```
+
+```bash
+test.py:4: error: Argument 1 to "talk" has incompatible type "List[int]"; expected "int"
 ```
 
 ---
@@ -1583,7 +1640,6 @@ python3 -m build   # Will build both a sdist and bdist
 ### Remarks about binary distribution bdist_*
 - Binary format at platform-dependant (OS, arch, Python implementation and ABI)
 - `.egg` files are just zip files containing sdist or bdist, you can unzip them
-- Optional `setup.cfg` customizes the setup behaviour (e.g. ignore some flake8...)
 - Several binary formats exist: wheel, egg... As of 2021, `wheel` format is preferred
 - wheel files are named this way: `my_math-3.0.4-py3-none-any.whl` where:
   - `my_math` is the package name
@@ -1759,7 +1815,7 @@ But also harder to deal with since processes are insulated in their own memory s
 - Use queues and pipes from the [`multiprocessing`](https://docs.python.org/3.7/library/multiprocessing.html) library (Python only)
 - Use network messaging libraries [`zmq`](https://zeromq.org/), [`rabbitmq`](https://www.rabbitmq.com/), [`redis`](https://redis.io/)... (language-agnostic)
 
-![bg right:35% 95%](img/multiprocess-communication.svg)
+![bg right:35% 90%](img/multiprocess-communication.svg)
 
 ---
 When to use these libs?
@@ -2195,10 +2251,11 @@ for divisor in divisors_of(50):
 **Note:** Iterators and generators do not have to stop: useful to generate infinite patterns.
 
 ---
-### The Abstract Base Class
+### The Interface / Abstract Base Class
 
-An **Abstract Base Class** is a class that cannot be instanciated but only subclassed.
-All subclasses must implement compulsory methods **and respect their semantics**.
+The **Interface** describes the structure and semantics that classes must comply with.  
+
+In Python, **Abstract Base Class** is the closest concept.
 
 ```python
 from abc import ABC, abstractmethod   # This is the Abstract Base Class module
@@ -2208,13 +2265,49 @@ class Animal(ABC):
     def vocalize(self):
         raise NotImplementedError("vocalize() must be overriden")
 
-class Dog(Animal):
+class Dog(Animal): # Inheriting from the ABC means that Dog implements the ABC
     def vocalize(self):
         print("WAF!")
 
-class Cat(Animal): pass
+class Cat(Animal): pass   # This class does not comply with the ABC
 ```
-In this example the linter will report that `vocalize()` must be defined in `Cat` and `TypeError` will be raised at runtime.
+Here, `vocalize()` must be overrriden in subclasses or `TypeError` is raised at instanciation. At runtime, calling `super().vocalize()` raises `NotImplementedError`.
+
+---
+
+If you are dealing with types for which you do not own the implementation (e.g. `tuple` or `list`) you can still state that it complies with your ABC by registering it:
+
+```python
+MyABC.register(tuple)
+MyABC.register(list)
+
+def f(p: MyABC): pass # list and tuple are valid for p because registered
+```
+
+Registering an ABC not only forces registered classes to comply with:
+- the **structure** of the ABC (e.g. method `vocalize()` exist)
+- the **semantics** of the ABC, described in the ABC's documentation
+
+**Drawback**: Explicit registering or inheritence is somehow unpythonic since **duck typing** is usually sufficient to decide if a class is accepted or not.
+
+---
+#### Protocols: duck typing for static type checking
+
+Protocols fulfill the same need as ABCs without the need of an explicit registration or subclassing.
 
 
+```python
+from typing import Protocol
 
+class Animal(Protocol):   
+    def vocalize(self):
+        raise NotImplementedError("vocalize() must be overriden")
+
+class Cat:  # No need to subclass Animal here
+    def vocalize(self):
+        pass
+
+def some_function(animal: Animal): # Cat instance will be accepted here
+    pass
+```
+A protocol has benefits for static type checking. At runtime it just acts as an ABC.
