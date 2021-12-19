@@ -143,7 +143,7 @@ Store the parameters as attributes.
 
 ---
 
-4. Store lockdowns starts and ends in a attribute `self.lockdown`. Use [`fill_between`](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.fill_between.html) to draw green areas for each lockdown, with parameters `color="green", alpha=0.1, label="lockdown"`.
+4. Store lockdowns starts and ends in a attribute `self.lockdown`. Use [`fill_betweenx`](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.fill_betweenx.html) to draw green areas for each lockdown, with parameters `color="green", alpha=0.1, label="lockdown"`.
 - `self.lockdown: list[dict[str, int]]` stores the start and end dates, e.g. `[{"start": 50, "end": 65}, {"start": 100, "end": 115}`
 - Do not start a new lockdown if the previous is not ended
 - In case the last lockdown is not over when the simulation ends, stop the filled area at the end of the simulation.
