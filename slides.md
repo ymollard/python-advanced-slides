@@ -2185,7 +2185,7 @@ Not all coroutines have to run *asap*. Some will first:
 - wait for an event to happen: `asyncio.Event` is made for it
 - wait for a specific time or delay: `asyncio.sleep` is made for it
 
-These [Synchronization primitives](https://docs.python.org/3/library/asyncio-sync.html) are the same as the `threading` module, but they are not thread-safe.
+ℹ️ These [Synchronization primitives](https://docs.python.org/3/library/asyncio-sync.html) are the same as the `threading` module, but they are not thread-safe.
 
 ---
 ### Example of task synchronisation with Event

@@ -264,7 +264,7 @@ To do so, we need to introduce **transaction dates** in our simulation.
   - the  `transfer_to` method overloads the parent method:
     - it takes the `transaction_date` in parameter, of type `datetime` (also change the parent class)
     - it records the time from which the balance becomes negative. You need an additional attribute for this.
-  - the `credit` method overloads the method from the parent class, with the only difference that it computes the agios to be payed to the bank and transfer the money to the bank. Round agios to integer values.
+  - the `_credit` method overloads the method from the parent class, with the only difference that it computes the agios to be payed to the bank and transfer the money to the bank. Round agios to integer values.
 
 ---
  - 3.2. Move the code computing the agios in a private method named `__check_for_agios`, explain the concept of private method and the role of the double underscore 
