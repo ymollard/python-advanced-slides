@@ -956,6 +956,7 @@ To define your own decorator, you need to write a function returning a function:
 from functools import wraps
 
 def log_this(f):
+    @wraps
     def __wrapper_function(*args, **kwargs):
         print("Call with params", args, kwargs)
         f(*args, **kwargs)
