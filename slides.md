@@ -2062,9 +2062,9 @@ Hello from the first process!
 ---
 What if we want to communicate between between 2 threads?
 `threading` relies on thread-safe* synchronization primitives:
- * `threading.Lock` (aka Mutex): authorizes a single thread at once
- * `threading.Semaphore`: authorizes a maximum of `n` threads at once
- * `threading.Event`: an event can be emitted `event.set()` by a thread and waited by other threads (`event.wait()`) 
+- `threading.Lock` (aka Mutex): authorizes a single thread at once
+- `threading.Semaphore`: authorizes a maximum of `n` threads at once
+- `threading.Event`: an event can be emitted `event.set()` by a thread and waited by other threads (`event.wait()`) 
 
 ```python
 lock = threading.Lock()  # Lock share dby all threads
