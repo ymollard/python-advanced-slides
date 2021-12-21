@@ -2082,12 +2082,12 @@ with lock:               # All threads lock the lock before writing the list
 
 ---
 What if we want to communicate between between 2 processes?
-`multiprocessing` relies on thread-safe* synchronization primitives:
+`multiprocessing` relies on thread-safe synchronization primitives:
 - `multiprocessing.Lock` (aka Mutex): authorizes a single process at once
 - `multiprocessing.Semaphore`: authorizes a maximum of `n` processes at once
 - `multiprocessing.Event`: an event can be emitted `event.set()` by a process and waited by other processes (`event.wait()`) 
 - `multiprocessing.Queue`: shared queue between all processes. They can put data into it and retrieve data from it
-- `multiprocessing.Pipe`: bidiretionnal pipe with only two ends to put an retrieve data between a maximum of 2 processes
+- `multiprocessing.Pipe`: bidirectionnal pipe with only two ends to put an retrieve data between a maximum of 2 processes
 - It is also possible to share lists, dicts, ...
 ---
 
