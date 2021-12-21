@@ -287,7 +287,6 @@ We would like to be able to import the classes from than manner:
 from account.external.agios import AgiosBankAccount
 from account.external.blocked import BlockedBankAccount
 from account.internal import BankAccount
-from account.monitor import monitor
 ```
 
 
@@ -380,7 +379,8 @@ Refer to the [abc documentation](https://docs.python.org/3/library/abc.html) to 
 ---
 
 ### 8.2. Write a decorator
-Implement a `monitor` decorator for the `transfer_to` methods to print a warning if this user has never transferred an amount of money higher than `value` before.
+
+In a new module `account.monitor`, implement a `@monitor` decorator for the `transfer_to` methods to print a warning if this user has never transferred an amount of money higher than `value` before.
     - Recall that it is possible to assign an attribute to a function
     - Recall that a decorator takes a function in input and returns a function 
     - Recall that decorators are not bound to class instances
