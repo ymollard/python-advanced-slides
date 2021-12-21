@@ -1055,6 +1055,8 @@ To specify more complex annotations, import them from `typing`:
 - `Tuple[X, Y, Z]`: tuple (sequence) of several types (e.g. `bool`, `str`)
 - `Callable[[X], Y]`: function that takes X in input and returns Y
 - `TypeVar`: a name of variable type
+- `Optional[X]`: either X or NoneType
+
 
 ```python
 from typing import Union
@@ -1141,6 +1143,8 @@ print(is_same_sign_than_or_positive.__doc__)
 ---
 ## Logging
 Python has a module dedicated to **logging**. It classes each log entry in levels of criticity: debug, info, warning, error and allows to filter them. [🐍 Learn more](https://docs.python.org/3/howto/logging.html)
+
+The simplest usecase uses the basic configuration:
 
 ```python
 logging.basicConfig(filename='app.log', level=logging.INFO)
