@@ -1449,7 +1449,7 @@ Optionally, a (sub-)package can by "executed" from command-line with the `-m` op
 ```bash
 python -m my_math.float
 ```
-only if a module `__main__.py` has been placed a the root of the sub-package.
+only if a module `__main__.py` has been placed at the root of the sub-package.
 
 Then, executing the sub-package consists into running code in `__main__.py`
 
@@ -1517,7 +1517,7 @@ pip install numpy    # Will seek on PyPI
 
 Pip installs packages in the current Python installation's `site-packages` directory which is, depending the situation:
 1. Inside your virtual environment if some venv is activated
-2. Inside your local hoem directory `/home/<user>/.local/lib` if you cannot write to system directories (i.e. you are not root)
+2. Inside your local home directory `/home/<user>/.local/lib` if you cannot write to system directories (i.e. you are not root)
 3. Inside system's directories such as `/usr/lib/python3.8/` if you are root (🚨 This is dangerous and not advisable in general)
 
 ---
@@ -1653,8 +1653,8 @@ python3 -m build   # Will build both a sdist and bdist
 - `.egg` files are just zip files containing sdist or bdist, you can unzip them
 - Several binary formats exist: wheel, egg... As of 2021, `wheel` format is preferred
 - wheel files are named this way: `my_math-3.0.4-py3-none-any.whl` where:
-  - `my_math` is the package name
-  - `3.0.4` is the version
+  - `my_math` is your package name
+  - `3.0.4` is your package version
   - `py3` is the Python implementation tag
   - `none` is the ABI tag ([the C API for Python](https://docs.python.org/3/c-api/stable.html))
   - `any` is the platform (x86_64, arm, macos...)

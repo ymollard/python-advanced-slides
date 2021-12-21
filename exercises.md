@@ -237,16 +237,18 @@ bob = BankAccount("Bob Müller", 100)
 
 Bob is currently overdrawn. To prevent this kind of situation, its customer adviser prefers to convert his account into a blocked account. This way, any purchase would be refused if Bob had not enough money.
 
-- 2.1. Implement a class `BlockedBankAccount` so that:
+- 2.1. Create the `InsufficientBalance` exception type inheriting from `ValueError`
+
+- 2.2. Implement a class `BlockedBankAccount` so that:
   - the `BlockedBankAccount` inherits from `BankAccount`. Make sure you do not forget to call parent method with the `super()` keyword if necessary
-  - the `transfer_to` methods overloads the parent method, with the only difference that it raises an exception if the balance is not sufficiently provided to execute the transfer
+  - the `transfer_to` methods overrides the parent method, with the only difference that it raises `InsufficientBalance` if the balance is not sufficiently provided to execute the transfer
 
 ---
-- 2.2. Replace Bob's account by a blocked account and check that the previous scenario actually raises an exception
+- 2.3. Replace Bob's account by a blocked account and check that the previous scenario actually raises an exception
 
-- 2.3. Protect the portion of code that looks coherent with `try..except` in order to catch the exception without interrupting the script
+- 2.4. Protect the portion of code that looks coherent with `try..except` in order to catch the exception without interrupting the script
 
-- 2.4. Explain the concept of protected method and the role of the underscore in front of the method name ; and why it is preferable that `_credit` is protected
+- 2.5. Explain the concept of protected method and the role of the underscore in front of the method name ; and why it is preferable that `_credit` is protected
 
 ---
 ## Part 3: The account with agios
@@ -261,10 +263,11 @@ To do so, we need to introduce **transaction dates** in our simulation.
 - 3.1. Implement a class `AgiosBankAccount` so that:
   - the `AgiosBankAccount` inherits from `BankAccount`. Make sure you do not forget to call parent method with the `super()` keyword if necessary
   - the constructor of this account takes in parameter the account of the bank so that agios can be credited on their account.
-  - the  `transfer_to` method overloads the parent method:
-    - it takes the `transaction_date` in parameter, of type `datetime` (also change the parent class)
+  - the  `transfer_to` method overrides the parent method:
+    - it takes the `transaction_date` in parameter, of type `datetime`
+    (*also change the parent class and propagate the date when necessary*)
     - it records the time from which the balance becomes negative. You need an additional attribute for this.
-  - the `_credit` method overloads the method from the parent class, with the only difference that it computes the agios to be payed to the bank and transfer the money to the bank. Round agios to integer values.
+  - the `_credit` method overrides the method from the parent class, with the only difference that it computes the agios to be payed to the bank and transfer the money to the bank. Round agios to integer values.
 
 ---
  - 3.2. Move the code computing the agios in a private method named `__check_for_agios`, explain the concept of private method and the role of the double underscore 
@@ -385,7 +388,7 @@ In a new module `account.monitor`, implement a `@monitor` decorator for the `tra
     - Recall that a decorator takes a function in input and returns a function 
     - Recall that decorators are not bound to class instances
 
-### 8.3. Overload magic methods
+### 8.3. Override magic methods
 Implement the *magic method* `__add__(self, other)` so that accounts can be added if they share the same owner, resulting in a new account with the sum of balances.
 
 ---
