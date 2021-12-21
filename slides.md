@@ -145,7 +145,7 @@ l.append("element") # Append at the end (right side)
 l.pop()             # Remove from the end. pop(0) removes from the start
 ```
 
-##### The dictionary (no guarantee about order)
+##### The dictionary (Order guaranteed since 3.8)
 ```python
 d = {}
 dict(zip(("article", "price", "stock"), ("Logitech M180", 99.90, 5)))
@@ -223,8 +223,8 @@ sum, difference = compute(5, 5)
 results = compute(5, 5)
 ```
 
-
 ---
+
 ##### The named tuple
 Compared to a tuple, the named tuple can be accessed by keys.
 Compared to a dict, the named tuple is immutable.
@@ -242,22 +242,9 @@ tiffany.score
 tiffany.name
 # Will return 'Tiffany'
 ```
----
-
-**Exercise**: With `timeit`, compare performance of:
-1. Multiple declarations of:
-   - instances of type `HighScores` (namedtuple)
-   - instances of type `dict` (with equivalent data fields)
-   - instances of type `tuple` (with equivalent data sequence)
-2. Multiple access to the score of:
-   - the `HighScores` (namedtuple)
-   - the `dict` 
-   - the `tuple`
-
-**Conclusion:** The Python dict inherits from benefits from the tuple (for fast creation and access) and named tuples (for readibility thanks to key-access), and it is mutable!
 
 ---
-### Subclassing existing types
+### Subclassing existing types from `collections`
 
 If you require a data structure than behaves like an existing one (`dict`, `list`, `strings`...) you may implement you own type by inheriting from existing classes.
 
@@ -267,11 +254,13 @@ In module `collections`, three types are made specifically for this purpose: `Us
 from collections import UserString
 
 class UpperCaseString(UserString):
-    def __init(args):
+    def __init__(args):
         super(UpperCaseString, self).__init__(args)
         # Custom code for constructor of str here
     
-    # Custom re-implementation of other str methods here
+    def __add__(self, other):
+        # Custom re-implementation of other str methods here
+        return self + other.upper()
 ```
 
 
@@ -288,7 +277,7 @@ The less complex an operation is in terms of time / space, the better it is opti
 
 According to the usecase, we may opt for the best optimization either in space or time.
 
-An optimized program is **faster**, **greener** and **more economic**, since both time (CPUs and GPUs) and space (Hard drives and networks) consume energy.
+An optimized program is **faster**, **greener** and **more economic**, since both time (CPUs and GPUs) and space (RAM, hard drives and networks) consume energy.
 
 ---
 `Big-O` is a notation that helps measure complexity of programs in time and space.
@@ -371,6 +360,21 @@ print(timeit("numpy.sqrt(25)", globals=globals()))
 
 [🐍 Learn more about timeit](https://docs.python.org/3/library/timeit.html)
 
+---
+
+### Type-benchmarking exercise to setup Pycharm and Jupyter Lab
+
+With `%timeit` in *Jupyter Lab*, compare the performance of:
+1. Multiple declarations of:
+   - instances of type `HighScores` (namedtuple)
+   - instances of type `dict` (with equivalent data fields)
+   - instances of type `tuple` (with equivalent data sequence)
+2. Multiple access to the score of:
+   - the `HighScores` (namedtuple)
+   - the `dict` 
+   - the `tuple`
+
+**Conclusion:** The Python dict inherits from benefits from the tuple (for fast creation and access) and named tuples (for readibility thanks to key-access), and it is mutable!
 
 ---
 # CHARACTERISTICS AND PARADIGMS OF PYTHON
@@ -851,7 +855,7 @@ A lambda function (aka unnamed function) is an inline function definition with n
 ```python
 lambda x: x*x
 ```
-This lambda is the function that takes `x` in input and returns x*x in output.
+This lambda is the function that takes `x` in input and returns `x*x` in output.
 
 Like any other type, function can then be assigned to variables ... and called:
 ```python
@@ -868,7 +872,7 @@ def squared(x):
 ---
 ### Mapping
 
-The `map()` function applies a function to every element from an ierable.
+The `map()` function applies a function to every element from an iterable.
 
 ```python
 map(f, l)
@@ -896,11 +900,11 @@ sentence.capitalize()   # returns "Hello my friend"
 
 " ".join(map(lambda x: x.capitalize(), sentence.split(" "))
 ```
-If we do not want to with `str.capitalize()`:
+If we do not want to cheat with `str.capitalize()`:
 ```python
 " ".join(map(lambda x: x[0].upper() + x[1:], sentence.split(" ")))
 ```
-If we do not want to cheat with `str.upper()` (only with ASCII lowercase strings):
+If we do not want to cheat with `str.upper()` (*only with ASCII lowercase strings*):
 ```python
 " ".join(map(lambda x: chr(ord(x[0]) - 32) + x[1:], sentence.split(" ")))
 ```
@@ -1029,7 +1033,7 @@ with resource:
 def sum(a, b):
     return a+b
 ```
-The same function, with annotations:
+The same function, with annotations from [PEP484](https://www.python.org/dev/peps/pep-0484/):
 ```python
 def sum(a: int, b: int) -> int:
     return a+b
@@ -1042,7 +1046,7 @@ s: bool = sum(5.0, 5)
 sum(5, 5).capitalize()
 # Linter warning:  Unresolved attribute reference "capitalize" for "int"
 ```
-Mistakes will NOT raise exception or prevent the interpreter from running the code in any way, only an (optional) linter would notice.
+Mistakes will NOT raise exception or prevent the interpreter from running the code in any way, only an (optional) type checker would notice.
 
 ---
 To specify more complex annotations, import them from `typing`:
@@ -1054,31 +1058,33 @@ To specify more complex annotations, import them from `typing`:
 
 ```python
 from typing import Union
+
 def sum(a: Union[int, float], b: Union[int, float]) -> Union[int, float]:
     return a+b
 
 sum(5.0, 5)
-# Now this call is valid for the linter
+# Now this call is valid for the type checker
 ```
 
 ---
 
+If you are referring to classes, use quotes:
 ```python
 class Foo:
     def bar(self, foo:"Foo"):
         pass
 ```
 
-
+Here is an example to limit accepted literals to only a subset:
 ```python
 from typing import Literal
 
-UInt8 = Literal[0, 1, 2, 3, 4, 5, 6, 7]
+UInt3 = Literal[0, 1, 2, 3, 4, 5, 6, 7]
 
-def accepts_only_uint8(x: UInt8) -> None:
+def accepts_only_uint3(x: UInt3) -> None:
     pass
 
-accepts_only_uint8(10)
+accepts_only_uint3(10)
 # Expected type Literal[0, 1, 2, 3, 4, 5, 6, 7], got Literal[10] instead
 ```
 
@@ -1318,7 +1324,7 @@ talk([1, 2, 3])
 ```
 
 ```bash
-test.py:4: error: Argument 1 to "talk" has incompatible type "List[int]"; expected "int"
+error: Argument 1 to "talk" has incompatible type "List[int]"; expected "int"
 ```
 
 ---
