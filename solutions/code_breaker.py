@@ -18,6 +18,7 @@ from string import ascii_letters
 from itertools import product
 from hashlib import md5
 from time import time
+from binascii import unhexlify
 
 parser = ArgumentParser(description="Add padding to a password so that it matches a SHA-512 prefix pattern")
 parser.add_argument("--digest", help="MD5 digest to be reversed", default="9fcce10c03dc2eaada4c361c508c4ebe")
@@ -26,10 +27,11 @@ args = parser.parse_args()
 
 
 def reverse_md5(length: int, digest: str):
+    binary_digest = unhexlify(digest)
     for password in product(ascii_letters, repeat=length):
         str_password = "".join(password)
-        generated_digest = md5(str_password.encode("utf8")).hexdigest()
-        if digest == generated_digest:
+        generated_digest = md5(str_password.encode("utf8")).digest()
+        if binary_digest == generated_digest:
             return str_password
     return None
 
