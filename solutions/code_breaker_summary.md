@@ -22,5 +22,8 @@ Built-in libs are full of micro-optimizations. [Example with choices() implement
 ## Version 4: Use deterministic approaches
 **What to do:** Replace `choices()` by `itertools.product()`
 
+## Version 5: Compare on `bytes` instead of `str`
+**What to do:** Convert the hex representation of the input md5 into `bytes` (e.g. using [`unhexlify` from `binascii`](https://docs.python.org/3/library/binascii.html#binascii.unhexlify)) ; and for each generated md5, get its binary `digest()` instead of its `hexdigest()`.
 
+You will save a little overhead due to the conversion of each digest into an hexadecimal string at every loop. 
 
