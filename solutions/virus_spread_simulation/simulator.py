@@ -55,7 +55,7 @@ class Scenario:
             self.remaining_lockdown_days -= 1
         elif self.cases_history[-1] > self.critical and (len(self.lockdowns) == 0 or "end" in self.lockdowns[-1]):
             self.logger.warning(f"{self.cases_history[-1]} cases reached the critical level ({self.critical}), "
-                                f"new lockdown started")
+                                f"new lockdown started at {current_date}")
             r0 = self.r0["lockdown"]
             self.lockdowns.append({"start": current_date})
             self.remaining_lockdown_days = self.lockdown_duration

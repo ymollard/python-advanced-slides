@@ -1763,9 +1763,14 @@ If a function does not call any other then `tottime=cumtime`. Some tools draw pr
 
 ## Alternative package managers
 Not happy with PyPI and pip? Here are other ones:
-- `conda`: Useful if you also deal with non-Python dependencies. Compatible with Ruby, Java, JS, C/ C++, FORTRAN, ...
-- `miniconda`: Minimal conda
-- `mamba`: Ultrafast conda reimplementation in C++
+- `anaconda`: 
+   - `conda` package manager +
+   - many datascience libraries +
+   - Python interpreter
+   Also useful if you also deal with non-Python dependencies. 
+   Compatible with Ruby, Java, JS, C/ C++, FORTRAN, ...
+- `miniconda`: Minimal `conda` + Python interpreter
+- `mamba`: Ultrafast `conda` reimplementation in C++
 - `micromamba`: ...
 
 The bad news is that package managers are not compatible with each other.
@@ -1783,7 +1788,7 @@ A few patterns are presented here.
 ---
 ### The factory 
 
-A **factory** is a function that builds an instance with the right type and parameters:
+A **factory** is a function that builds a class instance with the right type and parameters:
 
 ```python
 class Animal:
@@ -1827,7 +1832,7 @@ class USBJoystickController:
 ```
 
 ---
-### Iterators
+### The Iterator
 
 An **iterator** is an object that iterates over a structure but agnostic about what it contains.
 
@@ -1868,7 +1873,7 @@ t.__next__()
 ```
 
 ---
-### The generator
+### The Generator
 A **generator** is a specific type of iterator created via a function instead of a class:
 
 ```python
