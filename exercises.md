@@ -300,7 +300,7 @@ Create an empty script `scenario1.py`for the scenario.
 
 ---
 
-- 4.2. Create a logger for each module: `agios.py`, `blocked.py`, `internal.py`. Make sure you log unseful debug info in the next questions.
+- 4.2. Create a logger for each module: `agios.py`, `blocked.py`, `internal.py`. Make sure you log useful debug info in the next questions.
 
 - 4.3. Move the class declaration of `AgiosBankAccount` in `agios.py`
 
