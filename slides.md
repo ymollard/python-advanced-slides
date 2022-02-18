@@ -927,7 +927,7 @@ Decorators can take parameters in input, independant from parameters of the func
 [🐍 Learn more](https://docs.python.org/3/glossary.html#term-decorator)
 
 ---
-**Example 1:** `@classmethod` is a decorator that passes the class type `cls` passed as the first paramter to the following function.
+**Example 1:** `@classmethod` is a decorator that passes the class type `cls` passed as the first parameter to the following function.
 
 ```python
 class Animal:
