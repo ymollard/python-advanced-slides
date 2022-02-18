@@ -1201,39 +1201,39 @@ When a message is posted to logger L:
 ---
 For each new project you create/clone, create it its own dedicated virtual environment:
 ```bash
-/usr/bin/python3.7 -m venv dev/Training2021/venv
+/usr/bin/python3.7 -m venv dev/Training2022/venv
 ```
 
 Then, every time you work on this project, activate its environment first:
 ```bash
-source Training2021/venv/bin/activate
+source Training2022/venv/bin/activate
 ```
 
 Your terminal must prefix the prompt with the name of the env:
 ```bash
-(venv) yoan@humancoders ~/dev/Training2021 $
+(venv) yoan@humancoders ~/dev/Training2022 $
 ```
 And quit the venv every time you stop working on the project:
 ```bash
-(venv) yoan@humancoders ~/dev/Training2021 $ deactivate
-yoan@humancoders ~/dev/Training2021 $ 
+(venv) yoan@humancoders ~/dev/Training2022 $ deactivate
+yoan@humancoders ~/dev/Training2022 $ 
 ```
 
 ---
 In an activated venv, every call to the interpreter and every package installation will target the isolated virtual environment:
 
 ```bash
-(venv) yoan@humancoders ~/dev/Training2021 $ python
+(venv) yoan@humancoders ~/dev/Training2022 $ python
 ```
 will run the Python version targeted by the venv
 
 ```bash
-(venv) yoan@humancoders ~/dev/Training2021 $ pip install numpy
+(venv) yoan@humancoders ~/dev/Training2022 $ pip install numpy
 ```
 will install the latest numpy version into the venv
 
 ```bash
-(venv) yoan@humancoders ~/dev/Training2021 $ pip install numpy==1.21.0
+(venv) yoan@humancoders ~/dev/Training2022 $ pip install numpy==1.21.0
 ```
 will install the specific numpy version into the venv
 
