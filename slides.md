@@ -1145,12 +1145,10 @@ print(is_same_sign_than_or_positive.__doc__)
 ## Logging
 Python has a module dedicated to **logging**. It classes each log entry in levels of criticity: debug, info, warning, error and allows to filter them. [🐍 Learn more](https://docs.python.org/3/howto/logging.html)
 
-The simplest usecase uses the basic configuration:
 
 ```python
-logging.basicConfig(filename='app.log', level=logging.INFO)
-logging.debug('Debug message')  # Won't print because DEBUG is < INFO
-logging.info('Info message')    # Will print
+logging.debug('Debug message')  # Lowest priority
+logging.info('Info message')    # Higher priority
 ```
 
 ---
@@ -1171,6 +1169,28 @@ When a message is posted to logger L:
 3. L's parent is notified, if appropriate
 
 ![bg right:36% 80%](./img/logging.png)
+
+---
+**Example**: activate a stream handler for level DEBUG
+```python
+h = logging.StreamHandler()
+h.setLevel("DEBUG")
+
+l = logging.getLogger("mymodule.submodule.subsubmodule")
+l.setLevel("DEBUG")
+
+l.addHandler(h)
+```
+Both the logger and the handler(s) must accept the level so that the message is printed
+
+The simple config is a quick way to activate a stream handler for all loggers. But the output will be fussy since logs from **all** modules will be printed (including your imports):  
+
+```python
+logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+```
+```python
+logging.basicConfig(filename='app.log', level=logging.INFO)
+```
 
 ---
 ## Virtual environments (venv)
@@ -2052,14 +2072,14 @@ import time, multiprocessing
 def second_process():
     for i in range(10):
         print("Hello from the second process!")
-        sleep(1)
+        time.sleep(1)
 
 new_process = multiprocessing.Process(target=second_process)
 new_process.start()
 
 for i in range(10):
     print("Hello from the first process!")
-    sleep(1)
+    time.sleep(1)
 
 new_process.join()
 ```
@@ -2191,6 +2211,8 @@ Not all coroutines have to run *asap*. Some will first:
 - wait for a specific time or delay: `asyncio.sleep` is made for it
 
 ℹ️ These [Synchronization primitives](https://docs.python.org/3/library/asyncio-sync.html) are the same as the `threading` module, but they are not thread-safe.
+
+⚠️ Do not mix primitives from `threading`, `multiprocessing` and `asyncio`. Even if they share the same name e.g. `Lock`, they suit for a specific parallelization method.
 
 ---
 ### Example of task synchronisation with Event
