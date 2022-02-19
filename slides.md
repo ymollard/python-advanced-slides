@@ -749,9 +749,10 @@ A consistent MRO requires to validate the following:
 
 ---
 ## Metaclasses
-While an **instance** of a class is an **object** ; an instance of a **metaclass** is a **class**.
 
-A metaclass creates a new class at runtime.
+A **metaclass** is to a **class** what an **object** is to a **class**.
+
+A **metaclass** creates a **new class** at runtime.
 
 ```python
 type(int)    # Returns "type" 
