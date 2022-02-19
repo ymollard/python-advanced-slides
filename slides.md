@@ -750,7 +750,8 @@ A consistent MRO requires to validate the following:
 ---
 ## Metaclasses
 While an **instance** of a class is an **object** ; an instance of a **metaclass** is a **class**.
-In other words, a metaclass is made to create new classes (yes, at runtime).
+
+A metaclass creates a new class at runtime.
 
 ```python
 type(int)    # Returns "type" 
@@ -763,7 +764,9 @@ Just like `int` is a child class of `type`, `type` is a child class `type` (a ch
 ---
 
 The role of a metaclass is to generate a class.
-The type of the metaclass can be a class or a function. `type` is both. First, a function:
+The type of the metaclass can be a class or a function.`type` is both.
+
+Here is `type` as a function:
 
 ```python
 NewClass = type(name, bases, methods)
@@ -805,10 +808,37 @@ Cat().meow()    # MEOW!
 
 ---
 
+Metaprogramming may also involve the `__new__` magic method to build an instance:
+```python
+class Fly:
+    def __new__(cls):
+        # __new__ is to construct an instance
+    
+    def __init__(self):
+        # __init__ is to initialize this instance
+```
+
+**Example**: substitute the current class:
+
+```python
+class MyFilePathClass:
+    def __new__(cls):
+        cls = WindowsFilePathClass if os.name == 'nt' else UnixFilePathClass
+        return cls.__new__(cls)
+    
+    def __init__(self, path: str):
+        self.path = "./" + path
+```
+
+---
+
 Some usecases of metaclasses:
 - Class generation at runtime (e.g. from classes described in a configuration file)
 - Class checking (e.g. check the existance of compulsory/forbidden methods or attributes)
 - Class mutation (e.g. remove some existing methods when inheriting from another class)
+- Class substitution (e.g. construct this object with another class)
+
+⚠️ Use metaprogramming carefully. It makes the code difficult to read and the wished behaviour can often be reached without metaprogramming
 
 ---
 ## Functional programming
