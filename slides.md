@@ -4,7 +4,7 @@ marp: true
 <!-- 
 class: invert
 paginate: true
-footer: 'Advanced Python training – course – Yoan Mollard – CC-BY-NC-SA [🔗](https://advanced.python.training.aubrune.eu/)'
+footer: 'Advanced Python training – course – Yoan Mollard – CC-BY-NC-SA [🔗](https://www.eirlab.net/2022/03/04/cours-python-avance/)'
 title: Course – Advanced Python training
 author: 'Yoan Mollard'
 image: https://www.python.org/static/favicon.ico
@@ -21,14 +21,14 @@ image: https://www.python.org/static/favicon.ico
 
 #  **Python advanced training**
 
-Yoan Mollard, for **Human Coders**
+Yoan Mollard, for **Eirlab Community**
 
-https://advanced.python.training.aubrune.eu/
+https://www.eirlab.net/2022/03/04/cours-python-avance/
 
 
 ---
 
-#  Schedule of DAY 1
+#  Programme
 
 1. [ ADVANCED PROGRAMMING TECHNIQUES](#6)
     1.1. [ Python typing](#7)
@@ -41,8 +41,6 @@ https://advanced.python.training.aubrune.eu/
     2.5. [ Context manager: the `with` statement](#57)
 
 ---
-
-#  Schedule of DAY 2
 
 3. [ CODE WITH QUALITY](#59)
     3.1. [ Type annotations](#60)
@@ -60,8 +58,6 @@ https://advanced.python.training.aubrune.eu/
 
 ---
 
-#  Schedule of DAY 3
-
 5. [ PERFORMANCE OPTIMIZATION](#106)
     5.1. [ Kind reminder about complexities](#107)
     5.2. [ Refactor your code by keeping complexity in mind](#108)
@@ -75,19 +71,16 @@ https://advanced.python.training.aubrune.eu/
     7.1. [ Python for datascience](#143)
 ---
 
-#  List of mini-projects
+#  Practical labs: Money transfer simulator
 
-[ Mini-project 1: WARMUP – The dataset generator](/exercises.html#3)
-[ Mini-project 2: Draw plots – (Simplistic) Virus spread simulation](/exercises.html#4)
-[ Mini-project 3. Build a full package – Money transfer simulator](/exercises.html#15)
-[ Mini-project 4: Optimize Python – The code breaker](/exercises.html#32)
-[ Mini-project 5: Optimize Python – Bread-First Search optimization](/exercises.html#36)
-[ Mini-project 6. Estimate π with Nilakantha](/exercises.html#40)
-[ Mini-project 7: Write asynchronous code – The chess master](/exercises.html#44)
+- Creation of a complete package simulating bank transactions:
+  - Package implementation
+  - Package architecture
+  - Unit tests
+  - Publication on PyPI for further installation with pip.
 
 ---
 
-#  DAY 1
 # ADVANCED PROGRAMMING TECHNIQUES
 (Including reminders)
 
@@ -1055,7 +1048,7 @@ with resource:
 
 <!--#####################################################################################################-->
 ---
-#  DAY 2
+
 # CODE WITH QUALITY
 
 ---
@@ -1262,29 +1255,29 @@ source Training2022/venv/bin/activate
 
 Your terminal must prefix the prompt with the name of the env:
 ```bash
-(venv) yoan@humancoders ~/dev/Training2022 $
+(venv) yoan@eirlab ~/dev/Training2022 $
 ```
 And quit the venv every time you stop working on the project:
 ```bash
-(venv) yoan@humancoders ~/dev/Training2022 $ deactivate
-yoan@humancoders ~/dev/Training2022 $ 
+(venv) yoan@eirlab ~/dev/Training2022 $ deactivate
+yoan@eirlab ~/dev/Training2022 $ 
 ```
 
 ---
 In an activated venv, every call to the interpreter and every package installation will target the isolated virtual environment:
 
 ```bash
-(venv) yoan@humancoders ~/dev/Training2022 $ python
+(venv) yoan@eirlab ~/dev/Training2022 $ python
 ```
 will run the Python version targeted by the venv
 
 ```bash
-(venv) yoan@humancoders ~/dev/Training2022 $ pip install numpy
+(venv) yoan@eirlab ~/dev/Training2022 $ pip install numpy
 ```
 will install the latest numpy version into the venv
 
 ```bash
-(venv) yoan@humancoders ~/dev/Training2022 $ pip install numpy==1.21.0
+(venv) yoan@eirlab ~/dev/Training2022 $ pip install numpy==1.21.0
 ```
 will install the specific numpy version into the venv
 
@@ -1760,7 +1753,6 @@ jobs:
 
 <!--#####################################################################################################-->
 ---
-#  DAY 3
 # PERFORMANCE OPTIMIZATION
 <!--#####################################################################################################-->
 
