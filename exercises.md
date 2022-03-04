@@ -4,8 +4,8 @@ marp: true
 <!-- 
 class: invert
 paginate: true
-footer: 'Advanced Python training – exercices and mini-projects – Yoan Mollard – CC-BY-NC-SA [🔗](https://advanced.python.training.aubrune.eu/)'
-title: Exercises – Advanced Python training
+footer: 'Advanced Python training – practical labs – Yoan Mollard – CC-BY-NC-SA [🔗](https://www.eirlab.net/2022/03/04/cours-python-avance/)'
+title: Course – Advanced Python training
 author: 'Yoan Mollard'
 image: https://www.python.org/static/favicon.ico
 -->
@@ -17,28 +17,29 @@ image: https://www.python.org/static/favicon.ico
 </style>
 
 
-# **Python advanced training**, exercises
-
-Yoan Mollard, for **Human Coders**
-
-https://advanced.python.training.aubrune.eu/
-
 ![bg left:30% 90%](https://www.python.org/static/img/python-logo.png)
+
+#  **Python Practical Labs**
+
+Yoan Mollard, for **Eirlab Community**
+
+https://www.eirlab.net/2022/03/04/cours-python-avance/
+
 
 ---
 
-#  List of mini-projects
+#  List of projects
 
-[ Mini-project 1: WARMUP – The dataset generator](#3)
-[ Mini-project 2: Draw plots – (Simplistic) Virus spread simulation](#4)
-[ Mini-project 3. Build a full package – Money transfer simulator](#15)
-[ Mini-project 4: Optimize Python – The code breaker](#34)
-[ Mini-project 5: Optimize Python – Bread-First Search optimization](#38)
-[ Mini-project 6. Estimate π with Nilakantha](#42)
-[ Mini-project 7: Write asynchronous code – The chess master](#46)
+[ Build a full package – Money transfer simulator](#3)
 
+[ Write asynchronous code – The chess master](#23)
 
+---
 
+# PROJECT 1: Build a full Python package
+# The money transfer simulator
+
+<!--
 ---
 # Mini-project 1: WARMUP – The dataset generator
 We will use Jupyter Lab in this mini-project.
@@ -193,11 +194,10 @@ In this mini-project, celebrations simulate a temporary decrease of the respect 
 5.3. In the main script, activate the [`basicConfig`](https://docs.python.org/3/library/logging.html#logging.basicConfig) to display all DEBUGs in the terminal
 
 5.4. An extra library pollutes the stream. Drop the basic config and activate only logs from `simulator` (make sure you do not forget the handler).
-
+-->
 ---
-# Mini-project 3. Build a full package – Money transfer simulator
 
-In this exercise we are going to create a simplified Information System that is able to handle and simulate bank transactions.
+In this project we are going to create a simplified Information System that is able to handle and simulate bank transactions.
 
 In our scenario there are 4 actors: a bank (HSBC), a supermarket (Walmart), and 2 individuals Alice and Bob.
 
@@ -408,8 +408,7 @@ In `setup.py` set the version to `0.0.2`. Drop former distribution versions from
 Build and publish this new version on TestPyPI. 
 
 
----
-
+<!--
 # Mini-project 4: Optimize Python – The code breaker
 MD5 is a message-digest algorithm that is no longer considered safe since 2004 when a research team managed to provoke collisions with MD5.
 
@@ -602,7 +601,11 @@ First make sure you can open a single process and get the same result as before.
 Limit to 30s of computation max. What is the best number of digits you can achieve?
 
 ---
-# Mini-project 7: Write asynchronous code – The chess master
+-->
+---
+# PROJECT 2: Write asynchronous code
+# The chess master
+---
 
 In this mini-project, we will simulate **moves of chess** during a tournament in which a unique chess master faces many opponents by turns
 
