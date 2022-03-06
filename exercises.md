@@ -502,35 +502,31 @@ Output: EXPLORED, the list of all nodes in BFS order
 ```
 
 ---
-**1.**. Implement and test with `timeit` a first version `naive_bfs(G: dict, root: str)` of the preceeding BFS pseudocode:
-- For `Q`, use a `list`
-- For `EXPLORED`, use a `list`
-- For `G` use a `dict` associating a list of children for each node:
+We have implemented [here](https://github.com/ymollard/python-advanced-slides/raw/main/exercises/naive_bfs.py) a naive implementation of the preceeding BFS pseudocode, where a graph is implemented as:
 ```python
 G = { # dict representing the children of all nodes
-  '5' : ['3','7', '9'], # 5 has 3 children: 3 7 and 9 
-  '3' : ['2', '4', '10'],
-  '7' : ['8'],
-  '2' : [],    # A node with an empty list is a leaf
-  '4' : ['8', '9'],
-  '8' : [],
-  '9' : ['13','12', '11'],
-  '10': ['13', '11', '8', '9'],
-  '11': ['3','7', '9'],
-  '12': [],
-  '13': []}
+  5 : [3, 7, 9], # 5 has 3 children: 3 7 and 9 
+  3 : [2, 4, 10],
+  7 : [8],
+  2 : [],    # A node with an empty list is a leaf
+  4 : [8, 9],
+  8 : [],
+  9 : [12, 11],
+  10: [13, 10, 8, 9],
+  11: [3, 7, 9],
+  12: [],
+  13: []}
 ```
 
 ![bg right:20% 95%](./img/tree-bfs.png)
 
 ---
-**2.** : Use a graphical profiler to identify the culprints of your code:
+**1.** : Use a graphical profiler to identify the culprints of this naive code:
 - Install `snakeviz` with `pip`. Read the [documentation](https://jiffyclub.github.io/snakeviz/).
-- Make sure you repeat calls to `naive_bfs()` several thousands of time to get meaningful statistics about its performance
 - Generate a profile for your naive implementation of BFS
-- What could be improved?
+- Find the 2 culprints
 
-**3.**: Implement a new version `fixed_bfs()` that fixes the performance issue you spotted with the profiler. Measure the difference of execution time with `timeit`.
+**2.**: Implement a new version `improved_bfs()` that fixes the performance issues that you spotted with the profiler. 
 
 
 ---

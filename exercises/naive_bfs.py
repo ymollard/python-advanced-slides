@@ -1,8 +1,9 @@
 #!/usr/bin/env python
+
 """
 This script compares the median execution duration of 2 implementations of the BFS:
 - A naive version using only regular lists as data structures
-- An improved version where list are replaced by more efficient data structures in this context (deque and set) 
+- An improved version where... (TODO)
 
 Both implementation are executed 10 times and we compare the median of their execution time rounded to 4 digits.
 
@@ -28,15 +29,8 @@ def bfs_naive(graph, root=1):
                 visited.append(child)
 
 def bfs_improved(graph, root=1):
-    from collections import deque
-    visited = set([root])
-    queue = deque([root])
-    while len(queue) > 0:
-        node = queue.popleft()
-        for child in graph[node]:
-            if child not in visited:
-                queue.append(child)
-                visited.add(child)
+    raise NotImplementedError("You must implement 'bfs_improved' as an improved version of 'bfs_naive'")
+    # TODO
 
 def generate_graph(n:int):
     """
