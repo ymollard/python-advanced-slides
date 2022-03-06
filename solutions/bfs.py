@@ -1,31 +1,22 @@
+"""
+This script compares the median execution duration of 2 implementations of the BFS:
+- A naive version using only regular lists as data structures
+- An improved version where list are replaced by more efficient data structures in this context (deque and set) 
+
+Both implementation are executed 10 times and we compare the median of their execution time rounded to 4 digits.
+
+We represent a graph as a dictionary in the form {parent: [children]}, for example:
 graph = {
-  '5' : ['3','7', '9'],
-  '3' : ['2', '4', '10'],
-  '7' : ['8'],
-  '2' : [],
-  '4' : ['8', '9'],
-  '8' : [],
-  '9' : ['13','12', '11'],
-  '10': ['13', '11', '8', '9'],
-  '11': ['3','7', '9'],
-  '12': [],
-  '13': []
+  0: [4, 1],
+  1: [],
+  2: [2, 3],
+  3: [5, 6, 2],
+  4: [7]
 }
 
-def bfs_with_queue(graph, root='5') -> list:
-    from collections import deque
+"""
 
-    visited = [root]
-    queue = deque([root])
-    while len(queue) > 0:
-        node = queue.popleft()
-        for child in graph[node]:
-            if child not in visited:
-                queue.append(child)
-                visited.append(child)
-
-
-def bfs_naive(graph, root='5') -> list:
+def bfs_naive(graph, root=1):
     visited = [root]
     queue = [root]
     while len(queue) > 0:
@@ -35,12 +26,27 @@ def bfs_naive(graph, root='5') -> list:
                 queue.append(child)
                 visited.append(child)
 
-from timeit import Timer
-print(Timer("bfs_naive(graph)", globals=globals()).repeat())
-#print(Timer("bfs_with_queue(graph)", globals=globals()).repeat())
+def bfs_improved(graph, root=1):
+    from collections import deque
+    visited = set([root])
+    queue = deque([root])
+    while len(queue) > 0:
+        node = queue.popleft()
+        for child in graph[node]:
+            if child not in visited:
+                queue.append(child)
+                visited.add(child)
 
 def generate_graph(n:int):
     from random import randint, choice
     return {k: [randint(1, n-1) for _ in range(randint(0, n//3))] for k in range(n)}
 
-# bfs_naive(generate_graph(10000), root=1)
+from timeit import Timer
+from statistics import median
+
+graph = generate_graph(1000)
+naive_time = median(Timer("bfs_naive(graph)", globals=globals()).repeat(repeat=10, number=1))
+improved_time = median(Timer("bfs_improved(graph)", globals=globals()).repeat(repeat=10, number=1))
+
+print(f"Naive BFS: exec time = {naive_time:.4f} secs")
+print(f"Improved BFS: exec time = {improved_time:.4f} secs")
