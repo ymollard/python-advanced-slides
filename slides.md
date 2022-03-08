@@ -109,7 +109,7 @@ c = 1 + 1j                                      # complex
 ---
 🚨 **Beware with floats**
 
-Python's floats are IEE754 floats with mathematically incorrect rounding precision:
+Python's floats are IEEE754 floats with mathematically incorrect rounding precision:
 ```python
 0.1 + 0.1 + 0.1 - 0.3 == 0    # This is False 😿
 print(0.1 + 0.1 + 0.1 - 0.3)  # Returns 5.551115123125783e-17 but not 0
