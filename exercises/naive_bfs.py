@@ -29,7 +29,7 @@ def bfs_naive(graph, root=1):
                 visited.append(child)
 
 def bfs_improved(graph, root=1):
-    raise NotImplementedError("You must implement 'bfs_improved' as an improved version of 'bfs_naive'")
+    print("You must implement 'bfs_improved()' as an improved version of 'bfs_naive()'")
     # TODO
 
 def generate_graph(n:int):
@@ -39,12 +39,15 @@ def generate_graph(n:int):
     from random import randint, choice
     return {k: [randint(1, n-1) for _ in range(randint(0, n//3))] for k in range(n)}
 
-from timeit import Timer
-from statistics import median
+if __name__ == "__main__":
+    from timeit import Timer
+    from statistics import median
 
-graph = generate_graph(1000)
-naive_time = median(Timer("bfs_naive(graph)", globals=globals()).repeat(repeat=10, number=1))
-improved_time = median(Timer("bfs_improved(graph)", globals=globals()).repeat(repeat=10, number=1))
+    print("Repeating calls to the BFS functions, please wait...")
+    graph = generate_graph(1000)
+    naive_time = median(Timer("bfs_naive(graph)", globals=globals()).repeat(repeat=10, number=1))
+    improved_time = median(Timer("bfs_improved(graph)", globals=globals()).repeat(repeat=10, number=1))
 
-print(f"Naive BFS: exec time = {naive_time:.4f} secs")
-print(f"Improved BFS: exec time = {improved_time:.4f} secs")
+    print(f"Naive BFS: median exec time = {naive_time:.4f} secs")
+    print(f"Improved BFS: median exec time = {improved_time:.4f} secs")
+
