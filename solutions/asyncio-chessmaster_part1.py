@@ -1,7 +1,6 @@
 import time
 
 
-
 def log(*args):
     if not hasattr(log, "t0"):
         log.t0 = time.time()
@@ -10,13 +9,13 @@ def log(*args):
 
 
 class ChessMaster:
-    def think_and_play(self, round: "Round", opponent: "Player"):
-        log("Master is thinking for round {} with opponent {}...".format(round, opponent.id))
+    def think_and_play(self, round: int, opponent: "Player"):
+        log(f"Master is thinking for round {round} with opponent {opponent.id}...")
         time.sleep(1)
 
 
 class Round:
-    def __init__(self, round, master, players):
+    def __init__(self, round: int, master: "ChessMaster", players: list["Player"]):
         self.players = players
         self.round = round
         self.master = master
@@ -30,8 +29,8 @@ class Player:
     def __init__(self, id: int):
         self.id = id
 
-    def think_and_play(self, round: "Round"):
-        log("Player {} is thinking for round {}...".format(self.id, round))
+    def think_and_play(self, round: int):
+        log(f"Player {self.id} is thinking for round {round}...")
         time.sleep(5)
 
 

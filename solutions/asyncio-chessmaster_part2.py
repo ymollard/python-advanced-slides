@@ -12,17 +12,17 @@ class ChessMaster:
     def __init__(self):
         self.is_busy = asyncio.Lock()
 
-    async def think_and_play(self, round: "Round", opponent: "Player"):
+    async def think_and_play(self, round: int, opponent: "Player"):
         async with self.is_busy:
             await opponent.player_is_done.wait()
             opponent.player_is_done.clear()
-            log("Master is thinking for round {} with opponent {}...".format(round, opponent.id))
+            log(f"Master is thinking for round {round} with opponent {opponent.id}...")
             await asyncio.sleep(1)
             opponent.master_is_done.set()
 
 
 class Round:
-    def __init__(self, round, master, players):
+    def __init__(self, round: int, master: "ChessMaster", players: list["Player"]):
         self.players = players
         self.round = round
         self.master = master
@@ -41,7 +41,7 @@ class Player:
         self.player_is_done = asyncio.Event()   # Tells if the player has finished his turn
         self.master_is_done = asyncio.Event()   # Tells if the master has finished his turn with this player
 
-    async def think_and_play(self, round: "Round"):
+    async def think_and_play(self, round: int):
         await self.master_is_done.wait()
         self.master_is_done.clear()
         async with self.is_busy:
