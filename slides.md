@@ -1936,7 +1936,7 @@ def divisors_of(n: int):
 It can then be used this way:
 ```python
 for divisor in divisors_of(50):
-    print(it, "is the next divisor")
+    print(divisor, "is the next divisor")
 ```
 `StopIteration`is raised automatically when there is no more `yield`.
 **Note:** Iterators and generators do not have to stop: useful to generate infinite patterns.
