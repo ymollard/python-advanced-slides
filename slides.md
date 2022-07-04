@@ -286,7 +286,7 @@ It describes how greedy an operation is according the size of its input, in term
 
 Examples:
 - `O(n)` in time = for an input of size `n`, the operation requires `n` CPU cycles 
-- `O(n*n)` in time = for an input of size `n`, the oepration requires `n*n` CPU cycles
+- `O(n*n)` in time = for an input of size `n`, the operation requires `n*n` CPU cycles
 
 ℹ️ Here, *CPU cycle* and `n` do not refer to a precise quantity (e.g. bytes, assembly instructions, time in seconds...), only the order of magnitude is important.
 
@@ -750,7 +750,7 @@ A consistent MRO requires to validate the following:
 ---
 ## Metaclasses
 
-A **metaclass** is to a **class** what an **object** is to a **class**.
+A **metaclass** is to a **class** what a **class** is to an **object**.
 
 A **metaclass** creates a **new class** at runtime.
 
@@ -796,8 +796,8 @@ animals = {
 
 class ClassGenerator(type):
     def __new__(cls, name, bases, methods):
-        methods.update(animals[name])
-        return super(ClassGenerator, cls).__new__(cls, name, bases, methods)
+        methods.update(methods)
+        return super().__new__(cls, name, bases, methods)
 
 
 Dog = ClassGenerator("Dog", (), animals["Dog")
