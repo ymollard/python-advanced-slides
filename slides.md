@@ -255,7 +255,7 @@ from collections import UserString
 
 class UpperCaseString(UserString):
     def __init__(args):
-        super(UpperCaseString, self).__init__(args)
+        super().__init__(args)
         # Custom code for constructor of str here
     
     def __add__(self, other):
@@ -405,7 +405,7 @@ class Apartment:
 
 class FurnishedApartment(Apartment):
     def __init__(self, surface, furniture=("bed", "sofa")):
-        super(FurnishedApartment, self).__init__(surface)
+        super().__init__(surface)
         self.furniture = list(furniture)
 
     def get_description(self):
