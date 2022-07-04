@@ -145,7 +145,7 @@ l.append("element") # Append at the end (right side)
 l.pop()             # Remove from the end. pop(0) removes from the start
 ```
 
-##### The dictionary (Order guaranteed since 3.8)
+##### The dictionary (Order guaranteed since 3.7)
 ```python
 d = {}
 dict(zip(("article", "price", "stock"), ("Logitech M180", 99.90, 5)))
