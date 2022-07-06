@@ -1182,6 +1182,16 @@ logging.debug('Debug message')  # Lowest priority
 logging.info('Info message')    # Higher priority
 ```
 
+```python
+# Prefer the use of lazy evaluation
+%timeit logging.info("%s", 42)
+# 645 ns ± 43.1 ns per loop
+%timeit logging.info(f"{42}")
+# 787 ns ± 51.1 ns per loop
+%timeit logging.info("{}".format(42))
+# 876 ns ± 54.9 ns per loop
+```
+
 ---
 
 The **logging** library uses  modular approach to organize logs in a big app. Usually every module has its own logger named as itself:
@@ -1330,10 +1340,14 @@ import logging
 variable = inexisting_variable
 ```
 
-
 ```
 ./main.py:2: 'logging' imported but unused
 ./main.py:3: undefined name 'inexisting_variable'
+```
+
+```bash
+pip install pyflakes
+pyflakes mymodule.py
 ```
 
 ---
