@@ -1526,16 +1526,6 @@ value = sqrt(25)
 
 ---
 
-### The `sys.path` variable
-
-When importing a package with the `import` statement, the interpreter seeks for it in `sys.path`. 
-
-This is a regular Python list and it can be modified at runtime (with `append`) to add paths to your libraries.
-
-![bg right:60% 95%](img/sys.path.png)
-
----
-
 ### Choose the exported resources
 
 By default, Python will export all resources (classes, constants, instances...) if they do not start with a `_`.
@@ -1547,6 +1537,17 @@ If it is required to limit the exported names to only some resources you can use
 ```python
 __all__ = ["Class1", "Class2", "Class3"]
 ```
+
+---
+
+### The `sys.path` variable
+
+When importing a package with the `import` statement, the interpreter seeks for it in `sys.path`. 
+
+This is a regular Python list and it can be modified at runtime (with `append`) to add paths to your libraries.
+
+![bg right:60% 95%](img/sys.path.png)
+
 
 ---
 ## The Python Package Index (PyPI)
