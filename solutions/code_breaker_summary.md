@@ -1,4 +1,4 @@
-# The code breaker: THe 4 weaknesses of the naive implementation
+# The code breaker: The 5 weaknesses of the naive implementation
 
 ## Version 1: Avoid I/Os
 I/O operations take time. Avoid them as much as possble: 
