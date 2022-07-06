@@ -19,7 +19,7 @@ from random import choice
 from hashlib import md5
 from time import time
 
-parser = ArgumentParser(description="Add padding to a password so that it matches a SHA-512 prefix pattern")
+parser = ArgumentParser(description="Break a md5 digest of a password made of upper and lower case characters (aka reverse-MD5) using Brute force")
 parser.add_argument("--digest", help="MD5 digest to be reversed", default="d0eedb799584d850fdd802fd3c27ae34")
 parser.add_argument("--password-length", type=int, choices=range(1, 20), default=3)
 args = parser.parse_args()

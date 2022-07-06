@@ -20,7 +20,7 @@ from hashlib import md5
 from time import time
 from binascii import unhexlify
 
-parser = ArgumentParser(description="Add padding to a password so that it matches a SHA-512 prefix pattern")
+parser = ArgumentParser(description="Break a md5 digest of a password made of upper and lower case characters (aka reverse-MD5) using Brute force")
 parser.add_argument("--digest", help="MD5 digest to be reversed", default="9fcce10c03dc2eaada4c361c508c4ebe")
 parser.add_argument("--password-length", type=int, choices=range(1, 20), default=4)
 args = parser.parse_args()
