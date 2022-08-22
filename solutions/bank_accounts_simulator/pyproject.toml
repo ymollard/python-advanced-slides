@@ -1,6 +1,17 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
-]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "accounts-correction"
+version = "1.0"
+description = "Simulator of bank account transactions - solution"
+requires-python = ">=3.7"
+license = {text = "BSD 3-Clause License"}
+classifiers = [
+    "Topic :: Games/Entertainment :: Simulation",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "matplotlib",
+]

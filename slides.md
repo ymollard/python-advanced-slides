@@ -1413,7 +1413,7 @@ error: Argument 1 to "talk" has incompatible type "List[int]"; expected "int"
 Test files are often placed in a `tests/` directory, file names are prefixed with `test_*.py` and test function names are also prefixed with `test_`
 
 ```bash
-setup.py
+pyproject.toml
 mypkg/
     __init__.py
     app.py
@@ -1630,73 +1630,54 @@ pip install matplotlib
 ## Package distribution
 `setuptools` simplifies the package distribution. [🐍 Learn more](https://setuptools.readthedocs.io/en/latest/setuptools.html)
 
-You need a  `setup.py` file that tells:
+You need a  `pyproject.toml` file (or `setup.cfg`) that tells:
 - The list of modules and data files embedded in the package (*replaces the `MANIFEST` file*)
 - Package version number
 - The list of dependencies on other packages from PyPI, git repos, ...
 - The entry points (executables, commands, ...)
+- How to build the package (using `hatching` or `setuptools`, ...)
 
 You need `pyproject.toml` that tells how to build the package
 
-*Note: `setuptools` replaces the legacy `distutils`*
-
+Notes:
+- `setuptools` replaces the legacy `distutils` deprecated since 3.10
+- the `setup.py` dynamic file is now discouraged in place of static files (`toml` or `cfg`) 
 
 
 ![bg right:24% 85%](img/package-with-init-setup.png)
 
 ---
-Most basic setup file to distribute a single module:
 
-```python
-# File setup.py within package "my_math"
+```conf
+# pyproject.toml example file
 
-from setuptools import setup
-
-setup(name='foo',
-      version='1.0',
-      py_modules=['foo'], # distribute a single module foo.py under name foo
-      )
-```
-
-The most basic `pyproject.toml` just tells pip to build with `setuptools` and `wheel`:
-```python
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "my_package"
+description = "My package description"
+readme = "README.rst"
+requires-python = ">=3.7"
+license = {text = "BSD 3-Clause License"}
+classifiers = [
+    "Framework :: Django",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "requests",
+]
+
+[project.scripts]
+my-script = "my_package.module:function"
 ```
 
 ---
-
-Now let's see a more complete setup file distributing a package:
-
-```python
-from setuptools import setup, find_packages
-
-setup(name='my_math',
-      version='2.0',
-      description='Custom math tools and functions',
-      license='MIT',
-      author='Bob Dupont',
-      author_email='bob@example.org',
-      url='https://github.com/bobdupont42/my_math',
-      packages=find_packages(),                 # Embedded (sub-)packages
-      install_requires=['numpy', 'matplotlib']  # Dependencies to install
-     )
-```
-
-We rely on `find_packages()` to search for all valid (sub)-packages:
-`['my_math', 'my_math.trigo', 'my_math.float', 'my_math.matrix', 'my_math.matrix.complex', 'my_math.matrix.real']`
-
-There is 1 sub-package per `__init__.py` file.
-
----
-The setup file then offers distribution tools:
+The TOML file then offers distribution tools:
 - Install the package in the current environement:
 ```bash
 pip install .
-python setup.py install   # equivalent but deprecated because pip is cool 😎
 ```
 
 - Build distribution:
@@ -1738,6 +1719,18 @@ As of 2021, uploading to PyPI with `twine` is the preferred option:
 3. `twine upload dist/* --repository testpypi`
    - Drop the `--repository` argument if you want to upload to the regular pypi
    - `--repository` can also target your company's own pypi server [Learn more](https://packaging.python.org/guides/hosting-your-own-index/)
+
+---
+
+### Optional: use `poetry` to handle dependencies
+`poetry` is a package manager for Python such as `pip` or `conda`, with the following benefits:
+- Populates dependencies automatically according to your source code
+- Keep track of the version of dependencies in `poetry.lock`
+- Generates a `pyproject.toml` for you
+- Interacts with a prompt
+- Embeds a venv manager with dev and prod
+
+[🐍 Poetry doc](https://python-poetry.org/docs/)
 
 ---
 ### Python package deployment with Continuous Integration (Github actions)
