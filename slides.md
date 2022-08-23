@@ -1631,24 +1631,22 @@ pip install matplotlib
 `setuptools` simplifies the package distribution. [🐍 Learn more](https://setuptools.readthedocs.io/en/latest/setuptools.html)
 
 You need a  `pyproject.toml` file (or `setup.cfg`) that tells:
-- The list of modules and data files embedded in the package (*replaces the `MANIFEST` file*)
-- Package version number
-- The list of dependencies on other packages from PyPI, git repos, ...
+- The package name and version number
+- The list of deps on other packages from PyPI, git repos, ...
 - The entry points (executables, commands, ...)
-- How to build the package (using `hatching` or `setuptools`, ...)
-
-You need `pyproject.toml` that tells how to build the package
-
-Notes:
-- `setuptools` replaces the legacy `distutils` deprecated since 3.10
-- the `setup.py` dynamic file is now discouraged in place of static files (`toml` or `cfg`) 
+- How to build the package (using `hatching`, `setuptools`...)
 
 
-![bg right:24% 85%](img/package-with-init-setup.png)
+`setuptools` replaces the legacy `distutils` deprecated in 3.10.
+
+The `setup.py` dynamic file is now discouraged in place of `pyproject.toml` but is still used in many projects.
+
+
+![bg right:20% 90%](img/package-with-init-setup.png)
 
 ---
 
-```conf
+```toml
 # pyproject.toml example file
 
 [build-system]
