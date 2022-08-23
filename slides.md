@@ -1950,29 +1950,41 @@ for divisor in divisors_of(50):
 ---
 ### The Interface / Abstract Base Class
 
-The **Interface** describes the structure and semantics that classes must comply with.  
+The **Interface** class describes the structure & semantics that classes must comply with. 
 
-In Python, **Abstract Base Class** is the closest concept.
+We say that a class **implements** an interface. Interfaces are usually named *xxxxx-able*.
+
+* the `Car` class may implement interfaces `Movable` and `Drivable`.
+* the `Bird` class may implement interfaces `Movable` and `Cryable`.
+
+Classes implementing `Movable` must define a method to **move** them e.g. `car_or_bird.move_to(self, x: float, y: float, z: float)`
+
+Classes implementing `Drivable` must define a method to associate a **driver** e.g. `car.set_driver(self, d: Driver)`.
+
+Classes implementing `Cryable` must define a method to make the animal **cry** e.g. `bird.cry(self)`
+
+---
+In Python, an **Abstract Base Class** is the closest concept to create an interface.
 
 ```python
 from abc import ABC, abstractmethod   # This is the Abstract Base Class module
 
-class Animal(ABC):
+class Cryable(ABC):
     @abstractmethod
-    def vocalize(self):
-        raise NotImplementedError("vocalize() must be overriden")
+    def cry(self):
+        raise NotImplementedError("cry() must be overriden")
 
-class Dog(Animal): # Inheriting from the ABC means that Dog implements the ABC
-    def vocalize(self):
+class Dog(Cryable): # Inheriting from the ABC means that Dog implements the ABC
+    def cry(self):
         print("WAF!")
 
-class Cat(Animal): pass   # This class does not comply with the ABC
+class Cat(Cryable): pass   # This class does not comply with the ABC
 ```
-Here, `vocalize()` must be overrriden in subclasses or `TypeError` is raised at instanciation. At runtime, calling `super().vocalize()` raises `NotImplementedError`.
+Here, `cry()` must be overriden in subclasses or `TypeError` is raised at instanciation. At runtime, calling `super().cry()` raises `NotImplementedError`.
 
 ---
 
-If you are dealing with types for which you do not own the implementation (e.g. `tuple` or `list`) you can still state that it complies with your ABC by registering it:
+If you are dealing with types for which you do not own the implementation (e.g. `tuple` or `list`) you can still state that it complies with your ABC by registering it explicitely:
 
 ```python
 MyABC.register(tuple)
@@ -1982,7 +1994,7 @@ def f(p: MyABC): pass # list and tuple are valid for p because registered
 ```
 
 Registering an ABC not only forces registered classes to comply with:
-- the **structure** of the ABC (e.g. method `vocalize()` exist)
+- the **structure** of the ABC (e.g. method `cry()` exist)
 - the **semantics** of the ABC, described in the ABC's documentation
 
 **Drawback**: Explicit registering or inheritence is somehow unpythonic since **duck typing** is usually sufficient to decide if a class is accepted or not.
@@ -1996,12 +2008,12 @@ Protocols fulfill the same need as ABCs without the need of an explicit registra
 ```python
 from typing import Protocol
 
-class Animal(Protocol):   
-    def vocalize(self):
-        raise NotImplementedError("vocalize() must be overriden")
+class Cryable(Protocol):   
+    def cry(self):
+        raise NotImplementedError("cry() must be overriden")
 
-class Cat:  # No need to subclass Animal here
-    def vocalize(self):
+class Cat:  # No need to subclass Cryable here
+    def cry(self):
         pass
 
 def some_function(animal: Animal): # Cat instance will be accepted here
