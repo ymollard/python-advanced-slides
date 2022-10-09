@@ -35,8 +35,16 @@ def reverse_md5(length: int, digest: str):
             return str_password
     return None
 
+def reverse_md5_bytes(length: int, digest: str):
+    digest = bytes.fromhex(digest)
+    for attempt, combination in enumerate(product(map(lambda x: bytes(x, 'utf-8'), ascii_letters), repeat=length)):
+        password = b"".join(combination)
+        generated_digest = md5(password).digest()
+        if digest == generated_digest:
+            return password
+    return None
 
 t0 = time()
-result = reverse_md5(args.password_length, args.digest)
+result = reverse_md5_bytes(args.password_length, args.digest)
 t1 = time()
-print("Found {} result in {} seconds: {}".format(0 if result is None else 1, round(t1-t0, 2), result))
+print("Result{} found in {} seconds: {}".format(" not" if result is None else "", round(t1-t0, 2), result))
