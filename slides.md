@@ -362,19 +362,86 @@ print(timeit("numpy.sqrt(25)", globals=globals()))
 
 ---
 
-### Type-benchmarking exercise to setup Pycharm and Jupyter Lab
+## Iterators & generators
 
-With `%timeit` in *Jupyter Lab*, compare the performance of:
-1. Multiple declarations of:
-   - instances of type `HighScores` (namedtuple)
-   - instances of type `dict` (with equivalent data fields)
-   - instances of type `tuple` (with equivalent data sequence)
-2. Multiple access to the score of:
-   - the `HighScores` (namedtuple)
-   - the `dict` 
-   - the `tuple`
+An **iterator** is an object that iterates over a data structure.
 
-**Conclusion:** The Python dict inherits from benefits from the tuple (for fast creation and access) and named tuples (for readibility thanks to key-access), and it is mutable!
+`next(i)` generates the next element from iterator `i`.
+
+![bg right:50% 90%](img/iterator.svg)
+
+Duck typing considers that objects with a `__iter__` method are iterators.
+
+---
+
+```python
+class DivisorsOf:
+    def __init__(self, n: int):
+        self.__last_divisor_tested = n // 2 + 1
+
+    def __iter__(self): # The definition of __iter__ makes DivisorsOf iterable
+        return self
+    
+    def __next__(self):
+        if self.__last_divisor_tested == 1:
+            raise StopIteration("There is no more divisor")
+
+        divisor = self.__last_divisor_tested - 1
+        self.__last_divisor_tested = divisor
+        return divisor if divisor % 2 == 0 else next(self)
+```
+---
+The `__iter__` magic transforms this class into an iterable, that can be iterated just as any regular iterable:
+
+```python
+for i in DivisorsOf(500):
+    print(i, "is a divisor")
+```
+Or also:
+```python
+it = DivisorsOf(2)
+print(next(it), "is the first divisor")   # 2 is the first divisor
+print(next(it), "is the second divisor") # 1 is the second divisor
+print(next(it), "is the third divisor") # StopIteration: There is no more divisor
+```
+All basic iterables (tuples, lists, dicts) also work this way with `__iter__` & `__next__`:
+```python
+t = 1, 2, 3   # Tuple
+t.__next__()
+```
+
+---
+### The Generator
+A **generator** is a specific type of iterator created via a function instead of a class:
+
+```python
+def divisors_of(n: int):
+    for i in range(n // 2 + 1):
+        if i % 2 == 0:
+            yield i
+```
+It can then be used this way:
+```python
+for divisor in divisors_of(50):
+    print(divisor, "is the next divisor")
+```
+`StopIteration`is raised automatically when there is no more `yield`.
+
+---
+
+When you would you use **iterators** or **generators**:
+- when the iterable is **infinite**
+- when the **space** complexity would be too high with a regular list
+- when the **time** complexity would be too high with a regular list
+- when the list elements **are unknown** at the time the list is constructed
+- when it would be adapted to generate the list elements **on demand**
+
+e.g. declare an iterator of `(r, g, b)` color pattern for your outdoor lights
+e.g. generate an iterator of HTML pages to be retrieved when network is available
+e.g. generate an iterator of thousands of 100MiB images
+
+
+The [🐍 itertools](https://docs.python.org/3/library/itertools.html) module contains tools to create efficient iterators
 
 ---
 # CHARACTERISTICS AND PARADIGMS OF PYTHON
@@ -1887,65 +1954,6 @@ class USBJoystickController:
             raise ValueError("Singleton already existing, use get_controller()")
         USBJoystickController.__controller = self
 ```
-
----
-### The Iterator
-
-An **iterator** is an object that iterates over a structure but agnostic about what it contains.
-
-```python
-class DivisorsOf:
-    def __init__(self, n: int):
-        self.__last_divisor_tested = n // 2 + 1
-
-    def __iter__(self): # The definition of __iter__ makes DivisorsOf iterable
-        return self
-    
-    def __next__(self):
-        if self.__last_divisor_tested == 1:
-            raise StopIteration("There is no more divisor")
-
-        divisor = self.__last_divisor_tested - 1
-        self.__last_divisor_tested = divisor
-        return divisor if divisor % 2 == 0 else next(self)
-```
----
-The `__iter__` magic transforms this class into an iterable, that can be iterated just as any regular iterable:
-
-```python
-for i in DivisorsOf(500):
-    print(i, "is a divisor")
-```
-Or also:
-```python
-it = DivisorsOf(2)
-print(next(it), "is the first divisor")   # 2 is the first divisor
-print(next(it), "is the second divisor") # 1 is the second divisor
-print(next(it), "is the third divisor") # StopIteration: There is no more divisor
-```
-All basic iterables (tuples, lists, dicts) also work this way with `__iter__` & `__next__`:
-```python
-t = 1, 2, 3   # Tuple
-t.__next__()
-```
-
----
-### The Generator
-A **generator** is a specific type of iterator created via a function instead of a class:
-
-```python
-def divisors_of(n: int):
-    for i in range(n // 2 + 1):
-        if i % 2 == 0:
-            yield i
-```
-It can then be used this way:
-```python
-for divisor in divisors_of(50):
-    print(divisor, "is the next divisor")
-```
-`StopIteration`is raised automatically when there is no more `yield`.
-**Note:** Iterators and generators do not have to stop: useful to generate infinite patterns.
 
 ---
 ### The Interface / Abstract Base Class
