@@ -33,46 +33,48 @@ https://advanced.python.training.aubrune.eu/
 1. [ ADVANCED PROGRAMMING TECHNIQUES](#6)
     1.1. [ Python typing](#7)
     1.2. [ Complexity and the `Big-O` notation](#17)
-2. [ CHARACTERISTICS AND PARADIGMS OF PYTHON](#25)
-    2.1. [ Object-oriented programming (OOP)](#26)
-    2.2. [ Metaclasses](#43)
-    2.3. [ Functional programming](#48)
-    2.4. [ Decorators](#53)
-    2.5. [ Context manager: the `with` statement](#57)
+    1.3. [ Iterators & generators](#24)
+2. [ CHARACTERISTICS AND PARADIGMS OF PYTHON](#29)
+    2.1. [ Object-oriented programming (OOP)](#30)
+    2.2. [ Metaclasses](#47)
+    2.3. [ Functional programming](#52)
+    2.4. [ Decorators](#57)
+    2.5. [ Context manager: the `with` statement](#61)
 
 ---
 
 #  Schedule of DAY 2
 
-3. [ CODE WITH QUALITY](#59)
-    3.1. [ Type annotations](#60)
-    3.2. [ Python docstrings](#63)
-    3.3. [ Logging](#65)
-    3.4. [ Virtual environments (venv)](#68)
-    3.5. [ Quality control tools](#77)
-    3.6. [ Testing](#83)
-4. [ PACKAGE AND DISTRIBUTE](#86)
-    4.1. [ Reminders about Modules and packages](#86)
-    4.2. [ The Python Package Index (PyPI)](#94)
-    4.3. [ Package distribution](#99)
-    4.4. [ Uploading your package distribution on PyPI](#104)
+3. [ CODE WITH QUALITY](#63)
+    3.1. [ Type annotations](#64)
+    3.2. [ Python docstrings](#67)
+    3.3. [ Logging](#69)
+    3.4. [ Virtual environments (venv)](#72)
+    3.5. [ Quality control tools](#81)
+    3.6. [ Testing](#87)
+4. [ PACKAGE AND DISTRIBUTE](#90)
+    4.1. [ Reminders about Modules and packages](#90)
+    4.2. [ The Python Package Index (PyPI)](#98)
+    4.3. [ Package distribution](#103)
+    4.4. [ Uploading your package distribution on PyPI](#107)
 
 
 ---
 
 #  Schedule of DAY 3
 
-5. [ PERFORMANCE OPTIMIZATION](#106)
-    5.1. [ Kind reminder about complexities](#107)
-    5.2. [ Refactor your code by keeping complexity in mind](#108)
-    5.3. [ Profiling](#110)
-    5.4. [ Alternative package managers](#111)
-    5.5. [ Common design patterns](#112)
-6. [ PARALLELIZE PYTHON APPLICATIONS](#121)
-    6.1. [ Multithreading, multiprocessing and asynchronous IO](#122)
-    6.2. [ Asynchronous code (Python coroutines)](#132)
-7. [ ANNEXES / EXTRA-CURRICULAR TOPICS](#142)
-    7.1. [ Python for datascience](#143)
+5. [ PERFORMANCE OPTIMIZATION](#110)
+    5.1. [ Kind reminder about complexities](#111)
+    5.2. [ Refactor your code by keeping complexity in mind](#112)
+    5.3. [ Profiling](#114)
+    5.4. [ Alternative package managers](#115)
+    5.5. [ Common design patterns](#116)
+6. [ PARALLELIZE PYTHON APPLICATIONS](#123)
+    6.1. [ Multithreading, multiprocessing and asynchronous IO](#124)
+    6.2. [ Asynchronous code (Python coroutines)](#134)
+7. [ ANNEXES / EXTRA-CURRICULAR TOPICS](#144)
+    7.1. [ Python for datascience](#145)
+
 ---
 
 #  List of mini-projects
