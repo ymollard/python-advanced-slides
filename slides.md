@@ -197,7 +197,7 @@ t = ("A", "tuple", "is", "immutable")
 ```
 Example: put the first letter of these sequences in lower case:
 ```python
-s = "This does not work"[0] = "t"
+s[0] = "t"
 # TypeError: 'str' object does not support item assignment
 
 s = "t" + "This works!"[1:]
@@ -1601,7 +1601,7 @@ value = my_sqrt(25)
 Relative import from a parent folder:
 ```python
 from ..my_math import my_sqrt
-value = sqrt(25)
+value = my_sqrt(25)
 ```
 
 - Do not put any slash such as ~~`import ../my_math`~~
@@ -2026,7 +2026,7 @@ class Cat:  # No need to subclass Cryable here
     def cry(self):
         pass
 
-def some_function(animal: Animal): # Cat instance will be accepted here
+def some_function(animal: Cryable): # Cat instance will be accepted here
     pass
 ```
 A protocol has benefits for static type checking. At runtime it just acts as an ABC.
