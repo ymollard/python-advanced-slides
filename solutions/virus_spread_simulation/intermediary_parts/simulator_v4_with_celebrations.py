@@ -1,21 +1,12 @@
-from typing import Iterable, Protocol
+
 from matplotlib import pyplot
-
-
-class Plotable(Protocol, Iterable):
-    celebrations: Iterable[int]
 
 
 class ScenarioIterator:
     """
     Iterator that simulates contamination cases for a certain duration
     """
-    def __init__(self,
-                 duration: int,
-                 critical: int,
-                 lockdown_duration: int,
-                 celebrations: Iterable[int],
-                 r0: dict[str, int]):
+    def __init__(self, duration, critical, lockdown_duration, celebrations, r0):
         self.duration = duration
         self.r0 = r0
         self.critical = critical
@@ -55,12 +46,7 @@ class Scenario:
     """
     Iterable that can be iterated in a loop
     """
-    def __init__(self,
-                 duration: int,
-                 critical: int,
-                 lockdown_duration: int,
-                 celebrations: Iterable[int],
-                 r0: dict[str, int]):
+    def __init__(self, duration, critical, lockdown_duration, celebrations, r0):
         """
         Constructor of a scenario
         :param duration: Numbero of days of simulation
@@ -68,18 +54,18 @@ class Scenario:
         :param lockdown_duration: Lockdown duration in days
         :param r0: Dictionary of R0 values applied for "regular", "lockdown", "high"
         """
-        self.duration: int = duration
-        self.r0: dict[str, int] = r0
-        self.critical: int = critical
-        self.lockdown_duration: int = lockdown_duration
-        self.celebrations: Iterable[int] = celebrations
-        self.iter: iter = ScenarioIterator(self.duration, self.critical, self.lockdown_duration, self.celebrations, self.r0)
+        self.duration = duration
+        self.r0 = r0
+        self.critical = critical
+        self.lockdown_duration = lockdown_duration
+        self.celebrations = celebrations
+        self.iter = ScenarioIterator(self.duration, self.critical, self.lockdown_duration, self.celebrations, self.r0)
 
     def __iter__(self):
         return self.iter
 
     def __getitem__(self, item):
-        output: list[float] = []
+        output = []
         for i in range(item.start, item.stop):
             try:
                 output.append(next(self.iter))
@@ -88,7 +74,7 @@ class Scenario:
         return output
 
 
-def plot(iterable: Plotable):
+def plot(iterable):
     start = 0  # The lower boundary of the window of 300 days is day #0
     while True:
         stop = start + 300

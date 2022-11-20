@@ -30,7 +30,7 @@ https://advanced.python.training.aubrune.eu/
 #  List of mini-projects
 
 [ Mini-project 1: WARMUP – The dataset generator](#3)
-[ Mini-project 2: Draw plots – (Simplistic) Virus spread simulation](#4)
+[ Mini-project 2: The virus spread iterator](#4)
 [ Mini-project 3. Build a full package – Money transfer simulator](#15)
 [ Mini-project 4: Optimize Python – The code breaker](#34)
 [ Mini-project 5: Optimize Python – Bread-First Search optimization](#38)
@@ -53,16 +53,15 @@ If you cannot install it in short time, do not spend too much time, copy/paste c
 
 ---
 
-# Mini-project 2: Draw plots – (Simplistic) Virus spread simulation
+# Mini-project 2: The Virus spread iterator
 
-This is a project to practice **numpy** and **matplotlib**. It consists into simulating a number of sick people based on a simplistic exponential contamination model.
+This project consists into simulating the evolution of people contaminated by a disease that spreads according to a simplistic exponential contamination model.
 
 It relies on the `R0` variable: it describes the slope of the contamination:
 - `R0 < 1` = In average, a person contaminates less than 1 person: The number of contamination dicreases
 - `R0 > 1` = In average, a person contaminates more than 1 person: The number of contaminations increases
 
-
-The goal is to simulate contamination scenarii and plot them as presented on the next figure. 
+The goal is to simulate contamination scenarii and plot them as presented on the next figure, by using a Python iterator.
 
 ---
 
@@ -76,7 +75,6 @@ In our simplistic model:
   - a **value during celebrations** (e.g. Christmas ; high R0)
   - a regular value for all other periods
 - Time is measured in number of days from day 0, for a certain **simulation duration**
-- **Incubation time** is taken into account: it is materialized by a delay of a few days every time the R0 changes
 - Lockdown is triggered automatically when the number of contaminations goes beyond a **critical threshold**, causing the R0 to decrease.
 
 **Bold values** are taken as parameters of the simulation.
@@ -87,15 +85,12 @@ In our simplistic model:
 
 1. Implement a class with a constructor accepting the parameters of the simu, e.g:
 ```python
-s = Scenario(
-    incubation_duration = 15,     # Number of days before the R0 actually changes 
-    duration = 300,               # Days of simulation
+s = ScenarioIterator(
+    duration = 300,               # Days of simulation or None for Infinite
     critical = 5000,              # Threshold for triggering lockdowns
-    lockdown_duration = 60,       # Lockdown duration in days
-    celebrations = [
-                    74, 75, 76,   # Individual dates of celebrations
-                    210, 211, 212 
-                   ], 
+    celebrations = [ 74, 75, 76,  # Individual dates of celebrations
+                     210, 211, 450, 670,
+                     710, 920 ], 
     r0 = {
         "high": 2,          # R0 applied for celebrations
         "lockdown": 0.9,    # R0 applied for lockdowns
@@ -103,96 +98,87 @@ s = Scenario(
     }
 )
 ```
-Store the parameters as attributes.
 
 ---
 
-2. Implement a method `plot(self)` that draws a plot with matplotlib, with:
-- a correct *xlabel*, *ylabel*, *legend* and *title*
-- a linear plot `f(x)=x` from 0 to `duration`. Execute and check that the plot is right
+1. Store the previous parameters as attributes, and also define the following:
+- `self.current_date` that corresponds to the current date (from 0 to 300)
+- `self.previous_num_cases` that corresponds to the previous number of cases (here, we need a number of 1, corresponding to the very first positive case)
 
-3. Initialize a new attribute `self.num_cases` to 1 in the constructor (this is our first person contaminating the other!) 
+2. Make this class an **iterator** by implementing `__iter__()` and `__next__()`:
 
-*NB: do not forget to add docstrings as long as you code!*
+- `__iter__()` returns `self` since the class instance itself is already an iterator
+
+- `__next__()` must check if we have reached the last day of the simulation:
+    - If **yes**, raise `StopIteration`
+    - If **no**, return an integer corresponding to the new number of cases =  `the_regular_r0 * previous_cases_number`
 
 ---
 
-4. Implement a method `next(self, num_former_cases:int)` intended to be called by the simulator every simulated day. This method must:
-- read the regular R0 from the constructor
-- update `self.num_cases` for the current day ; based on the number of cases for the previous day: `new_cases = R0*former_cases`
+3. Create a new class `Scenario`. Make it an **iterable** by implementing `__iter__()` that just returns an instance of the iterator previously defined.
 
-5. In `plot()`, repeat calls to `next()` for each simulated day and store each return values in a list of ordinates stored as the attribute `self.cases_history`
+4. Create a function `plot(iterable)` (**NOT** a class method), that accepts `iterable` in input and plots it. This function must:
+   - Generate all values until the end of the iterator. For this, simply cast the iterator into a list, which which trigger the full generation
+   - Store the list of simulated cases into `cases_history`
+   - Import `pyplot`, call `pyplot.plot(xvalues, yvalues)` and `pyplot.show()`
+   Refer to the [matplotlib documentation](https://matplotlib.org/stable/plot_types/basic/plot.html#sphx-glr-plot-types-basic-plot-py) if needed
 
-6. Substitute the ordinates `self.cases_history` to the linear ordinates in `pyplot.plot()` (***ordinates** are y-values*)
-
-7. Drop the `self.num_cases` variable since it now corresponds to `self.cases_history[-1]`. Update code where necessary.
+5. Initialize an instance of `Scenario` and plot it using your `plot()` function.
 
 **Outcome:** Now you must see an exponential curve in your plot.
 
 ---
 ## Part 2: Lockdown implementation
 
-1. In `next()`, check if the cases has reached the critical level. If yes, substitute the regular R0 by the "lockdown" R0
+1. In `__next__()`, check if the cases has reached the critical threshold. If yes, substitute the regular R0 by the "lockdown" R0
 
 2. Revert to the regular R0 when the number of cases is below the critical level again
 
 **Outcome:** You should see an exponential curve ending in shaky oscillations around the critical threshold. This is what would happen if the lockdowns were released too fast.
 
-3. Add an attribute counting the number of remaining lockdown days since it has been triggered. Change the behaviour so that lockdown is released only when `lockdown_duration` days have passed. 
+3. Add an attribute counting the number of remaining lockdown days since it has been triggered. Change the behaviour so that lockdown is released only when `lockdown_duration` days have passed
 
 **Outcome:** You should see 3 peaks of ascending and descending exponential curves.
 
 ---
 
-4. Store lockdowns starts and ends in a attribute `self.lockdown`. Use [`fill_betweenx`](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.fill_betweenx.html) to draw green areas for each lockdown, with parameters `color="green", alpha=0.1, label="lockdown"`.
-- `self.lockdown: list[dict[str, int]]` stores the start and end dates, e.g. `[{"start": 50, "end": 65}, {"start": 100, "end": 115}`
-- Do not start a new lockdown if the previous is not ended
-- In case the last lockdown is not over when the simulation ends, stop the filled area at the end of the simulation.
+## Part 3: Simulate a long period and split the plots
 
-**Outcome:** You should see 3 peaks with 3 green areas representing 3 lockdowns
+We will make sure that our iterator is able to generate an illimited number of values.
 
----
-## Part 3: Incubation delay
-So far, when a lockdown happens, the number of contaminations starts to decrease the same day. We do not consider people contaminated right before the lockdown.
+1. Increase the simulation duration to 950 days.
+It stills works but we want to split the plot in several subplots of 300 days each
 
-1. Add a `r0_history:` [`deque`](https://docs.python.org/3/library/collections.html#collections.deque) as an attribute to keep a track of previous R0, and:
-- Init the queue with neutral R0s: `1` repeated `incubation_duration` times
-- `next()` must now accept the previous number of cases in parameter: `next(self, previous_num_cases: int)`
-- `next()` must now enqueue the current R0 to the history
-- `next()` must now return a new contamination case with delay: pop the r0_history from the left and use this to return the current number of contamination cases
-
-`next()` now returns a current number of cases based on a former R0 (kept into memory in the queue). **Outcome:** Every R0 change you plot is delayed by some days.
+2. Overload operator `__getitem__(self, item)` that is called when you access an iterable slice `iterable[start:stop]`:
+    - That operator must iterate between start and stop indices and return a new list in which elements are generated with function `next(iterator)`.
+    - Make sure that you loose no simulated data in case of `StopIteration`
+    - **Tip:** `item` is a `slice` instance that offers `item.start` and `item.stop`
 
 ---
 
-## Part 4: Celebrations
-In this mini-project, celebrations simulate a temporary decrease of the respect of mitigation measures, causing a temporary increase of the R0. Here again, this increase will be delayed by the incubations time.
+3. In `plot()`, implement a loop that:
+   - Defines a plot windows between day `start` and `stop`
+   - Generates a slice of the iterable
+   - Plots the corresponding slice
+   - Breaks the loop if no more data is available 
 
-1. In `next()`, simply multiply the current R0 by `R0["high"]` if this day is present in the list of celebration days.
+
+**Outcome:** every time you close the plot window, the plot is refreshed with the next 300 values from the iterator
+
+
+---
+
+## Part 4: Celebrations (Optional)
+In this mini-project, celebrations simulate a temporary decrease of the respect of mitigation measures, causing a temporary increase of the R0.
+
+1. In `__next__()`, simply multiply the current R0 by `R0["high"]` if this day is present in the list of celebration days.
 
 *NB: We use R0 multiplication instead of a substitution of the R0 so that the effect of mitigation measures are still visible but their impact is lowered due to the celebration.*
 
-2. Plot a red vertical bar with `pyplot.plot()` for every celebration day
+2. In `plot()`, draw a red vertical bar with `pyplot.plot()` for every celebration day
 
-**Outcome**: You must see delayed peaks of cases due to the celebrations. Severity of peaks is highly influenced by the severity of cases at the moment of the celebration.
+**Outcome**: You must see peaks of cases due to the celebrations. Severity of peaks is highly influenced by the severity of cases at the moment of the celebration.
 
----
-## Part 5: Log your library (Optional)
-
-5.1. Split your code in 2 modules:
-- `simulator.py`: the class running the actual simulation
-- `main.py`: the main entry point importing the first module in order to run a scenario
-
-5.2. Use the [`logging`](https://docs.python.org/3/howto/logging.html) library in order to log the simulator module:
-  * a WARNING entry when a lockdown is triggered
-  * an INFO entry when a lockdown has just finished
-  * a DEBUG entry telling the number of remaining lockdown days 
-
-
-
-5.3. In the main script, activate the [`basicConfig`](https://docs.python.org/3/library/logging.html#logging.basicConfig) to display all DEBUGs in the terminal
-
-5.4. An extra library pollutes the stream. Drop the basic config and activate only logs from `simulator` (make sure you do not forget the handler).
 
 ---
 # Mini-project 3. Build a full package – Money transfer simulator
@@ -641,3 +627,28 @@ Run the simulation with the same parameters (*see figure next page*).
 ---
 
 ![bg 90%](./img/exercises/chessmaster-async.svg)
+
+---
+
+# Mini-project 7: Write protocols – Virus spread simulation
+
+We will improve the virus spread simulator with explicit type hints.
+
+## Part 1. Explicit typing
+
+1. Start from the solution of the simulator TODO
+2. Add type hints to all:
+   * Parameters of functions or methods
+   (you may need the `iter` type for iterators)
+   * Class attributes
+3. Make sure that your IDE's type checker
+(or install and run `mypy` to launch type checking)
+
+---
+## Part 2. Implement a protocol
+
+The current issue with our function `plot` is that it relies on a class attribute `celebrations` that is non-standard for the input parameter `it` of type `iter`.
+
+1. Pass a list to the function `plot([1,2,3])` and make sure that, since a list is iterable, the type checker does not complain.
+An exception will ne raised at runtime because of a bad type, though. We will fixe this issue with a protocol.
+2. Implement a protocol that inherits from `iter` and that has a `` attribute
