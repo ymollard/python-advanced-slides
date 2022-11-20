@@ -86,7 +86,7 @@ In our simplistic model:
 1. Implement a class with a constructor accepting the parameters of the simu, e.g:
 ```python
 s = ScenarioIterator(
-    duration = 300,               # Days of simulation or None for Infinite
+    duration = 300,               # Days of simulation
     critical = 5000,              # Threshold for triggering lockdowns
     celebrations = [ 74, 75, 76,  # Individual dates of celebrations
                      210, 211, 450, 670,
@@ -630,25 +630,17 @@ Run the simulation with the same parameters (*see figure next page*).
 
 ---
 
-# Mini-project 7: Write protocols – Virus spread simulation
+# Mini-project 7: Write protocols – Virus spread simu
 
 We will improve the virus spread simulator with explicit type hints.
 
-## Part 1. Explicit typing
-
 1. Start from the solution of the simulator TODO
 2. Add type hints to all:
-   * Parameters of functions or methods
-   (you may need the `iter` type for iterators)
+   * Parameters of all functions and methods
+   (you may need the `Iterator` type from `typing` module for iterators)
    * Class attributes
-3. Make sure that your IDE's type checker
-(or install and run `mypy` to launch type checking)
+3. Pay attention to the results of the type checking of your IDE, or install/run `mypy` to launch type checking.
+4. Identify **where** and **why** a type error exists.
+5. Implement a protocol named `Plotable` for which `Scenario` is an implementation 
+6. Make sure type checking now fully succeeds
 
----
-## Part 2. Implement a protocol
-
-The current issue with our function `plot` is that it relies on a class attribute `celebrations` that is non-standard for the input parameter `it` of type `iter`.
-
-1. Pass a list to the function `plot([1,2,3])` and make sure that, since a list is iterable, the type checker does not complain.
-An exception will ne raised at runtime because of a bad type, though. We will fixe this issue with a protocol.
-2. Implement a protocol that inherits from `iter` and that has a `` attribute
