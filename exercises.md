@@ -47,9 +47,9 @@ We will use Jupyter Lab in this mini-project.
 
 2. Launch it by typing `jupyter lab` in the same terminal
 
-3. Download [the notebook](https://github.com/ymollard/python-advanced-slides/raw/main/exercises/Mini-project%201.%20A%20dataset.ipynb) in your PyCharm project's folder and check your browser again
+3. Download [the notebook](https://github.com/ymollard/python-advanced-slides/raw/main/exercises/dataset.ipynb) in your PyCharm project's folder and check your browser again
 
-If you cannot install it in short time, do not spend too much time, copy/paste cells in a regular PyCharm script from the [online notebook](https://github.com/ymollard/python-advanced-slides/blob/main/exercises/Mini-project%201.%20A%20dataset.ipynb).
+If you cannot install it in short time, do not spend too much time, copy/paste cells in a regular PyCharm script from the [online notebook](https://github.com/ymollard/python-advanced-slides/blob/main/exercises/dataset.ipynb).
 
 ---
 
@@ -634,7 +634,7 @@ Run the simulation with the same parameters (*see figure next page*).
 
 We will improve the virus spread simulator with explicit type hints.
 
-1. Start from the solution of the simulator TODO
+1. Start from the [solution of the Virus Spread simulator](https://raw.githubusercontent.com/ymollard/python-advanced-slides/main/solutions/virus_spread_simulation/intermediary_parts/simulator_v4_with_celebrations.py)
 2. Add type hints to all:
    * Parameters of all functions and methods
    (you may need the `Iterator` type from `typing` module for iterators)
