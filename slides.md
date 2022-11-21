@@ -2034,22 +2034,26 @@ Registering an ABC not only forces registered classes to comply with:
 ---
 #### Protocols: duck typing for static type checking
 
-Protocols fulfill the same need as ABCs without the need of an explicit registration or subclassing.
+Protocols fulfill the same need without need of an explicit registration or subclassing.
 
 
 ```python
 from typing import Protocol
 
-class Cryable(Protocol):   
+class Cryable(Protocol):
+    vocalization: str
     def cry(self):
         raise NotImplementedError("cry() must be overriden")
-
+```
+```python
 class Cat:  # No need to subclass Cryable here
+    def __init__(self):
+        self.vocalization = "meow" 
     def cry(self):
         pass
-
-def some_function(animal: Cryable): # Cat instance will be accepted here
-    pass
+```
+```python
+animal: Cryable = Cat() # Cat instance is accepted bcz Cat implements Cryable
 ```
 A protocol has benefits for static type checking. At runtime it just acts as an ABC.
 
