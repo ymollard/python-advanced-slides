@@ -30,12 +30,14 @@ https://advanced.python.training.aubrune.eu/
 #  List of mini-projects
 
 [ Mini-project 1: WARMUP – The dataset generator](#3)
-[ Mini-project 2: The virus spread iterator](#4)
-[ Mini-project 3. Build a full package – Money transfer simulator](#15)
-[ Mini-project 4: Optimize Python – The code breaker](#34)
-[ Mini-project 5: Optimize Python – Bread-First Search optimization](#38)
-[ Mini-project 6. Estimate π with Nilakantha](#42)
-[ Mini-project 7: Write asynchronous code – The chess master](#46)
+[ Mini-project 2: The Virus spread simulator](#4)
+[ Mini-project 3. Build a full package – Money transfer simulator](#14)
+[ Mini-project 4: Optimize Python – The code breaker](#33)
+[ Mini-project 5: Optimize Python – Bread-First Search optimization](#37)
+[ Mini-project 6. Estimate π with Nilakantha](#41)
+[ Mini-project 7: Write asynchronous code – The chess master](#45)
+[ Mini-project 8: Write protocols – Virus spread simu](#50)
+
 
 
 
@@ -53,7 +55,7 @@ If you cannot install it in short time, do not spend too much time, copy/paste c
 
 ---
 
-# Mini-project 2: The Virus spread iterator
+# Mini-project 2: The Virus spread simulator
 
 This project consists into simulating the evolution of people contaminated by a disease that spreads according to a simplistic exponential contamination model.
 
@@ -630,7 +632,7 @@ Run the simulation with the same parameters (*see figure next page*).
 
 ---
 
-# Mini-project 7: Write protocols – Virus spread simu
+# Mini-project 8: Write protocols – Virus spread simu
 
 We will improve the virus spread simulator with explicit type hints.
 
