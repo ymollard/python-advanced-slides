@@ -366,18 +366,28 @@ print(timeit("numpy.sqrt(25)", globals=globals()))
 
 ## Iterators & generators
 
-An **iterator** is an object that iterates over a data structure.
+An **iterable** is a data structure on which one can iterate over: list, tuple...
 
-`next(i)` generates the next element from iterator `i`.
+An **iterator** is an object that performs the actual iteration on an iterable.
 
-![bg right:50% 90%](img/iterator.svg)
+Once an iterator has been consumed it cannot be rewound (but an iterable can)
 
-Duck typing considers that objects with a `__iter__` method are iterators.
+`iter(l)` returns an iterator on iterable `l`
+
+`next(i)` generates the next element of iterator `i`
+
+![bg right:45% 90%](img/iterator.svg)
 
 ---
 
+Duck typing considers that:
+- objects with a `__iter__` method are **iterables**
+- objects with a `__next__` method are **iterators**
+
+Since an iterator is also iterable, it implements both:
+
 ```python
-class DivisorsOf:
+class DivisorsOfIterator:
     def __init__(self, n: int):
         self.__last_divisor_tested = n // 2 + 1
 
@@ -393,24 +403,30 @@ class DivisorsOf:
         return divisor if divisor % 2 == 0 else next(self)
 ```
 ---
-The `__iter__` magic transforms this class into an iterable, that can be iterated just as any regular iterable:
+An iterable would then return a new iterator every time `__iter__()` is called,
+causing the iteration to reset every time:
+```python
+class DivisorsOf:       # This is an iterable
+    def __init__(self, n: int):
+        self.n = n
+    def __iter__(self): # __iter__ returns an iterator
+        return DivisorsOfIterator(self.n)
+```
 
 ```python
-for i in DivisorsOf(500):
-    print(i, "is a divisor")
+divisors = DivisorsOf(50)
+for d in divisors:
+    print(d, "is a divisor")
 ```
-Or also:
+
+You can also get the iterator itself and iterate with manual calls to `next()`:
 ```python
-it = DivisorsOf(2)
-print(next(it), "is the first divisor")   # 2 is the first divisor
+it = iter(DivisorsOf(2))
+print(next(it), "is the first divisor")  # 2 is the first divisor
 print(next(it), "is the second divisor") # 1 is the second divisor
-print(next(it), "is the third divisor") # StopIteration: There is no more divisor
+print(next(it), "is the third divisor")  # StopIteration: There is no more divisor
 ```
-All basic iterables (tuples, lists, dicts) also work this way with `__iter__` & `__next__`:
-```python
-t = 1, 2, 3   # Tuple
-t.__next__()
-```
+
 
 ---
 ### The Generator
@@ -422,12 +438,18 @@ def divisors_of(n: int):
         if i % 2 == 0:
             yield i
 ```
-It can then be used this way:
+
+Again, an iterable can be built out of the generator:
 ```python
-for divisor in divisors_of(50):
-    print(divisor, "is the next divisor")
+class DivisorsOf:       # This is an iterable
+    def __init__(self, n: int):
+        self.n = n
+
+    def __iter__(self):              # __iter__ returns an iterator...
+        for i in range(n // 2 + 1):  # ...or more precisely, a generator
+            if i % 2 == 0:
+                yield i
 ```
-`StopIteration`is raised automatically when there is no more `yield`.
 
 ---
 
