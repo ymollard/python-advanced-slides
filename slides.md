@@ -81,11 +81,12 @@ https://advanced.python.training.aubrune.eu/
 
 [ Mini-project 1: WARMUP – The dataset generator](/exercises.html#3)
 [ Mini-project 2: Draw plots – (Simplistic) Virus spread simulation](/exercises.html#4)
-[ Mini-project 3. Build a full package – Money transfer simulator](/exercises.html#15)
-[ Mini-project 4: Optimize Python – The code breaker](/exercises.html#32)
-[ Mini-project 5: Optimize Python – Bread-First Search optimization](/exercises.html#36)
-[ Mini-project 6. Estimate π with Nilakantha](/exercises.html#40)
-[ Mini-project 7: Write asynchronous code – The chess master](/exercises.html#44)
+[ Mini-project 3. Build a full package – Money transfer simulator](/exercises.html#14)
+[ Mini-project 4: Optimize Python – The code breaker](/exercises.html#33)
+[ Mini-project 5: Optimize Python – Bread-First Search optimization](/exercises.html#37)
+[ Mini-project 6. Estimate π with Nilakantha](/exercises.html#41)
+[ Mini-project 7: Write asynchronous code – The chess master](/exercises.html#45)
+[ Mini-project 8: Write protocols – Virus spread simu](/exercises.html#50)
 
 ---
 
@@ -125,14 +126,25 @@ When you deal with float number and if precision counts, use the decimal module!
 from decimal import Decimal
 Decimal("1e-10") + Decimal("1e10") == Decimal("1e10")   # This is False 🎉
 ```
+
 Beware not to initialize `Decimal` with float since the precision is already lost: `Decimal(0.1)` will show `Decimal('0.10000000000000000555111512312578270215')`
 
 ---
 
 ### Python collections (data containers)
-Collections allow to store data in structures. General purpose built-in containers are `dict`, `list`, `set`, and `tuple`. Other containers exist in module `collections`.
+Collections allow to store data in structures.
 
+General purpose built-in containers are `dict`, `list`, `set`, and `tuple`. Other containers exist in module `collections`.
+
+---
 **Definition**: Some Python collections are said **mutable** because they can be updated and modified at any moment during runtime.
+
+**Quizz**: Do you know which of these types are mutable and immutable: 
+- `list`
+- `dict`
+- `tuple`
+- `str`
+- `bytes`
 
 ---
 #### Mutable collections
@@ -144,6 +156,7 @@ l = list(("Conversion", "tuple", "to", "list"))
 l = list("Hello")
 l = "".join(["H", "e", "l", "l", "o"])
 l.append("element") # Append at the end (right side)
+l.insert("a", 5)
 l.pop()             # Remove from the end. pop(0) removes from the start
 ```
 
@@ -156,25 +169,6 @@ d.keys()     # dict_keys
 d.values()   # dict_values
 ```
 
----
-##### The ordered dictionary
-
-```python
-from collections import OrderedDict
-scores = OrderedDict()
-
-scores["Anna"] = 900                                                      
-scores["Mathew"] = 500                                                    
-scores["Alfredo"] = 450                                                  
-
-print(scores)                                                            
-# OrderedDict([('Anna', 900), ('Mathew', 500), ('Alfredo', 450)])
-```
-Hence, an `OrderDict` has additional methods unavailable in regular dicts:
-```python
-# Say that Anna has now a score of 300, the OrderedDict must be reordered:
-scores.move_to_end("Anna", last=True)
-```
 
 ---
 ##### The double-ended queue (deque)
@@ -197,12 +191,12 @@ t = ("A", "tuple", "is", "immutable")
 ```
 Example: put the first letter of these sequences in lower case:
 ```python
-s[0] = "t"
+s[0] = "a"
 # TypeError: 'str' object does not support item assignment
 
-s = "t" + "This works!"[1:]
+s = "a" + s[1:]
 
-"".join(["t"] + list("This also works!")[1:])
+"".join(["a"] + list(s[1:]))
 ```
 
 ---
@@ -219,9 +213,10 @@ a, b = b, a   # Value swapping
 And this is the type used for returning several values in a function:
 ```python
 def compute(a, b):
-    return a+b, a-b
+    return a+b, a-b, a*b, a/b
 
-sum, difference = compute(5, 5)
+sum, difference, product, quotient = compute(5, 5)
+sum, other* = compute(5, 5)
 results = compute(5, 5)
 ```
 
@@ -384,23 +379,21 @@ Duck typing considers that:
 - objects with a `__iter__` method are **iterables**
 - objects with a `__next__` method are **iterators**
 
-Since an iterator is also iterable, it implements both:
-
 ```python
-class DivisorsOfIterator:
+class DivisorsOfIntegerIterator:
     def __init__(self, n: int):
+        self.__n = n
         self.__last_divisor_tested = n // 2 + 1
 
-    def __iter__(self): # The definition of __iter__ makes DivisorsOf iterable
+    def __iter__(self):    # This magic makes this class an iterable
         return self
     
-    def __next__(self):
+    def __next__(self):    # This magic makes this class an iterator
         if self.__last_divisor_tested == 1:
             raise StopIteration("There is no more divisor")
-
         divisor = self.__last_divisor_tested - 1
         self.__last_divisor_tested = divisor
-        return divisor if divisor % 2 == 0 else next(self)
+        return divisor if self.__n % divisor == 0 else next(self)
 ```
 ---
 An iterable would then return a new iterator every time `__iter__()` is called,
@@ -410,7 +403,7 @@ class DivisorsOf:       # This is an iterable
     def __init__(self, n: int):
         self.n = n
     def __iter__(self): # __iter__ returns an iterator
-        return DivisorsOfIterator(self.n)
+        return DivisorsOfIntegerIterator(self.n)
 ```
 
 ```python
@@ -435,19 +428,19 @@ A **generator** is a specific type of iterator created via a function instead of
 ```python
 def divisors_of(n: int):
     for i in range(n // 2 + 1):
-        if i % 2 == 0:
+        if n % i == 0:
             yield i
 ```
 
 Again, an iterable can be built out of the generator:
 ```python
-class DivisorsOf:       # This is an iterable
+class DivisorsOf: # This is an iterable
     def __init__(self, n: int):
         self.n = n
 
     def __iter__(self):              # __iter__ returns an iterator...
         for i in range(n // 2 + 1):  # ...or more precisely, a generator
-            if i % 2 == 0:
+            if n % i == 0:
                 yield i
 ```
 
@@ -485,6 +478,7 @@ sentence = "How do you do?"
 ---
 ## Object-oriented programming (OOP)
 
+Reminder of the class implementation syntax and inherence syntax
 ```python
 class Apartment:
     def __init__(self, surface):
@@ -527,7 +521,8 @@ It means that when accessing a method e.g. `a.method()` the interpreter will fir
 ```
 - **parametric**: same method with different parameter types (⚠️ overloading in Java)
 ```python
-print("It is", True, "that the Ultimate Question of Life is", 42)
+def f(var):
+    return 42 if isinstance(var, int) else 4.2
 ```
 - **inheritance**: method is inherited from a different (parent) type
 
@@ -887,11 +882,10 @@ animals = {
 
 class ClassGenerator(type):
     def __new__(cls, name, bases, methods):
-        methods.update(methods)
         return super().__new__(cls, name, bases, methods)
 
 
-Dog = ClassGenerator("Dog", (), animals["Dog")
+Dog = ClassGenerator("Dog", (), animals["Dog"])
 Cat = ClassGenerator("Cat", (), animals["Cat"])
 
 Dog().bark()    # WAF!
@@ -1014,7 +1008,7 @@ map(hex, [2**x for x in range(5)])  # Returns ['0x1', '0x2', '0x4', '0x8', '0x10
 **Functional programming example**: capitalize each word
 ```python
 sentence = "hello my friend"
-````
+```
 How can we generate this string with each word capitalized? i.e. `"Hello My Friend"`?
 
 ```python
