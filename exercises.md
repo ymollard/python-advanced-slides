@@ -107,17 +107,18 @@ s = ScenarioIterator(
 - `self.current_date` that corresponds to the current date (from 0 to 300)
 - `self.previous_num_cases` that corresponds to the previous number of cases (here, we need a number of 1, corresponding to the very first positive case)
 
-2. Make this class an **iterator** by implementing `__iter__()` and `__next__()`:
+2. Make this class an **iterator** by implementing:
 
 - `__iter__()` returns `self` since the class instance itself is already an iterator
 
 - `__next__()` must check if we have reached the last day of the simulation:
     - If **yes**, raise `StopIteration`
-    - If **no**, return an integer corresponding to the new number of cases =  `the_regular_r0 * previous_cases_number`
+    - If **no**, update the relevant attributes and return an integer corresponding to the new number of cases =  `the_regular_r0 * previous_cases_number`
 
 ---
 
-3. Create a new class `Scenario`. Make it an **iterable** by implementing `__iter__()` that just returns an instance of the iterator previously defined.
+3. Create a new class `Scenario`. Make it an **iterable** by implementing `__iter__()` returning an instance of the previous iterator and `__len__()` returning its length.
+
 
 4. Create a function `plot(iterable)` (**NOT** a class method), that accepts `iterable` in input and plots it. This function must:
    - Generate all values until the end of the iterator. For this, simply cast the iterator into a list, which which trigger the full generation
@@ -328,7 +329,7 @@ Relative imports start with `.` or `..`
 
 Refer to the doc about [package creation](https://packaging.python.org/tutorials/packaging-projects).
 
-Create a dynamic metadata file `setup.py` and update its metadata (package name, author, license, description...)
+Create a dynamic metadata file `pyprojet.toml` and update its metadata (package name, author, dependencies if any).
 
 Delete the `sys.path` workaround in test files since your package is now installable. 
 
