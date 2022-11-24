@@ -39,6 +39,9 @@ class Scenario:
         self.duration = duration
         self.r0 = r0
 
+    def __len__(self):
+        return self.duration
+
     def __iter__(self):
         return ScenarioIterator(self.duration, self.r0)
 
@@ -47,6 +50,8 @@ def plot(iterable):
     cases_history = list(iterable)  # Convert an iterator into a list to force generation until the end
                                     # (make sure there IS an end with StopIterator)
                                     # Note that the conversion make us drop the benefits of the iterator in terms of memory usage
+
+    # pyplot.plot does not accept iterables but only what it assumes looking like a numpy.array, such as a list
     pyplot.plot(range(len(cases_history)), cases_history, label="Contamination cases")
 
     pyplot.legend()
@@ -56,11 +61,11 @@ def plot(iterable):
 
 
 if __name__ == "__main__":
-    scenario_iter = Scenario(
+    scenario = Scenario(
         duration=300,               # Days of simulation
         r0={
             "regular": 1.2,     # R0 value applied for all other cases
         }
     )
 
-    plot(scenario_iter)
+    plot(scenario)

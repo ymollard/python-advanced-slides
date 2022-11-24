@@ -61,6 +61,9 @@ class Scenario:
         self.celebrations = celebrations
         self.iter = ScenarioIterator(self.duration, self.critical, self.lockdown_duration, self.celebrations, self.r0)
 
+    def __len__(self):
+        return self.duration
+
     def __iter__(self):
         return self.iter
 
@@ -88,6 +91,7 @@ def plot(iterable):
             if start < celebration < stop:
                 pyplot.plot([celebration, celebration], [0, max(cases_history)], color="red")
 
+        # pyplot.plot does not accept iterables but only what it assumes looking like a numpy.array, such as a list
         pyplot.plot(range(start, start + len(cases_history)), cases_history, label="Contamination cases")
 
         pyplot.legend()
@@ -99,7 +103,7 @@ def plot(iterable):
 
 
 if __name__ == "__main__":
-    scenario_iter = Scenario(
+    scenario = Scenario(
         duration=950,               # Days of simulation
         critical=5000,              # Threshold for triggering lockdowns
         lockdown_duration=60,       # Lockdown duration in days
@@ -114,4 +118,4 @@ if __name__ == "__main__":
             "regular": 1.2,     # R0 applied for all other cases
         }
     )
-    plot(scenario_iter)
+    plot(scenario)
