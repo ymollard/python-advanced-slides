@@ -29,15 +29,13 @@ https://advanced.python.training.aubrune.eu/
 
 #  List of mini-projects
 
-[ Mini-project 1: WARMUP – The dataset generator](#3)
-[ Mini-project 2: The Virus spread simulator](#4)
-[ Mini-project 3. Build a full package – Money transfer simulator](#14)
-[ Mini-project 4: Optimize Python – The code breaker](#33)
-[ Mini-project 5: Optimize Python – Bread-First Search optimization](#37)
-[ Mini-project 6. Estimate π with Nilakantha](#41)
-[ Mini-project 7: Write asynchronous code – The chess master](#45)
-[ Mini-project 8: Write protocols – Virus spread simu](#50)
-
+1. [ WARMUP – The dataset generator](#3)
+2. [Build a full package – Money transfer simulator](#4)
+3. [Optimization – Bread-First Search in a graph](#23)
+4. [Optimization – The code breaker](#27)
+5. [Estimate π with Nilakantha](#31)
+6. [Asynchronous programming – The chess master](#35)
+7. [The Virus spread simulator](#40)
 
 
 
@@ -53,138 +51,9 @@ We will use Jupyter Lab in this mini-project.
 
 If you cannot install it in short time, do not spend too much time, copy/paste cells in a regular PyCharm script from the [online notebook](https://github.com/ymollard/python-advanced-slides/blob/main/exercises/dataset.ipynb).
 
----
-
-# Mini-project 2: The Virus spread simulator
-
-This project consists into simulating the evolution of people contaminated by a disease that spreads according to a simplistic exponential contamination model.
-
-It relies on the `R0` variable: it describes the slope of the contamination:
-- `R0 < 1` = In average, a person contaminates less than 1 person: The number of contamination dicreases
-- `R0 > 1` = In average, a person contaminates more than 1 person: The number of contaminations increases
-
-The goal is to simulate contamination scenarii and plot them as presented on the next figure, by using a Python iterator.
 
 ---
-
-![bg 60%](./img/exercises/naive-virus-simulation.png)
-
----
-## Description of the model to implement
-In our simplistic model:
-- The R0 has discrete values for different periods:
-  - a **value during migitation measures** (e.g. lockdowns ; low R0)
-  - a **value during celebrations** (e.g. Christmas ; high R0)
-  - a regular value for all other periods
-- Time is measured in number of days from day 0, for a certain **simulation duration**
-- Lockdown is triggered automatically when the number of contaminations goes beyond a **critical threshold**, causing the R0 to decrease.
-
-**Bold values** are taken as parameters of the simulation.
-
----
-
-## Part 1: Core of the simulator
-
-1. Implement a class with a constructor accepting the parameters of the simu, e.g:
-```python
-s = ScenarioIterator(
-    duration = 300,               # Days of simulation
-    critical = 5000,              # Threshold for triggering lockdowns
-    celebrations = [ 74, 75, 76,  # Individual dates of celebrations
-                     210, 211, 450, 670,
-                     710, 920 ], 
-    r0 = {
-        "high": 2,          # R0 applied for celebrations
-        "lockdown": 0.9,    # R0 applied for lockdowns
-        "regular": 1.2,     # R0 applied for all other cases
-    }
-)
-```
-
----
-
-1. Store the previous parameters as attributes, and also define the following:
-- `self.current_date` that corresponds to the current date (from 0 to 300)
-- `self.previous_num_cases` that corresponds to the previous number of cases (here, we need a number of 1, corresponding to the very first positive case)
-
-2. Make this class an **iterator** by implementing:
-
-- `__iter__()` returns `self` since the class instance itself is already an iterator
-
-- `__next__()` must check if we have reached the last day of the simulation:
-    - If **yes**, raise `StopIteration`
-    - If **no**, update the relevant attributes and return an integer corresponding to the new number of cases =  `the_regular_r0 * previous_cases_number`
-
----
-
-3. Create a new class `Scenario`. Make it an **iterable** by implementing `__iter__()` returning an instance of the previous iterator and `__len__()` returning its length.
-
-
-4. Create a function `plot(iterable)` (**NOT** a class method), that accepts `iterable` in input and plots it. This function must:
-   - Generate all values until the end of the iterator. For this, simply cast the iterator into a list, which which trigger the full generation
-   - Store the list of simulated cases into `cases_history`
-   - Import `pyplot`, call `pyplot.plot(xvalues, yvalues)` and `pyplot.show()`
-   Refer to the [matplotlib documentation](https://matplotlib.org/stable/plot_types/basic/plot.html#sphx-glr-plot-types-basic-plot-py) if needed
-
-5. Initialize an instance of `Scenario` and plot it using your `plot()` function.
-
-**Outcome:** Now you must see an exponential curve in your plot.
-
----
-## Part 2: Lockdown implementation
-
-1. In `__next__()`, check if the cases has reached the critical threshold. If yes, substitute the regular R0 by the "lockdown" R0
-
-2. Revert to the regular R0 when the number of cases is below the critical level again
-
-**Outcome:** You should see an exponential curve ending in shaky oscillations around the critical threshold. This is what would happen if the lockdowns were released too fast.
-
-3. Add an attribute counting the number of remaining lockdown days since it has been triggered. Change the behaviour so that lockdown is released only when `lockdown_duration` days have passed
-
-**Outcome:** You should see 3 peaks of ascending and descending exponential curves.
-
----
-
-## Part 3: Simulate a long period and split the plots
-
-We will make sure that our iterator is able to generate an illimited number of values.
-
-1. Increase the simulation duration to 950 days.
-It stills works but we want to split the plot in several subplots of 300 days each
-
-2. Overload operator `__getitem__(self, item)` that is called when you access an iterable slice `iterable[start:stop]`:
-    - That operator must iterate between start and stop indices and return a new list in which elements are generated with function `next(iterator)`.
-    - Make sure that you loose no simulated data in case of `StopIteration`
-    - **Tip:** `item` is a `slice` instance that offers `item.start` and `item.stop`
-
----
-
-3. In `plot()`, implement a loop that:
-   - Defines a plot windows between day `start` and `stop`
-   - Generates a slice of the iterable
-   - Plots the corresponding slice
-   - Breaks the loop if no more data is available 
-
-
-**Outcome:** every time you close the plot window, the plot is refreshed with the next 300 values from the iterator
-
-
----
-
-## Part 4: Celebrations (Optional)
-In this mini-project, celebrations simulate a temporary decrease of the respect of mitigation measures, causing a temporary increase of the R0.
-
-1. In `__next__()`, simply multiply the current R0 by `R0["high"]` if this day is present in the list of celebration days.
-
-*NB: We use R0 multiplication instead of a substitution of the R0 so that the effect of mitigation measures are still visible but their impact is lowered due to the celebration.*
-
-2. In `plot()`, draw a red vertical bar with `pyplot.plot()` for every celebration day
-
-**Outcome**: You must see peaks of cases due to the celebrations. Severity of peaks is highly influenced by the severity of cases at the moment of the celebration.
-
-
----
-# Mini-project 3. Build a full package – Money transfer simulator
+# Mini-project 2. Build a full package – Money transfer simulator
 
 In this exercise we are going to create a simplified Information System that is able to handle and simulate bank transactions.
 
@@ -396,66 +265,8 @@ In `setup.py` set the version to `0.0.2`. Drop former distribution versions from
 
 Build and publish this new version on TestPyPI. 
 
-
 ---
-
-# Mini-project 4: Optimize Python – The code breaker
-MD5 is a message-digest algorithm that is no longer considered safe since 2004 when a research team managed to provoke collisions with MD5.
-
-However it is still widely used in various applications. A common pattern is the use of the MD5 digest of passwords to store them in databases.
-
-In this project, you have extracted MD5 digests from websites accepting only alphabetical (digits excluded) characters of different lengths:
-
-- `d0eedb799584d850fdd802fd3c27ae34` (length = 3)
-- `9fcce10c03dc2eaada4c361c508c4ebe` on a website accepting (length = 4)
-- `8b1a9953c4611296a827abf8c47804d7` (length = 5)
-
----
-## Part 1: Use a profiler to identify where your code wastes time 
-
-Download the script [`naive_code_breaker.py`](https://github.com/ymollard/python-advanced-slides/blob/main/exercises/naive_code_breaker.py) that breaks the MD5 sums hereabove (i.e. reverse the md5 function with hints such as the password characters and size). 
-
-This script is highly unoptimized.
-
-- Install `snakeviz` with `pip`. Read the [documentation](https://jiffyclub.github.io/snakeviz/).
-- Generate a profile for the execution of the script and open it in snakeviz
-- Where does you code spends most of the CPU time?
-
-🚨 This script is HIGHLY unoptimized and may take long minutes to run with default arguments. Do not waste your time, run it on a lower password length at the beginning:
-
-```bash
-./naive_code_breaker.py --digest=d0eedb799584d850fdd802fd3c27ae34 --password-length=3
-```
-
----
-## Part 2: Code optimization
-
-Now try to optimize this naive code. Use the results of the profiler to help.
-
-There are at least 4 points of improvements.
-
-Here are the orders of magnitude of execution duration you must reach:
-
-```bash
-code_breaker.py --digest=d0eedb799584d850fdd802fd3c27ae34 --password-length=3 (must take <100ms)
-code_breaker.py --digest=9fcce10c03dc2eaada4c361c508c4ebe --password-length=4 (must take <10s)
-code_breaker.py --digest=8b1a9953c4611296a827abf8c47804d7 --password-length=5 (must take <1000s)
-code_breaker.py --digest=4d546c773867b86b4a233a7428c46c19 --password-length=6 (must take more!)
-```
-Do not use multiprocessing here, this is the next task, just optimize the function reversing the hash.
-
----
-## Part 3 (Optional): Make it multiprocess
-
-Make the code breaker multiprocess to break md5 hashs faster.
-
-There is no additional help here.
-
-**Note:** Brute force only is not the best approach when we deal with passwords. We should exploit the human weaknesses with a dictionary attack. But this is another topic.
-
-
----
-# Mini-project 5: Optimize Python – Bread-First Search optimization
+# Mini-project 3: Optimization – Bread-First Search in a graph
 
 > BFS browses a tree data structure. It starts at the tree root and explores all nodes at the present depth prior to moving on to the nodes at the next depth level. 
 Extra memory, usually a queue, is needed to keep track of the children that were reached but not yet explored.
@@ -517,9 +328,65 @@ G = { # dict representing the children of all nodes
 
 **2.**: Implement a new version `improved_bfs()` that fixes the performance issues that you spotted with the profiler. 
 
+---
+
+# Mini-project 4: Optimization – The code breaker
+MD5 is a message-digest algorithm that is no longer considered safe since 2004 when a research team managed to provoke collisions with MD5.
+
+However it is still widely used in various applications. A common pattern is the use of the MD5 digest of passwords to store them in databases.
+
+In this project, you have extracted MD5 digests from websites accepting only alphabetical (digits excluded) characters of different lengths:
+
+- `d0eedb799584d850fdd802fd3c27ae34` (length = 3)
+- `9fcce10c03dc2eaada4c361c508c4ebe` on a website accepting (length = 4)
+- `8b1a9953c4611296a827abf8c47804d7` (length = 5)
 
 ---
-# Mini-project 6. Estimate π with Nilakantha
+## Part 1: Use a profiler to identify where your code wastes time 
+
+Download the script [`naive_code_breaker.py`](https://github.com/ymollard/python-advanced-slides/blob/main/exercises/naive_code_breaker.py) that breaks the MD5 sums hereabove (i.e. reverse the md5 function with hints such as the password characters and size). 
+
+This script is highly unoptimized.
+
+- Install `snakeviz` with `pip`. Read the [documentation](https://jiffyclub.github.io/snakeviz/).
+- Generate a profile for the execution of the script and open it in snakeviz
+- Where does you code spends most of the CPU time?
+
+🚨 This script is HIGHLY unoptimized and may take long minutes to run with default arguments. Do not waste your time, run it on a lower password length at the beginning:
+
+```bash
+./naive_code_breaker.py --digest=d0eedb799584d850fdd802fd3c27ae34 --password-length=3
+```
+
+---
+## Part 2: Code optimization
+
+Now try to optimize this naive code. Use the results of the profiler to help.
+
+There are at least 4 points of improvements.
+
+Here are the orders of magnitude of execution duration you must reach:
+
+```bash
+code_breaker.py --digest=d0eedb799584d850fdd802fd3c27ae34 --password-length=3 (must take <100ms)
+code_breaker.py --digest=9fcce10c03dc2eaada4c361c508c4ebe --password-length=4 (must take <10s)
+code_breaker.py --digest=8b1a9953c4611296a827abf8c47804d7 --password-length=5 (must take <1000s)
+code_breaker.py --digest=4d546c773867b86b4a233a7428c46c19 --password-length=6 (must take more!)
+```
+Do not use multiprocessing here, this is the next task, just optimize the function reversing the hash.
+
+---
+## Part 3 (Optional): Make it multiprocess
+
+Make the code breaker multiprocess to break md5 hashs faster.
+
+There is no additional help here.
+
+**Note:** Brute force only is not the best approach when we deal with passwords. We should exploit the human weaknesses with a dictionary attack. But this is another topic.
+
+
+---
+# Mini-project 5. Estimate π with Nilakantha
 ## Part 1: Basic implementation
 The Nilakantha method consists into computing `n` fractions from the formula:
 ![w:800](./img/Nilakantha.svg)
@@ -587,7 +454,7 @@ First make sure you can open a single process and get the same result as before.
 Limit to 30s of computation max. What is the best number of digits you can achieve?
 
 ---
-# Mini-project 7: Write asynchronous code – The chess master
+# Mini-project 6: Asynchronous programming – The chess master
 
 In this mini-project, we will simulate **moves of chess** during a tournament in which a unique chess master faces many opponents by turns
 
@@ -631,10 +498,139 @@ Run the simulation with the same parameters (*see figure next page*).
 
 ![bg 90%](./img/exercises/chessmaster-async.svg)
 
+
 ---
 
-# Mini-project 8: Write protocols – Virus spread simu
+# Mini-project 7: The Virus spread simulator
 
+This project consists into simulating the evolution of people contaminated by a disease that spreads according to a simplistic exponential contamination model.
+
+It relies on the `R0` variable: it describes the slope of the contamination:
+- `R0 < 1` = In average, a person contaminates less than 1 person: The number of contamination dicreases
+- `R0 > 1` = In average, a person contaminates more than 1 person: The number of contaminations increases
+
+The goal is to simulate contamination scenarii and plot them as presented on the next figure, by using a Python iterator.
+
+---
+
+![bg 60%](./img/exercises/naive-virus-simulation.png)
+
+---
+## Description of the model to implement
+In our simplistic model:
+- The R0 has discrete values for different periods:
+  - a **value during migitation measures** (e.g. lockdowns ; low R0)
+  - a **value during celebrations** (e.g. Christmas ; high R0)
+  - a regular value for all other periods
+- Time is measured in number of days from day 0, for a certain **simulation duration**
+- Lockdown is triggered automatically when the number of contaminations goes beyond a **critical threshold**, causing the R0 to decrease.
+
+**Bold values** are taken as parameters of the simulation.
+
+---
+
+## Part 1: Core of the simulator
+
+1. Implement a class with a constructor accepting the parameters of the simu, e.g:
+```python
+s = ScenarioIterator(
+    duration = 300,               # Days of simulation
+    critical = 5000,              # Threshold for triggering lockdowns
+    celebrations = [ 74, 75, 76,  # Individual dates of celebrations
+                     210, 211, 450, 670,
+                     710, 920 ], 
+    r0 = {
+        "high": 2,          # R0 applied for celebrations
+        "lockdown": 0.9,    # R0 applied for lockdowns
+        "regular": 1.2,     # R0 applied for all other cases
+    }
+)
+```
+
+---
+
+1. Store the previous parameters as attributes, and also define the following:
+- `self.current_date` that corresponds to the current date (from 0 to 300)
+- `self.previous_num_cases` that corresponds to the previous number of cases (here, we need a number of 1, corresponding to the very first positive case)
+
+2. Make this class an **iterator** by implementing:
+
+- `__iter__()` returns `self` since the class instance itself is already an iterator
+
+- `__next__()` must check if we have reached the last day of the simulation:
+    - If **yes**, raise `StopIteration`
+    - If **no**, update the relevant attributes and return an integer corresponding to the new number of cases =  `the_regular_r0 * previous_cases_number`
+
+---
+
+3. Create a new class `Scenario`. Make it an **iterable** by implementing `__iter__()` returning an instance of the previous iterator and `__len__()` returning its length.
+
+
+4. Create a function `plot(iterable)` (**NOT** a class method), that accepts `iterable` in input and plots it. This function must:
+   - Generate all values until the end of the iterator. For this, simply cast the iterator into a list, which which trigger the full generation
+   - Store the list of simulated cases into `cases_history`
+   - Import `pyplot`, call `pyplot.plot(xvalues, yvalues)` and `pyplot.show()`
+   Refer to the [matplotlib documentation](https://matplotlib.org/stable/plot_types/basic/plot.html#sphx-glr-plot-types-basic-plot-py) if needed
+
+5. Initialize an instance of `Scenario` and plot it using your `plot()` function.
+
+**Outcome:** Now you must see an exponential curve in your plot.
+
+---
+## Part 2: Lockdown implementation
+
+1. In `__next__()`, check if the cases has reached the critical threshold. If yes, substitute the regular R0 by the "lockdown" R0
+
+2. Revert to the regular R0 when the number of cases is below the critical level again
+
+**Outcome:** You should see an exponential curve ending in shaky oscillations around the critical threshold. This is what would happen if the lockdowns were released too fast.
+
+3. Add an attribute counting the number of remaining lockdown days since it has been triggered. Change the behaviour so that lockdown is released only when `lockdown_duration` days have passed
+
+**Outcome:** You should see 3 peaks of ascending and descending exponential curves.
+
+---
+
+## Part 3: Simulate a long period and split the plots
+
+We will make sure that our iterator is able to generate an illimited number of values.
+
+1. Increase the simulation duration to 950 days.
+It stills works but we want to split the plot in several subplots of 300 days each
+
+2. Overload operator `__getitem__(self, item)` that is called when you access an iterable slice `iterable[start:stop]`:
+    - That operator must iterate between start and stop indices and return a new list in which elements are generated with function `next(iterator)`.
+    - Make sure that you loose no simulated data in case of `StopIteration`
+    - **Tip:** `item` is a `slice` instance that offers `item.start` and `item.stop`
+
+---
+
+3. In `plot()`, implement a loop that:
+   - Defines a plot windows between day `start` and `stop`
+   - Generates a slice of the iterable
+   - Plots the corresponding slice
+   - Breaks the loop if no more data is available 
+
+
+**Outcome:** every time you close the plot window, the plot is refreshed with the next 300 values from the iterator
+
+
+---
+
+## Part 4: Celebrations (Optional)
+In this mini-project, celebrations simulate a temporary decrease of the respect of mitigation measures, causing a temporary increase of the R0.
+
+1. In `__next__()`, simply multiply the current R0 by `R0["high"]` if this day is present in the list of celebration days.
+
+*NB: We use R0 multiplication instead of a substitution of the R0 so that the effect of mitigation measures are still visible but their impact is lowered due to the celebration.*
+
+2. In `plot()`, draw a red vertical bar with `pyplot.plot()` for every celebration day
+
+**Outcome**: You must see peaks of cases due to the celebrations. Severity of peaks is highly influenced by the severity of cases at the moment of the celebration.
+
+---
+
+## Part 5: Typing and protocols
 We will improve the virus spread simulator with explicit type hints.
 
 1. Start from the [solution of the Virus Spread simulator](https://raw.githubusercontent.com/ymollard/python-advanced-slides/main/solutions/virus_spread_simulation/intermediary_parts/simulator_v4_with_celebrations.py)
