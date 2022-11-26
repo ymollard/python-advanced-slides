@@ -63,7 +63,7 @@ https://advanced.python.training.aubrune.eu/
 
 #  Schedule of DAY 3
 
-5. [ PERFORMANCE OPTIMIZATION](#110)
+5. [ OPTIMIZATION AND GOOD PRACTICES](#110)
     5.1. [ Kind reminder about complexities](#111)
     5.2. [ Refactor your code by keeping complexity in mind](#112)
     5.3. [ Profiling](#114)
@@ -1549,8 +1549,6 @@ Either the module is made to be:
 
 A package can also be a folder containing modules and sub-packages.
 
-Modules can also be bindings, e.g. Python bindings to a C++ library.
-
 ---
 ### Shebangs of Python scripts
 
@@ -1571,29 +1569,42 @@ The Windows shell ignore shebangs.
 
 ---
 ### Structure of Python packages
-- Packages and sub-packages allow to bring a hierarchy to your code
-- The package's hierarchy is inherited from the files-and-folders hierarchy 
-- Modules hold resources that can be imported later on, e.g.:
-  - Constants
-  - Classes
-  - Functions...
-![bg right:40% 70%](img/package-init.png)
+
+All packages and sub-packages must contain an `__init__.py` file each
+
+In general `__init__.py` is empty but may contain code to be executed at import time
+
+The package's hierarchy is inherited from the files-and-folders hierarchy.
+
+![bg right:30% 85%](img/package-with-init.png)
 
 ---
-- All packages and sub-packages must contain an `__init__.py` file each
-- In general `__init__.py` is empty but may contain code to be executed at import time
 
-![bg right:30% 90%](img/package-with-init.png)
+Module names use the dotted notation:
 
-Then the package or its sub-packages can be imported:
 ```python
-import my_math.trigo
-my_math.trigo.sin.sinus(0)
+import my_math.matrix.complex.arithmetic
+
+print(my_math.matrix.complex.arithmetic.__name__)
+# my_math.matrix.complex.arithmetic
+
+print(my_math.matrix.complex.arithmetic.__file__)
+# /usr/[...]/my_math/matrix/comple/arithmetic.py
 ```
-Specific resources can also be imported:
+```python
+from my_math.matrix.complex import arithmetic
+# Also works: loads arithmetic in the global scope
+```
 ```python
 from my_math.matrix.complex.arithmetic import product
+# Also works: loads a single function from the module
 ```
+
+
+
+![bg right:30% 85%](img/package-with-init.png)
+
+
 ---
 Optionally, a (sub-)package can by "executed" from command-line with the `-m` option:
 ```bash
@@ -1603,7 +1614,7 @@ only if a module `__main__.py` has been placed at the root of the sub-package.
 
 Then, executing the sub-package consists into running code in `__main__.py`
 
-![bg right:30% 90%](img/package-with-init-main.png)
+![bg right:30% 85%](img/package-with-init-main.png)
 
 ---
 
@@ -1622,6 +1633,8 @@ value = my_sqrt(25)
 
 - Do not put any slash such as ~~`import ../my_math`~~
 - Only current and parent folders can be retrieved with a relative import
+
+Relative imports are forbidden when run from a module **outside** a package.
 
 ---
 
@@ -1852,7 +1865,7 @@ jobs:
 <!--#####################################################################################################-->
 ---
 #  DAY 3
-# PERFORMANCE OPTIMIZATION
+# OPTIMIZATION AND GOOD PRACTICES
 <!--#####################################################################################################-->
 
 ---
@@ -2195,21 +2208,23 @@ What if we want to communicate between between 2 processes?
 - It is also possible to share lists, dicts, ...
 ---
 
-## Asynchronous code (Python coroutines)
+## Asynchronous programming (Python coroutines)
 
-A **coroutine** is an asynchronous function. To be executed it must be awaited or run in an event loop.
+A **coroutine** is an asynchronous function. To execute it you must schedule it in an event loop. Scheduling is cooperative-based: coroutines must yield the execution flow.
 
-A **task** is an execution scheduling of a coroutine. It knows when a coroutine is done (if it returned a value, a result, or an exception).
+The OS is **NOT** involved with coroutines: Python handles coroutine executions by itself.
 
 A **future** is a placeholder in which a future result value will be stored later.
+
+A **task** is an execution scheduling of a coroutine. It knows when a coroutine is done: if it returned a value, a result, or an exception. 
 
 An **awaitable** is anything that can be awaited with `await`: a coroutine, a task, or future
 
 An async program is built as a concurrent one but it is a **single-threaded process**.
 
-The OS is **NOT** involved with `asyncio`: the library handles parallelization by itself. 
 
 ---
+Here is a regular (synchronous) function: 
 ```python
 def say(sentence):
     print(sentence)
@@ -2218,7 +2233,7 @@ say("Hello world!")
 ```
 
 
-Let's add the keyword `async`:
+Let's make it a coroutine by adding the keyword `async`:
 ```python
 async def say(sentence):
     print(sentence)
@@ -2256,13 +2271,13 @@ A the heart of the async app there is an **event loop**: This is a **scheduler**
 ---
 
 ```python
-async def wait(duration):
+async def waiting_coro(duration):
     await asyncio.sleep(duration)
     print("Finished to wait {}secs".format(duration))
 
 async def main():
-    l3 = asyncio.create_task(wait(3))   # Plan for execution asap
-    l5 = asyncio.create_task(wait(5))   # Plan for execution asap
+    l3 = asyncio.create_task(waiting_coro(3))   # Plan for execution asap
+    l5 = asyncio.create_task(waiting_coro(5))   # Plan for execution asap
     await asyncio.wait([l3, l5]) # Your moment of glory: don't abandon tasks
 
 asyncio.run(main())        # Creates and destroys the event loop
