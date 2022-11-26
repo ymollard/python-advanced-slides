@@ -46,10 +46,10 @@ https://advanced.python.training.aubrune.eu/
 #  Schedule of DAY 2
 
 3. [ CODE WITH QUALITY](#63)
-    3.1. [ Type annotations](#64)
-    3.2. [ Python docstrings](#67)
+    3.1. [ Type annotations and docstrings](#67)
     3.3. [ Logging](#69)
     3.4. [ Virtual environments (venv)](#72)
+    3.5. [ Python Enhancement Proposals (PEPs)](#81)
     3.5. [ Quality control tools](#81)
     3.6. [ Testing](#87)
 4. [ PACKAGE AND DISTRIBUTE](#90)
@@ -1144,18 +1144,14 @@ with resource:
 # CODE WITH QUALITY
 
 ---
-## Type annotations
+## Type annotations and docstrings
 
-```python
-def sum(a, b):
-    return a+b
-```
-The same function, with annotations from [PEP484](https://www.python.org/dev/peps/pep-0484/):
+With [PEP484](https://www.python.org/dev/peps/pep-0484/), all function parameters, function outputs, variables and attributes can be typed:
 ```python
 def sum(a: int, b: int) -> int:
     return a+b
 
-my_value : int = sum(5, 5)
+my_value : int = sum(5, 5)   # OK: Type checking passes
 
 s: bool = sum(5.0, 5)
 # Linter warning: Expected "int", got "float" instead
@@ -1169,11 +1165,8 @@ Mistakes will NOT raise exception or prevent the interpreter from running the co
 To specify more complex annotations, import them from `typing`:
 - `Any`: every type
 - `Union[X, Y, Z]`: one among several types (e.g. `int`, `float` or `str`)
-- `Tuple[X, Y, Z]`: tuple (sequence) of several types (e.g. `bool`, `str`)
 - `Callable[[X], Y]`: function that takes X in input and returns Y
-- `TypeVar`: a name of variable type
 - `Optional[X]`: either X or NoneType
-
 
 ```python
 from typing import Union
@@ -1185,9 +1178,12 @@ sum(5.0, 5)
 # Now this call is valid for the type checker
 ```
 
+Data containers can also be fully typed, e.g. `list[list[int]]`, `dict[str: float]`
+
+
 ---
 
-If you are referring to classes, use quotes:
+If you are referring to classes, use quotes with Python < 3.10:
 ```python
 class Foo:
     def bar(self, foo:"Foo"):
@@ -1211,7 +1207,7 @@ accepts_only_uint3(10)
 
 ---
 
-## Python docstrings
+### Python docstrings
 
 [PEP 257](https://www.python.org/dev/peps/pep-0257/) describes how RST documentation strings should be inserted in Python code:
 
@@ -1232,22 +1228,19 @@ def is_same_sign_than_or_positive(a: Union[float, int], b: Optional[Union[float,
     ..warning: if parameters are float, strict equality is not guaranteed
 
     :param a: First element to be compared
-    :type a: float
     :param b: Optional second element to be compared, or None
-    :type b: float
-    :type b: NoneType
     :return: True if a and b have the same sign or equal, False otherwise
     """
     return a * b >= 0 if b is not None else a > 0
 ```
 
 ---
-### What should have a docstring?
+**What should have a docstring?**
 Everything that is exported by a module:
 - modules
 - functions
 - classes
-- public methods (including the `__init__` constructor)
+- public methods (including the `__init__(self)` constructor)
 - packages (via their `__init__.py`) 
 
 Let your IDE (e.g. Pycharm) autocomplete the docstring syntax for you!
@@ -1389,10 +1382,16 @@ In practice, your IDE can handle venv creation, activation and deactivation auto
 ![bg right:50% 85%](img/venv-pycharm.png)
 
 ---
-## Quality control tools
-### [PEP 8](https://www.python.org/dev/peps/pep-0008/), the style guide for Python code
 
-> This document gives coding conventions for the Python code
+## Python Enhancement Proposals (PEPs)
+The [PEPs](https://www.python.org/dev/peps/pep-0008/) rule the Python language. In their lifetime the PEPs are proposed, debated, rejected/accepted and implemented.
+
+They are usually not very user-friendly but allow to understand some implementation choices and the implementation of the interpreter.
+
+[PEP 484](https://www.python.org/dev/peps/pep-0484/) is about type hints, [PEP 257](https://www.python.org/dev/peps/pep-0257/) about RST docstrings ...
+
+---
+In particular, the [PEP 8](https://www.python.org/dev/peps/pep-0008/) is the style guide for Python code.
 
 PEP8 codes start with E (Errors) or W (Warnings)
 
@@ -1403,20 +1402,13 @@ PEP8 codes start with E (Errors) or W (Warnings)
 | 300       | Blank lines              || 700       | Statements               |   
 | 400       | imports                  || 900       | Syntax                   |
 
----
-Linters can be customized in configuration files in:
-- `~/.config/pep8` if it's user-wide
-- `<PROJECT_ROOT>/setup.cfg` or `<PROJECT_ROOT>/tox.ini` if it's project-wide
+Most IDEs embed linters that emit warnings if you do not respect rules from the PEP 8.
 
-Example:
-```conf
-[flake8]
-ignore = E501,E731,E741
-max-line-length = 160
-exclude = build,dist,*.egg-info,doc/*,tests/*
-```
+Linters can usually be configured to change their behaviour (e.g. max line length).
 
 ---
+## Quality control tools
+
 ### [Pyflakes](pyflakes), the semantic analyser
 Pyflakes only focuses on the semantics (what your code stands for) but is not concerned about style.
 
@@ -1430,6 +1422,7 @@ variable = inexisting_variable
 ./main.py:3: undefined name 'inexisting_variable'
 ```
 
+Pyflakes and all linters presented here can be installed and invoked the same way:
 ```bash
 pip install pyflakes
 pyflakes mymodule.py
