@@ -196,16 +196,18 @@ Relative imports start with `.` or `..`
 ## Part 6: Automate package building and testing with `tox`
 ### 6.1. Make your package installable
 
-Refer to the doc about [package creation](https://packaging.python.org/tutorials/packaging-projects).
+Refer to the doc about [package creation](https://packaging.python.org/tutorials/packaging-projects) and make your package installable. Move your code into a new `src/` directory as recommanded by the doc.
 
 Create a dynamic metadata file `pyprojet.toml` and update its metadata (package name, author, dependencies if any).
 
-Delete the `sys.path` workaround in test files since your package is now installable. 
+Delete the `sys.path` workaround in test files since your package is now installable.
+
+But do not try to run the tests now, since the package is not yet installed in your venv.
 
 ---
 
 ### 6.2. Install, configure and run `tox`
-Refer to the [`tox` basic example](https://tox.wiki/en/latest/#basic-example). Create a basic `tox.ini` so that your package is built and tested against Python 3.10 and 3.9.
+Refer to the [`tox` basic example](https://tox.wiki/en/latest/#basic-example). Create a basic `tox.ini` so that your package is built and tested against Python 3.10 + 3.9
 
 Install and run tox in your project. Make sure all tests pass in both environments.
 
