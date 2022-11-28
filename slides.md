@@ -216,7 +216,7 @@ def compute(a, b):
     return a+b, a-b, a*b, a/b
 
 sum, difference, product, quotient = compute(5, 5)
-sum, other* = compute(5, 5)
+sum, *other = compute(5, 5)
 results = compute(5, 5)
 ```
 
@@ -439,8 +439,8 @@ class DivisorsOf: # This is an iterable
         self.n = n
 
     def __iter__(self):              # __iter__ returns an iterator...
-        for i in range(n // 2 + 1):  # ...or more precisely, a generator
-            if n % i == 0:
+        for i in range(1, self.n // 2 + 1):  # ...or more precisely, a generator
+            if self.n % i == 0:
                 yield i
 ```
 
