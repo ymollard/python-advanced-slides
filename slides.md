@@ -571,6 +571,8 @@ Client().make_transaction(BankAccount())
 # AttributeError: 'BankAccount' object has no attribute '_Client__balance'
 ```
 
+Name mangling applies to all private attributes and methods but magic methods.
+
 ---
 ### Class methods
 
