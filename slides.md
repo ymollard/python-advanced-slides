@@ -1663,8 +1663,8 @@ It is operated by the **Python Packaging Authority (PyPA)**: a working group fro
 The command-line tool **Package Installer for Python (pip)** can be used to install packages by their name, e.g. `bottle`. It can install from various sources (Link to code repos, ZIP file, local server...) and automatically seeks on PyPI if no source is given:
 
 ```bash
-pip install git+https://github.com/bottlepy/bottle
-pip install https://github.com/bottlepy/bottle/archive/refs/heads/master.zip
+pip install git+https://gitlab.com/bottlepy/bottle
+pip install https://gitlab.com/bottlepy/bottle/archive/refs/heads/master.zip
 pip install path/to/my/python/package/folder/
 pip install path/to/my/python/package/zip/file.zip
 pip install numpy    # Will seek on PyPI
@@ -1692,7 +1692,7 @@ Last update: November, 2017
 ```
 - Does the developer consider bugs and improvements?
 ```
-# of solved Github issues
+# of solved Gitlab issues
 ```
 - Is the package developer reliable?
 ```
@@ -1822,38 +1822,23 @@ As of 2021, uploading to PyPI with `twine` is the preferred option:
 [🐍 Poetry doc](https://python-poetry.org/docs/)
 
 ---
-### Python package deployment with Continuous Integration (Github actions)
-```yaml
-name: my-package-name
-on: [push]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: |
-          pip install build websocket
-      - name: Test package with unittest (flake8 linter also goes here)
-        working-directory: tests
-        run: python -m unittest discover
-      - name: Build package with Python 3.8
-        if: ${{ github.event_name == 'push' }}
-      - name: Publish package relying on pypa/gh-action-pypi-publish with Python 3.8
-        uses: pypa/gh-action-pypi-publish
-        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags') }}
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
-```
+### Deploy Python package with Continuous Integration (GitLab CI + gitops)
 
+This example pipeline for GitLab CI will run the unit tests (from tox) and upload the new version on PyPI, every time a new tag is pushed to git.
+```yaml
+pypi:
+    image: python:3.11
+    stage: release
+    script:
+        - pip install -U tox build twine
+        - tox
+        - python -m build
+        - twine upload dist/*
+    only:
+        - tags
+
+```
+This pipeline requires `TWINE_PASSWORD` tobe set to the right PyPI API key.
 
 <!--#####################################################################################################-->
 ---
