@@ -78,7 +78,7 @@ bob = BankAccount("Bob Müller", 100)
 ```
 
 ---
-- 1.2. Implement the `print()` method in class `BankAccount` that displays the name of the owner and the current balance. Iterate on all accounts to print them.
+- 1.2. Implement the `__str__()` magic in class `BankAccount` to return a f-string stating the owner and current balance. Loop over all accounts to print them.
 
 - 1.3. Implement these methods :
   - `_credit(value)` that credits the current account with the value passed in parameter. We will explain the goal of the initial underscore later.
