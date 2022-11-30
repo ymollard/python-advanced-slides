@@ -935,6 +935,8 @@ In functional programming your program is the result of the mathematical composi
 
 `f ∘ g ∘ h` or in Python `h(g(f(x)))`
 
+That operator is the pipe in shell languages e.g. `grep a file.txt | sort | uniq`
+
 In strict functional programming, no side effect is allowed, which means that even variable assignment is forbidden!
 
 [🐍 Learn more](https://docs.python.org/3/howto/functional.html)
@@ -1185,7 +1187,7 @@ Data containers can also be fully typed, e.g. `list[list[int]]`, `dict[str: floa
 
 ---
 
-If you are referring to classes, use quotes with Python < 3.10:
+If you are referring to the current class, use quotes:
 ```python
 class Foo:
     def bar(self, foo:"Foo"):
@@ -1274,14 +1276,14 @@ logging.info('Info message')    # Higher priority
 
 ---
 
+### Step 1: Produce log entries
+
 The **logging** library uses  modular approach to organize logs in a big app. Usually every module has its own logger named as itself:
 
 ```python
 logger = logging.getLogger(__name__)
 # foo/bar.py will be named "foo.bar"
 ```
-
-Hierarchy of module allows to propagate messages
 
 When a message is posted to logger L:
 
@@ -1292,17 +1294,19 @@ When a message is posted to logger L:
 ![bg right:36% 80%](./img/logging.png)
 
 ---
-**Example**: activate a stream handler for level DEBUG
+
+### Step 2: Consume log entries
+
 ```python
 h = logging.StreamHandler()
-h.setLevel("DEBUG")
+h.setLevel("INFO")   # Accept all entries more critical than INFO
 
 l = logging.getLogger("mymodule.submodule.subsubmodule")
-l.setLevel("DEBUG")
+l.setLevel("DEBUG")    # Accept all entries more critical than DEBUG
 
 l.addHandler(h)
 ```
-Both the logger and the handler(s) must accept the level so that the message is printed
+Both the logger and handler must accept the **minimum** level so that the entry is printed
 
 The simple config is a quick way to activate a stream handler for all loggers. But the output will be fussy since logs from **all** modules will be printed (including your imports):  
 
@@ -1579,6 +1583,8 @@ Module names use the dotted notation:
 
 ```python
 import my_math.matrix.complex.arithmetic
+
+my_math.matrix.complex.arithmetic.SomeClass().meth()
 
 print(my_math.matrix.complex.arithmetic.__name__)
 # my_math.matrix.complex.arithmetic
