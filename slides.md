@@ -527,11 +527,11 @@ def f(var):
 - **inheritance**: method is inherited from a different (parent) type
 
 ```python
-class mystr(str): pass
+class MyUpperCaseStr(UserString): pass
 
-isinstance(mystr(), str) # True: mystr() is of type "str"
+isinstance(MyUpperCaseStr(), str) # True: mystr() is of type "str"
 
-mystr(1e3).split(".")    # Methods & attributes inherited from the parent
+MyUpperCaseStr(1e3).split(".") # Methods & attributes inherited from the parent
 # Out[0]: ['1000', '0']
 ```
 ---
@@ -2272,7 +2272,7 @@ Grouping task creations and waiting for them in the same function is handy becau
 ---
 **No synchronous code** (e.g. `time.sleep()` or `requests.get()`) or heavy code (e.g. a `while loop` that will take years) should be mixed with async code.
 
-AsynIO is single-threaded, the event loop uses it too. If you block it with synchronous code, the event loop will be delayed as well as all other planned tasks.
+AsyncIO is single-threaded, the event loop uses it too. If you block it with synchronous code, the event loop will be delayed as well as all other planned tasks.
 
 If needed though, [executors](https://docs.python.org/3/library/asyncio-eventloop.html#executing-code-in-thread-or-process-pools) can run synchronous code in thread or process pools.
 
