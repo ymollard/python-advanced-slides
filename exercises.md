@@ -65,11 +65,13 @@ Each actor has his/her own bank account.
 ## Part 1: The basic scenario
 
 - 1.1. Create a class `BankAccount` that owns 2 attributes:
-  - `owner` (of type `str`): the owner's name
-  - `balance` (of type `int`): the balance (do not take care of decimals)
-  - the class constructor takes in parameter, in this order, `owner` and `initial_balance` 
+  - a private `owner` (of type `str`): the owner's name
+  - a protected `balance` (of type `int`): the balance *(do not care about decimals)*
+  - the class constructor takes in parameter, `owner` and `initial_balance` 
 
-With your class it must be possible to execute the following scenario (that has no effect so far, but it must not raise any error):
+- 1.2. Implement a property with only a getter for the balance ; and a property having both a getter and a setter for the owner.
+
+With your class it must be possible to execute the following scenario:
 ```python
 bank = BankAccount("LCL", 10000)
 walmart = BankAccount("Walmart", 5000)
