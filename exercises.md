@@ -73,7 +73,7 @@ Each actor has his/her own bank account.
 
 With your class it must be possible to execute the following scenario:
 ```python
-bank = BankAccount("LCL", 10000)
+bank = BankAccount("HSBC", 10000)
 walmart = BankAccount("Walmart", 5000)
 alice = BankAccount("Alice Worz", 500)
 bob = BankAccount("Bob Müller", 100)
