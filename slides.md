@@ -1385,6 +1385,13 @@ will install the specific numpy version into the venv
 ---
 In practice, your IDE can handle venv creation, activation and deactivation automatically for you when you create or open/close a project.
 
+### 🆕 PEP 668
+
+You can no longer use pip to install packages outside a venv.
+
+You can override this behaviour by passing `--break-system-packages`.
+
+
 ![bg right:50% 85%](img/venv-pycharm.png)
 
 ---
