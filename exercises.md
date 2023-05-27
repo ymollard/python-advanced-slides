@@ -272,37 +272,38 @@ Build and publish this new version on TestPyPI.
 ---
 # Mini-project 3: Optimization – Bread-First Search in a graph
 
-> BFS browses a tree data structure. It starts at the tree root and explores all nodes at the present depth prior to moving on to the nodes at the next depth level. 
-Extra memory, usually a queue, is needed to keep track of the children that were reached but not yet explored.
+> BFS browses a tree data structure. It starts at the tree root and visits all nodes at the present depth prior to moving on to the nodes at the next depth level. 
+
 
 *From [Breadth-first_search, Wikipedia](https://en.wikipedia.org/wiki/Breadth-first_search)*.
 
-📈 **Black** = explored ; **Grey** = queued to be explored later on
+📈 **Black** = visited ; **Grey** = queued to be visited later
 ℹ️ BFS is known as *parcours en largeur* in French
 
 ![bg right:25% 80%](https://upload.wikimedia.org/wikipedia/commons/4/46/Animated_BFS.gif)
 
 ---
 
-Here is the general algorithm of the BFS:
+Here is the general algorithm of the BFS in pseudocode:
 ```vb
 Input:  A graph G, 
 Input:  A root node where to start BFS
-Output: EXPLORED, the list of all nodes in BFS order
+Output: VISITED, the list of all nodes in BFS order
 ```
 
 ```ada
- 1  procedure BFS(G, ROOT) is
+ 1  function BFS(G, ROOT) is
  2      let Q be a list
- 3      let EXPLORED be a list 
- 4      append ROOT at the end of EXPLORED
+ 3      let VISITED be a list 
+ 4      append ROOT at the end of VISITED
  5      append ROOT at the end of Q
  6      while Q is not empty do
  7          v := pop the first node of Q
- 8          for all children of node v in G do
- 9              if w is not in EXPLORED then
-10                  append w at the end of EXPLORED
+ 8          for all children (w) of node v in G, do
+ 9              if w is not in VISITED then
+10                  append w at the end of VISITED
 11                  append w at the end of Q
+12      return VISITED
 ```
 
 ---

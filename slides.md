@@ -427,7 +427,7 @@ A **generator** is a specific type of iterator created via a function instead of
 
 ```python
 def divisors_of(n: int):
-    for i in range(n // 2 + 1):
+    for i in range(1, n // 2 + 1):
         if n % i == 0:
             yield i
 ```
@@ -514,12 +514,12 @@ It means that when accessing a method e.g. `a.method()` the interpreter will fir
 
 ---
 #### How does polymorphism apply to OOP?
-- **ad-hoc**: same name from different classes
+- **ad-hoc**: same method name in other classes
 ```python
 ["H", "e", "y"].index("e")
 "Hey".index("y")
 ```
-- **parametric**: same method with different parameter types (⚠️ overloading in Java)
+- **parametric**: same name with different parameter types (*overloading* in Java)
 ```python
 def f(var):
     return 42 if isinstance(var, int) else 4.2
@@ -556,7 +556,7 @@ class Foo:
         self.__private = 0        # ⚠️ Name mangling applies here
 ```
 
-Respect of protected attributes is not enforced but private ones rely on name mangling:
+Protected attributes are not enforced by the interpreter but private attributes are:
 
 ```python
 class BankAccount:
@@ -1346,41 +1346,38 @@ logging.basicConfig(filename='app.log', level=logging.INFO)
 ---
 For each new project you create/clone, create it its own dedicated virtual environment:
 ```bash
-/usr/bin/python3.7 -m venv dev/Training2022/venv
+/usr/bin/python3.7 -m venv dev/Training/venv
 ```
 
 Then, every time you work on this project, activate its environment first:
 ```bash
-source Training2022/venv/bin/activate
+source Training/venv/bin/activate
 ```
 
 Your terminal must prefix the prompt with the name of the env:
 ```bash
-(venv) yoan@humancoders ~/dev/Training2022 $
+(venv) yoan@humancoders ~/dev/Training $
 ```
-And quit the venv every time you stop working on the project:
-```bash
-(venv) yoan@humancoders ~/dev/Training2022 $ deactivate
-yoan@humancoders ~/dev/Training2022 $ 
-```
+
 
 ---
 In an activated venv, every call to the interpreter and every package installation will target the isolated virtual environment:
 
 ```bash
-(venv) yoan@humancoders ~/dev/Training2022 $ python
+(venv) yoan@humancoders ~/dev/Training $ python
 ```
 will run the Python version targeted by the venv
 
 ```bash
-(venv) yoan@humancoders ~/dev/Training2022 $ pip install numpy
+(venv) yoan@humancoders ~/dev/Training $ pip install numpy
 ```
 will install the latest numpy version into the venv
 
+You can quit the venv every time you stop working on the project:
 ```bash
-(venv) yoan@humancoders ~/dev/Training2022 $ pip install numpy==1.21.0
+(venv) yoan@humancoders ~/dev/Training $ deactivate
+yoan@humancoders ~/dev/Training $ 
 ```
-will install the specific numpy version into the venv
 
 ---
 In practice, your IDE can handle venv creation, activation and deactivation automatically for you when you create or open/close a project.
@@ -1802,7 +1799,7 @@ python3 -m build   # Will build both a sdist and bdist
 ### Remarks about binary distribution bdist_*
 - Binary format at platform-dependant (OS, arch, Python implementation and ABI)
 - `.egg` files are just zip files containing sdist or bdist, you can unzip them
-- Several binary formats exist: wheel, egg... As of 2021, `wheel` format is preferred
+- Several binary formats exist: `wheel`, `egg`... Nowadays, `wheel` is preferred
 - wheel files are named this way: `my_math-3.0.4-py3-none-any.whl` where:
   - `my_math` is your package name
   - `3.0.4` is your package version
@@ -1817,7 +1814,7 @@ python3 -m build   # Will build both a sdist and bdist
 ## Uploading your package distribution on PyPI
 Once sdist and/or bdist are available, several pipelines exist to share your project.
 
-As of 2021, uploading to PyPI with `twine` is the preferred option:
+Nowadays, uploading to PyPI with `twine` is the preferred option:
 1. Create an account on [PyPI](https://pypi.org/account/register/) or in the sandbox [TestPyPI](https://test.pypi.org/account/register/) if you're just testing
 2. ` pip install twine`
 3. `twine upload dist/* --repository testpypi`
@@ -1837,7 +1834,9 @@ As of 2021, uploading to PyPI with `twine` is the preferred option:
 [🐍 Poetry doc](https://python-poetry.org/docs/)
 
 ---
-### Deploy Python package with Continuous Integration (GitLab CI + gitops)
+### Deploy Python package with Continuous Integration
+
+**GitLab CI + gitops**
 
 This example pipeline for GitLab CI will run the unit tests (from tox) and upload the new version on PyPI, every time a new tag is pushed to git.
 ```yaml
@@ -1901,7 +1900,7 @@ A profiler usually returns a table of each function call during execution, with:
 
 - `ncalls`: the number of calls of this function
 - `tottime`: the total time spent in the internal body of the function only
-- `cumtime`: the total time spent in the function + all functions that this function called
+- `cumtime`: the total time spent in the function + all inner functions calls
 
 If a function does not call any other then `tottime=cumtime`. Some tools draw profiles:
 
@@ -1982,9 +1981,7 @@ class USBJoystickController:
 ---
 ### The Interface / Abstract Base Class
 
-The **Interface** class describes the structure & semantics that classes must comply with. 
-
-We say that a class **implements** an interface. Interfaces are usually named *xxxxx-able*.
+The **Interface** class describes the structure & semantics that classes must comply with. We say that a class **implements** an interface. Interfaces are usually named *xxxxx-able*.
 
 * the `Car` class may implement interfaces `Movable` and `Drivable`.
 * the `Bird` class may implement interfaces `Movable` and `Cryable`.
@@ -2034,7 +2031,7 @@ Registering an ABC not only forces registered classes to comply with:
 ---
 #### Protocols: duck typing for static type checking
 
-Protocols fulfill the same need without need of an explicit registration or subclassing.
+Protocols fulfill the same need without need of an explicit registration or subclass
 
 
 ```python
@@ -2097,7 +2094,7 @@ If the counter reaches 0, the literal is destroyed. This is how Python frees mem
 
 ---
 ### The Python Global Interpreter Lock (GIL)
-The GIL is a mutex that protects access to the reference counters of Python objects.
+The GIL is a mutex that protects the reference counters of Python objects.
 
 However it prevents multiple threads from executing Python bytecodes at once. It offers poor performance for multi-threaded programs, if they are CPU-bound.
 
